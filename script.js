@@ -17,19 +17,20 @@ navLinks.querySelectorAll('a').forEach(link => {
 
 // Navbar background on scroll
 const navbar = document.querySelector('.navbar');
+const scrollContainer = document.querySelector('.scroll-container');
 
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.style.boxShadow = '0 1px 10px rgba(0, 0, 0, 0.08)';
+scrollContainer.addEventListener('scroll', () => {
+    if (scrollContainer.scrollTop > 80) {
+        navbar.classList.add('scrolled');
     } else {
-        navbar.style.boxShadow = 'none';
+        navbar.classList.remove('scrolled');
     }
 });
 
-// Scroll animations
+// Scroll animations using IntersectionObserver
 const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+    threshold: 0.15,
+    rootMargin: '0px'
 };
 
 const observer = new IntersectionObserver((entries) => {
@@ -40,36 +41,76 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Add fade-in class to animated elements
-document.querySelectorAll('.service-card, .portfolio-card, .stat, .about-text, .contact-info, .contact-form').forEach(el => {
-    el.classList.add('fade-in');
-    observer.observe(el);
+// Observe all fade-up elements
+function initAnimations() {
+    const animatedElements = document.querySelectorAll(
+        '.section-heading, .section-text, .hero-title, .hero-subtitle, ' +
+        '.stat-block, .service-icon-large, .portfolio-item, ' +
+        '.contact-form, .contact-links, .split-left, .split-right'
+    );
+
+    animatedElements.forEach((el, index) => {
+        el.classList.add('fade-up');
+        const delayClass = `fade-up-delay-${(index % 3) + 1}`;
+        el.classList.add(delayClass);
+        observer.observe(el);
+    });
+}
+
+initAnimations();
+
+// Smooth scroll for anchor links (inside scroll container)
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const target = document.querySelector(targetId);
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
 });
 
 // Form submission handler
 function handleSubmit(event) {
     event.preventDefault();
     const form = event.target;
-    const btn = form.querySelector('button[type="submit"]');
+    const btn = form.querySelector('.btn-submit');
     const originalText = btn.textContent;
 
-    btn.textContent = 'Envoyé !';
-    btn.style.background = '#16a34a';
+    btn.textContent = 'ENVOYE !';
+    btn.style.background = 'var(--white)';
+    btn.style.color = 'var(--black)';
 
     setTimeout(() => {
         btn.textContent = originalText;
         btn.style.background = '';
+        btn.style.color = '';
         form.reset();
-    }, 2000);
+    }, 2500);
 }
 
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+// Parallax-like effect on hero
+const heroSection = document.querySelector('.hero');
+const heroTitle = document.querySelector('.hero-title');
+const heroSubtitle = document.querySelector('.hero-subtitle');
+
+scrollContainer.addEventListener('scroll', () => {
+    const scrolled = scrollContainer.scrollTop;
+    const heroHeight = heroSection.offsetHeight;
+
+    if (scrolled < heroHeight) {
+        const progress = scrolled / heroHeight;
+        const opacity = 1 - progress * 1.5;
+        const translateY = scrolled * 0.3;
+
+        if (heroTitle) {
+            heroTitle.style.transform = `translateY(${translateY}px)`;
+            heroTitle.style.opacity = Math.max(0, opacity);
         }
-    });
+        if (heroSubtitle) {
+            heroSubtitle.style.transform = `translateY(${translateY * 0.6}px)`;
+            heroSubtitle.style.opacity = Math.max(0, opacity);
+        }
+    }
 });
