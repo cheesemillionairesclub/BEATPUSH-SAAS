@@ -3,22 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wissam Bellil</title>
+    <title>BeatPush - Promotion Beatport | Boostez vos ventes</title>
+    <meta name="description" content="Boostez vos tracks sur Beatport avec BeatPush. Achetez des copies pour propulser votre musique dans les charts.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-inner">
-            <a href="#" class="logo">WISSAM BELLIL</a>
+            <a href="#" class="logo">
+                <img src="https://i.imgur.com/placeholder.png" alt="BeatPush" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                <span class="logo-text">BEATPUSH</span>
+            </a>
             <ul class="nav-links">
-                <li><a href="#about">A PROPOS</a></li>
-                <li><a href="#services">SERVICES</a></li>
-                <li><a href="#portfolio">PORTFOLIO</a></li>
-                <li><a href="#contact">CONTACT</a></li>
+                <li><a href="#how-it-works">COMMENT CA MARCHE</a></li>
+                <li><a href="#pricing">TARIFS</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#search" class="nav-cta">BOOSTER MA TRACK</a></li>
             </ul>
             <button class="menu-toggle" aria-label="Menu">
                 <span></span>
@@ -28,240 +33,360 @@
         </div>
     </nav>
 
-    <!-- Scroll Container -->
-    <main class="scroll-container">
-
-        <!-- Hero Section -->
-        <section class="section hero" id="hero">
-            <div class="section-bg hero-bg"></div>
-            <div class="section-content hero-content">
-                <h1 class="hero-title">DEVELOPPEUR<br>&amp; CREATEUR DIGITAL</h1>
-                <p class="hero-subtitle">Je conçois des expériences digitales modernes et performantes</p>
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-bg">
+            <div class="hero-glow"></div>
+            <div class="hero-particles"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge">PROMOTION BEATPORT #1</div>
+            <h1 class="hero-title">Propulsez votre musique<br>dans les <span class="text-gradient">Charts Beatport</span></h1>
+            <p class="hero-subtitle">Boostez vos ventes sur Beatport et grimpez dans les classements. Service fiable, rapide et discret utilise par des artistes et labels professionnels.</p>
+            <div class="hero-actions">
+                <a href="#search" class="btn-primary">BOOSTER MA TRACK</a>
+                <a href="#how-it-works" class="btn-secondary">COMMENT CA MARCHE</a>
             </div>
-            <div class="section-bottom">
-                <a href="#about" class="scroll-indicator">
-                    <span class="scroll-text">DECOUVRIR</span>
-                    <svg class="scroll-chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                </a>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-value">10K+</span>
+                    <span class="hero-stat-label">Tracks boostees</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value">500+</span>
+                    <span class="hero-stat-label">Artistes satisfaits</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value">24h</span>
+                    <span class="hero-stat-label">Livraison rapide</span>
+                </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- About Section -->
-        <section class="section" id="about">
-            <div class="section-bg about-bg"></div>
-            <div class="section-content">
-                <h2 class="section-heading">A PROPOS</h2>
-                <div class="split-content">
-                    <div class="split-left">
-                        <p class="section-text">
-                            Passionné par le développement web et la création digitale,
-                            je mets mes compétences au service de projets ambitieux.
-                            Mon objectif : transformer vos idées en solutions concrètes
-                            et impactantes.
-                        </p>
-                        <p class="section-text">
-                            Avec une approche centrée sur la qualité et l'expérience
-                            utilisateur, je vous accompagne de la conception à la
-                            réalisation de vos projets numériques.
-                        </p>
+    <!-- Trust Bar -->
+    <section class="trust-bar">
+        <div class="container">
+            <div class="trust-items">
+                <div class="trust-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span>Paiement securise</span>
+                </div>
+                <div class="trust-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span>Livraison sous 24-72h</span>
+                </div>
+                <div class="trust-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <span>100% confidentiel</span>
+                </div>
+                <div class="trust-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    <span>Support 7j/7</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section" id="search">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">ETAPE 1</span>
+                <h2 class="section-title">Trouvez votre track</h2>
+                <p class="section-desc">Recherchez votre morceau sur Beatport et selectionnez-le pour commencer la promotion.</p>
+            </div>
+            <div class="search-box">
+                <div class="search-input-wrap">
+                    <svg class="search-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="trackSearch" placeholder="Rechercher un artiste ou un titre..." autocomplete="off">
+                    <button id="searchBtn" class="search-btn">
+                        <span class="search-btn-text">RECHERCHER</span>
+                        <div class="search-spinner" style="display:none;"></div>
+                    </button>
+                </div>
+                <div id="searchResults" class="search-results"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Selected Track + Pricing Section -->
+    <section class="pricing-section" id="pricing" style="display:none;">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">ETAPE 2</span>
+                <h2 class="section-title">Choisissez votre pack</h2>
+                <p class="section-desc">Selectionnez le nombre de copies pour booster votre track dans les charts.</p>
+            </div>
+
+            <!-- Selected Track Display -->
+            <div class="selected-track" id="selectedTrack">
+                <div class="selected-track-art" id="selectedTrackArt"></div>
+                <div class="selected-track-info">
+                    <span class="selected-track-title" id="selectedTrackTitle"></span>
+                    <span class="selected-track-artist" id="selectedTrackArtist"></span>
+                </div>
+                <button class="change-track-btn" onclick="changeTrack()">Changer</button>
+            </div>
+
+            <!-- Pricing Cards -->
+            <div class="pricing-grid">
+                <div class="pricing-card" onclick="selectPack(this, 100)">
+                    <div class="pricing-card-header">
+                        <span class="pack-name">Starter</span>
+                        <span class="pack-copies">100 copies</span>
                     </div>
-                    <div class="split-right">
-                        <div class="stats-row">
-                            <div class="stat-block">
-                                <span class="stat-value">5+</span>
-                                <span class="stat-label">ANNEES D'EXPERIENCE</span>
-                            </div>
-                            <div class="stat-block">
-                                <span class="stat-value">30+</span>
-                                <span class="stat-label">PROJETS REALISES</span>
-                            </div>
-                            <div class="stat-block">
-                                <span class="stat-value">20+</span>
-                                <span class="stat-label">CLIENTS SATISFAITS</span>
-                            </div>
-                        </div>
+                    <div class="pricing-card-price">
+                        <span class="price-amount">&euro;49</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Livraison sous 72h</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Boost dans le Top 100 genre</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Support par email</li>
+                    </ul>
+                    <button class="pricing-btn">SELECTIONNER</button>
+                </div>
+                <div class="pricing-card popular" onclick="selectPack(this, 250)">
+                    <div class="popular-badge">POPULAIRE</div>
+                    <div class="pricing-card-header">
+                        <span class="pack-name">Pro</span>
+                        <span class="pack-copies">250 copies</span>
+                    </div>
+                    <div class="pricing-card-price">
+                        <span class="price-amount">&euro;99</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Livraison sous 48h</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Boost dans le Top 50 genre</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Rapport de progression</li>
+                    </ul>
+                    <button class="pricing-btn">SELECTIONNER</button>
+                </div>
+                <div class="pricing-card" onclick="selectPack(this, 500)">
+                    <div class="pricing-card-header">
+                        <span class="pack-name">Elite</span>
+                        <span class="pack-copies">500 copies</span>
+                    </div>
+                    <div class="pricing-card-price">
+                        <span class="price-amount">&euro;179</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Livraison sous 24h</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Boost dans le Top 10 genre</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Support VIP 24/7</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Rapport detaille</li>
+                    </ul>
+                    <button class="pricing-btn">SELECTIONNER</button>
+                </div>
+                <div class="pricing-card" onclick="selectPack(this, 1000)">
+                    <div class="pricing-card-header">
+                        <span class="pack-name">Label</span>
+                        <span class="pack-copies">1000 copies</span>
+                    </div>
+                    <div class="pricing-card-price">
+                        <span class="price-amount">&euro;299</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Livraison express</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Boost dans le Top 10 overall</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Manager dedie</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Garantie de resultats</li>
+                    </ul>
+                    <button class="pricing-btn">SELECTIONNER</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-section" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">SIMPLE & EFFICACE</span>
+                <h2 class="section-title">Comment ca marche ?</h2>
+                <p class="section-desc">En 3 etapes simples, boostez votre track dans les charts Beatport.</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">01</div>
+                    <div class="step-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </div>
+                    <h3 class="step-title">Recherchez votre track</h3>
+                    <p class="step-desc">Entrez le nom de votre morceau ou artiste et selectionnez votre track depuis notre base de donnees Beatport.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">02</div>
+                    <div class="step-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                    </div>
+                    <h3 class="step-title">Choisissez votre pack</h3>
+                    <p class="step-desc">Selectionnez le nombre de copies que vous souhaitez acheter selon vos objectifs de classement.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">03</div>
+                    <div class="step-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    </div>
+                    <h3 class="step-title">Regardez votre track monter</h3>
+                    <p class="step-desc">Apres paiement, votre promotion demarre immediatement. Suivez vos resultats en temps reel.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="social-proof">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">TEMOIGNAGES</span>
+                <h2 class="section-title">Ils nous font confiance</h2>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <p class="testimonial-text">"Ma track est passee de nulle part au Top 30 Techno en 3 jours. Service incroyable et rapide."</p>
+                    <div class="testimonial-author">
+                        <span class="testimonial-name">DJ Marco K.</span>
+                        <span class="testimonial-role">Producteur Techno</span>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <p class="testimonial-text">"On utilise BeatPush pour toutes nos sorties. Le rapport qualite-prix est imbattable. Nos artistes adorent."</p>
+                    <div class="testimonial-author">
+                        <span class="testimonial-name">Sarah L.</span>
+                        <span class="testimonial-role">Label Manager - Deep House</span>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <p class="testimonial-text">"Premier EP et directement dans le Top 100. BeatPush a change la donne pour ma carriere."</p>
+                    <div class="testimonial-author">
+                        <span class="testimonial-name">Alex T.</span>
+                        <span class="testimonial-role">Producteur Melodic Techno</span>
                     </div>
                 </div>
             </div>
-            <div class="section-bottom">
-                <a href="#services" class="cta-link">VOIR MES SERVICES</a>
-            </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Service 1: Dev Web -->
-        <section class="section" id="services">
-            <div class="section-bg service1-bg"></div>
-            <div class="section-content center-content">
-                <div class="service-icon-large">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="16 18 22 12 16 6"></polyline>
-                        <polyline points="8 6 2 12 8 18"></polyline>
-                    </svg>
-                </div>
-                <h2 class="section-heading">DEVELOPPEMENT WEB</h2>
-                <p class="section-text centered">
-                    Sites web modernes, rapides et responsive adaptés à vos besoins.
-                    Technologies de pointe pour des performances optimales.
-                </p>
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">FAQ</span>
+                <h2 class="section-title">Questions frequentes</h2>
             </div>
-            <div class="section-bottom">
-                <a href="#service2" class="cta-link">EN SAVOIR PLUS</a>
-            </div>
-        </section>
-
-        <!-- Service 2: Design UI/UX -->
-        <section class="section" id="service2">
-            <div class="section-bg service2-bg"></div>
-            <div class="section-content center-content">
-                <div class="service-icon-large">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                        <polyline points="21 15 16 10 5 21"></polyline>
-                    </svg>
-                </div>
-                <h2 class="section-heading">DESIGN UI / UX</h2>
-                <p class="section-text centered">
-                    Interfaces intuitives et esthétiques pour une expérience
-                    utilisateur optimale. Du wireframe au pixel-perfect.
-                </p>
-            </div>
-            <div class="section-bottom">
-                <a href="#service3" class="cta-link">EN SAVOIR PLUS</a>
-            </div>
-        </section>
-
-        <!-- Service 3: Applications -->
-        <section class="section" id="service3">
-            <div class="section-bg service3-bg"></div>
-            <div class="section-content center-content">
-                <div class="service-icon-large">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                        <line x1="8" y1="21" x2="16" y2="21"></line>
-                        <line x1="12" y1="17" x2="12" y2="21"></line>
-                    </svg>
-                </div>
-                <h2 class="section-heading">APPLICATIONS WEB</h2>
-                <p class="section-text centered">
-                    Applications sur mesure avec des technologies de pointe.
-                    Solutions scalables et performantes.
-                </p>
-            </div>
-            <div class="section-bottom">
-                <a href="#portfolio" class="cta-link">VOIR MES PROJETS</a>
-            </div>
-        </section>
-
-        <!-- Portfolio Section -->
-        <section class="section" id="portfolio">
-            <div class="section-bg portfolio-bg"></div>
-            <div class="section-content">
-                <h2 class="section-heading">PORTFOLIO</h2>
-                <div class="portfolio-grid">
-                    <a href="#" class="portfolio-item">
-                        <div class="portfolio-thumb" style="background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);">
-                            <div class="portfolio-overlay">
-                                <span class="portfolio-title">PROJET 01</span>
-                                <span class="portfolio-cat">Application Web Moderne</span>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="#" class="portfolio-item">
-                        <div class="portfolio-thumb" style="background: linear-gradient(135deg, #0f0f23, #1a0a2e, #2d1b69);">
-                            <div class="portfolio-overlay">
-                                <span class="portfolio-title">PROJET 02</span>
-                                <span class="portfolio-cat">Site E-Commerce</span>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="#" class="portfolio-item">
-                        <div class="portfolio-thumb" style="background: linear-gradient(135deg, #0a1628, #0d2137, #1a3a5c);">
-                            <div class="portfolio-overlay">
-                                <span class="portfolio-title">PROJET 03</span>
-                                <span class="portfolio-cat">Dashboard Analytique</span>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="#" class="portfolio-item">
-                        <div class="portfolio-thumb" style="background: linear-gradient(135deg, #1a1a1a, #2d2d2d, #0a0a0a);">
-                            <div class="portfolio-overlay">
-                                <span class="portfolio-title">PROJET 04</span>
-                                <span class="portfolio-cat">Identité Visuelle</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="section-bottom">
-                <a href="#contact" class="cta-link">ME CONTACTER</a>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section class="section" id="contact">
-            <div class="section-bg contact-bg"></div>
-            <div class="section-content center-content">
-                <h2 class="section-heading">CONTACT</h2>
-                <p class="section-text centered">
-                    Vous avez un projet en tête ? N'hésitez pas à me contacter
-                    pour en discuter.
-                </p>
-                <form class="contact-form" onsubmit="handleSubmit(event)">
-                    <div class="form-row">
-                        <input type="text" placeholder="Votre nom" required>
-                        <input type="email" placeholder="Votre email" required>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Comment fonctionne la promotion Beatport ?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Nous utilisons un reseau de DJs et de passionnes de musique electronique pour generer des achats reels de votre track sur Beatport. Cela permet d'augmenter votre classement dans les charts de maniere organique.</p>
                     </div>
-                    <textarea placeholder="Votre message" rows="4" required></textarea>
-                    <button type="submit" class="btn-submit">ENVOYER</button>
-                </form>
-                <div class="contact-links">
-                    <a href="mailto:contact@wissambellil.com" class="contact-link-item">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                            <polyline points="22,6 12,13 2,6"></polyline>
-                        </svg>
-                        contact@wissambellil.com
-                    </a>
-                    <a href="#" class="contact-link-item">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
-                        France
-                    </a>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>En combien de temps vais-je voir les resultats ?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Les resultats sont visibles dans les 24 a 72 heures suivant votre commande, selon le pack choisi. Le pack Elite et Label beneficient d'un traitement prioritaire.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Est-ce que c'est sans risque pour mon compte ?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Oui, notre methode est 100% sure. Nous generons de vrais achats par de vrais utilisateurs, ce qui est completement conforme aux conditions d'utilisation de Beatport.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Quels genres musicaux sont supportes ?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Tous les genres disponibles sur Beatport sont supportes : Techno, House, Trance, Drum & Bass, Melodic House & Techno, Deep House, et bien d'autres.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Quels moyens de paiement acceptez-vous ?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Nous acceptons toutes les cartes bancaires (Visa, Mastercard, Amex) via notre plateforme de paiement securisee Stripe. Apple Pay et Google Pay sont egalement disponibles.</p>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Footer -->
-        <footer class="site-footer">
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-box">
+                <h2 class="cta-title">Pret a dominer les charts ?</h2>
+                <p class="cta-desc">Rejoignez des centaines d'artistes qui utilisent BeatPush pour booster leur carriere.</p>
+                <a href="#search" class="btn-primary btn-large">COMMENCER MAINTENANT</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
             <div class="footer-inner">
-                <a href="#" class="footer-logo">WISSAM BELLIL</a>
-                <div class="footer-social">
-                    <a href="#" aria-label="GitHub">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                    </a>
-                    <a href="#" aria-label="LinkedIn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                        </svg>
-                    </a>
-                    <a href="#" aria-label="X">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                        </svg>
-                    </a>
+                <div class="footer-brand">
+                    <span class="footer-logo">BEATPUSH</span>
+                    <p class="footer-desc">La plateforme #1 de promotion musicale sur Beatport.</p>
                 </div>
-                <p class="footer-copy">&copy; 2026 WISSAM BELLIL. TOUS DROITS RESERVES.</p>
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <h4>Navigation</h4>
+                        <a href="#search">Booster ma track</a>
+                        <a href="#pricing">Tarifs</a>
+                        <a href="#how-it-works">Comment ca marche</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Support</h4>
+                        <a href="#faq">FAQ</a>
+                        <a href="mailto:contact@beatpush.com">Contact</a>
+                    </div>
+                </div>
             </div>
-        </footer>
-
-    </main>
+            <div class="footer-bottom">
+                <p>&copy; 2026 BeatPush. Tous droits reserves.</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>
