@@ -1,5 +1,5 @@
 // ===== Configuration =====
-const SEARCH_API_URL = 'https://demo.blaron.com/search';
+const SEARCH_API_URL = '/api/search';
 const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_eVq28tdkwgOre3xbwS0RG00';
 
 // ===== DOM Elements =====
