@@ -179,46 +179,33 @@ async function performSearch() {
 function displayResults(data, targetTrackId) {
     searchResults.innerHTML = '';
 
-    // Handle blaron API response - try multiple possible structures
-    let tracks = [];
-    if (Array.isArray(data)) {
-        tracks = data;
-    } else if (data?.results) {
-        tracks = Array.isArray(data.results) ? data.results : [];
-    } else if (data?.tracks) {
-        tracks = Array.isArray(data.tracks) ? data.tracks : [];
-    } else if (data?.data) {
-        tracks = Array.isArray(data.data) ? data.data : [];
-    } else if (data?.items) {
-        tracks = Array.isArray(data.items) ? data.items : [];
-    }
+    // Blaron API returns a direct array of tracks
+    let tracks = Array.isArray(data) ? data : [];
 
-    // Ensure we only show items that look like tracks
-    tracks = tracks.filter(item => {
-        return item.title || item.name || item.track_name;
-    });
+    tracks = tracks.filter(item => item.title);
 
     if (!tracks.length) {
         searchResults.innerHTML = '<div class="search-empty">Aucun titre trouve sur Beatport. Essayez un autre terme.</div>';
         return;
     }
 
-    // If we have a target track ID from URL, put it first
+    // If we have a target track ID from URL, match by link
     if (targetTrackId) {
         tracks.sort((a, b) => {
-            const aMatch = String(a.id || a.track_id || a.beatport_id) === targetTrackId;
-            const bMatch = String(b.id || b.track_id || b.beatport_id) === targetTrackId;
+            const aMatch = a.link && a.link.includes(targetTrackId);
+            const bMatch = b.link && b.link.includes(targetTrackId);
             return bMatch - aMatch;
         });
     }
 
     tracks.slice(0, 10).forEach(track => {
-        const title = track.title || track.name || track.track_name || 'Titre inconnu';
-        const artist = track.artist || track.artist_name || track.artists?.join?.(', ') || (Array.isArray(track.artists) ? track.artists.map(a => a.name || a).join(', ') : '') || 'Artiste inconnu';
-        const artwork = track.artwork_url || track.image || track.image_url || track.cover || track.artwork || track.thumbnail || track.cover_url || '';
-        const id = track.id || track.track_id || track.beatport_id || '';
+        const title = track.title;
+        const artist = Array.isArray(track.artists) ? track.artists.join(', ') : 'Artiste inconnu';
+        const artwork = track.image_url || '';
+        const genre = Array.isArray(track.genre) ? track.genre.join(', ') : '';
+        const link = track.link || '';
 
-        const el = createTrackElement(title, artist, artwork, id);
+        const el = createTrackElement(title, artist, artwork, link, genre);
         searchResults.appendChild(el);
     });
 }
@@ -242,12 +229,15 @@ function displayDemoResults(query) {
     });
 }
 
-function createTrackElement(title, artist, artwork, id) {
+function createTrackElement(title, artist, artwork, link, genre) {
     const el = document.createElement('div');
     el.className = 'track-result';
 
     const safeTitle = escapeHtml(title);
     const safeArtist = escapeHtml(artist);
+    const safeGenre = genre ? escapeHtml(genre) : '';
+    // Use larger image (500x500 instead of 200x200)
+    const largeArtwork = artwork ? artwork.replace('200x200', '500x500') : '';
 
     el.innerHTML = `
         <div class="track-art">
@@ -264,11 +254,12 @@ function createTrackElement(title, artist, artwork, id) {
         <div class="track-info">
             <div class="track-title">${safeTitle}</div>
             <div class="track-artist">${safeArtist}</div>
+            ${safeGenre ? `<div class="track-genre">${safeGenre}</div>` : ''}
         </div>
     `;
 
     el.addEventListener('click', () => {
-        selectTrack(title, artist, artwork, id);
+        selectTrack(title, artist, largeArtwork, link);
     });
 
     return el;
