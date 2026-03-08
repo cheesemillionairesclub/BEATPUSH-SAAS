@@ -170,6 +170,7 @@ async function performSearch() {
         displayResults(data, beatportUrl ? beatportUrl.id : null);
     } catch (error) {
         console.error('Search error:', error);
+        currentSearchQuery = ''; // Allow retry on same query
         displayDemoResults(query);
     } finally {
         hideSearchLoading();
@@ -224,7 +225,7 @@ function displayDemoResults(query) {
     ];
 
     demoTracks.forEach((track, i) => {
-        const el = createTrackElement(track.title, track.artist, track.artwork, `demo-${i}`);
+        const el = createTrackElement(track.title, track.artist, track.artwork, '', '');
         searchResults.appendChild(el);
     });
 }
