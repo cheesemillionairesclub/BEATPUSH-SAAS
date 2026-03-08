@@ -1,8 +1,5 @@
 // ===== Configuration =====
-const BEATPORT_SEARCH_URL = 'https://songstats.p.rapidapi.com/tracks/search';
-const BEATPORT_TRACK_INFO_URL = 'https://songstats.p.rapidapi.com/tracks/info';
-const RAPIDAPI_HOST = 'songstats.p.rapidapi.com';
-const RAPIDAPI_KEY = '4f41195243msh1e5dfd2b32f0e06p1926d0jsn02b5ab26286c';
+const SEARCH_API_URL = 'https://demo.blaron.com/search';
 const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_eVq28tdkwgOre3xbwS0RG00';
 
 // ===== DOM Elements =====
@@ -160,19 +157,14 @@ async function performSearch() {
         const beatportUrl = parseBeatportUrl(query);
         let searchQuery = beatportUrl ? beatportUrl.name : query;
 
-        const response = await fetch(`${BEATPORT_SEARCH_URL}?q=${encodeURIComponent(searchQuery)}&source=beatport`, {
-            method: 'GET',
-            headers: {
-                'x-rapidapi-host': RAPIDAPI_HOST,
-                'x-rapidapi-key': RAPIDAPI_KEY
-            }
-        });
+        const response = await fetch(`${SEARCH_API_URL}?q=${encodeURIComponent(searchQuery)}`);
 
         if (!response.ok) {
             throw new Error(`API error: ${response.status}`);
         }
 
         const data = await response.json();
+        console.log('Blaron API response:', data);
 
         // If searching by URL and we have an ID, try to highlight matching track
         displayResults(data, beatportUrl ? beatportUrl.id : null);
@@ -187,12 +179,23 @@ async function performSearch() {
 function displayResults(data, targetTrackId) {
     searchResults.innerHTML = '';
 
-    // Extract tracks from API response - filter only tracks (not artists)
-    let tracks = data?.results || data?.tracks || data?.data || [];
+    // Handle blaron API response - try multiple possible structures
+    let tracks = [];
+    if (Array.isArray(data)) {
+        tracks = data;
+    } else if (data?.results) {
+        tracks = Array.isArray(data.results) ? data.results : [];
+    } else if (data?.tracks) {
+        tracks = Array.isArray(data.tracks) ? data.tracks : [];
+    } else if (data?.data) {
+        tracks = Array.isArray(data.data) ? data.data : [];
+    } else if (data?.items) {
+        tracks = Array.isArray(data.items) ? data.items : [];
+    }
 
-    // Ensure we only show items that look like tracks (have title, not just artist name)
+    // Ensure we only show items that look like tracks
     tracks = tracks.filter(item => {
-        return item.title || item.name;
+        return item.title || item.name || item.track_name;
     });
 
     if (!tracks.length) {
@@ -203,17 +206,17 @@ function displayResults(data, targetTrackId) {
     // If we have a target track ID from URL, put it first
     if (targetTrackId) {
         tracks.sort((a, b) => {
-            const aMatch = String(a.id || a.track_id) === targetTrackId;
-            const bMatch = String(b.id || b.track_id) === targetTrackId;
+            const aMatch = String(a.id || a.track_id || a.beatport_id) === targetTrackId;
+            const bMatch = String(b.id || b.track_id || b.beatport_id) === targetTrackId;
             return bMatch - aMatch;
         });
     }
 
     tracks.slice(0, 10).forEach(track => {
-        const title = track.title || track.name || 'Titre inconnu';
-        const artist = track.artist || track.artists?.join(', ') || track.artist_name || 'Artiste inconnu';
-        const artwork = track.artwork_url || track.image || track.cover || track.artwork || '';
-        const id = track.id || track.track_id || '';
+        const title = track.title || track.name || track.track_name || 'Titre inconnu';
+        const artist = track.artist || track.artist_name || track.artists?.join?.(', ') || (Array.isArray(track.artists) ? track.artists.map(a => a.name || a).join(', ') : '') || 'Artiste inconnu';
+        const artwork = track.artwork_url || track.image || track.image_url || track.cover || track.artwork || track.thumbnail || track.cover_url || '';
+        const id = track.id || track.track_id || track.beatport_id || '';
 
         const el = createTrackElement(title, artist, artwork, id);
         searchResults.appendChild(el);
