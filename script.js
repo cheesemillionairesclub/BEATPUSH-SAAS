@@ -1,6 +1,6 @@
 // ===== Configuration =====
-const SONGSTATS_API_URL = 'https://songstats.p.rapidapi.com/tracks/info';
-const SONGSTATS_SEARCH_URL = 'https://songstats.p.rapidapi.com/tracks/search';
+const BEATPORT_SEARCH_URL = 'https://songstats.p.rapidapi.com/tracks/search';
+const BEATPORT_TRACK_INFO_URL = 'https://songstats.p.rapidapi.com/tracks/info';
 const RAPIDAPI_HOST = 'songstats.p.rapidapi.com';
 const RAPIDAPI_KEY = '4f41195243msh1e5dfd2b32f0e06p1926d0jsn02b5ab26286c';
 const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_eVq28tdkwgOre3xbwS0RG00';
@@ -16,6 +16,7 @@ const pricingSection = document.getElementById('pricing');
 // ===== State =====
 let selectedTrack = null;
 let searchTimeout = null;
+let currentSearchQuery = '';
 
 // ===== Mobile Menu =====
 menuToggle.addEventListener('click', () => {
@@ -73,36 +74,93 @@ document.querySelectorAll('.step-card, .testimonial-card, .pricing-card, .sectio
     observer.observe(el);
 });
 
-// ===== Track Search =====
-searchBtn.addEventListener('click', performSearch);
-searchInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') performSearch();
-});
+// ===== Beatport URL Detection =====
+function parseBeatportUrl(input) {
+    // Match patterns like:
+    // https://www.beatport.com/track/track-name/12345
+    // https://beatport.com/track/track-name/12345
+    // beatport.com/track/track-name/12345
+    const urlPattern = /(?:https?:\/\/)?(?:www\.)?beatport\.com\/track\/([^/]+)\/(\d+)/i;
+    const match = input.match(urlPattern);
+    if (match) {
+        return {
+            slug: match[1],
+            id: match[2],
+            // Extract readable name from slug
+            name: match[1].replace(/-/g, ' ')
+        };
+    }
+    return null;
+}
 
-// Debounced auto-search
+// ===== Track Search =====
+// Auto-search on every input (debounced)
 searchInput.addEventListener('input', () => {
     clearTimeout(searchTimeout);
     const query = searchInput.value.trim();
-    if (query.length >= 3) {
-        searchTimeout = setTimeout(performSearch, 600);
-    } else {
+
+    if (query.length < 2) {
         searchResults.innerHTML = '';
+        hideSearchLoading();
+        return;
+    }
+
+    // Show loading immediately
+    showSearchLoading();
+
+    // Shorter debounce for responsive feel
+    searchTimeout = setTimeout(() => performSearch(), 400);
+});
+
+// Also search on Enter
+searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        clearTimeout(searchTimeout);
+        performSearch();
     }
 });
+
+// Search button click
+searchBtn.addEventListener('click', () => {
+    clearTimeout(searchTimeout);
+    performSearch();
+});
+
+function showSearchLoading() {
+    const btnText = searchBtn.querySelector('.search-btn-text');
+    const spinner = searchBtn.querySelector('.search-spinner');
+    btnText.style.display = 'none';
+    spinner.style.display = 'block';
+    searchBtn.disabled = true;
+}
+
+function hideSearchLoading() {
+    const btnText = searchBtn.querySelector('.search-btn-text');
+    const spinner = searchBtn.querySelector('.search-spinner');
+    btnText.style.display = 'inline';
+    spinner.style.display = 'none';
+    searchBtn.disabled = false;
+}
 
 async function performSearch() {
     const query = searchInput.value.trim();
     if (!query) return;
 
-    const btnText = searchBtn.querySelector('.search-btn-text');
-    const spinner = searchBtn.querySelector('.search-spinner');
+    // Avoid duplicate searches
+    if (query === currentSearchQuery) {
+        hideSearchLoading();
+        return;
+    }
+    currentSearchQuery = query;
 
-    btnText.style.display = 'none';
-    spinner.style.display = 'block';
-    searchBtn.disabled = true;
+    showSearchLoading();
 
     try {
-        const response = await fetch(`${SONGSTATS_SEARCH_URL}?q=${encodeURIComponent(query)}&source=beatport`, {
+        // Check if user pasted a Beatport URL
+        const beatportUrl = parseBeatportUrl(query);
+        let searchQuery = beatportUrl ? beatportUrl.name : query;
+
+        const response = await fetch(`${BEATPORT_SEARCH_URL}?q=${encodeURIComponent(searchQuery)}&source=beatport`, {
             method: 'GET',
             headers: {
                 'x-rapidapi-host': RAPIDAPI_HOST,
@@ -115,32 +173,46 @@ async function performSearch() {
         }
 
         const data = await response.json();
-        displayResults(data);
+
+        // If searching by URL and we have an ID, try to highlight matching track
+        displayResults(data, beatportUrl ? beatportUrl.id : null);
     } catch (error) {
         console.error('Search error:', error);
-        // Show demo results as fallback
         displayDemoResults(query);
     } finally {
-        btnText.style.display = 'inline';
-        spinner.style.display = 'none';
-        searchBtn.disabled = false;
+        hideSearchLoading();
     }
 }
 
-function displayResults(data) {
+function displayResults(data, targetTrackId) {
     searchResults.innerHTML = '';
 
-    const tracks = data?.results || data?.tracks || data?.data || [];
+    // Extract tracks from API response - filter only tracks (not artists)
+    let tracks = data?.results || data?.tracks || data?.data || [];
+
+    // Ensure we only show items that look like tracks (have title, not just artist name)
+    tracks = tracks.filter(item => {
+        return item.title || item.name;
+    });
 
     if (!tracks.length) {
-        searchResults.innerHTML = '<div class="search-empty">Aucun resultat trouve. Essayez un autre terme de recherche.</div>';
+        searchResults.innerHTML = '<div class="search-empty">Aucun titre trouve sur Beatport. Essayez un autre terme.</div>';
         return;
+    }
+
+    // If we have a target track ID from URL, put it first
+    if (targetTrackId) {
+        tracks.sort((a, b) => {
+            const aMatch = String(a.id || a.track_id) === targetTrackId;
+            const bMatch = String(b.id || b.track_id) === targetTrackId;
+            return bMatch - aMatch;
+        });
     }
 
     tracks.slice(0, 10).forEach(track => {
         const title = track.title || track.name || 'Titre inconnu';
-        const artist = track.artist || track.artists?.join(', ') || 'Artiste inconnu';
-        const artwork = track.artwork_url || track.image || track.cover || '';
+        const artist = track.artist || track.artists?.join(', ') || track.artist_name || 'Artiste inconnu';
+        const artwork = track.artwork_url || track.image || track.cover || track.artwork || '';
         const id = track.id || track.track_id || '';
 
         const el = createTrackElement(title, artist, artwork, id);
@@ -151,10 +223,14 @@ function displayResults(data) {
 function displayDemoResults(query) {
     searchResults.innerHTML = '';
 
+    // Check if it's a Beatport URL for better demo results
+    const beatportUrl = parseBeatportUrl(query);
+    const displayName = beatportUrl ? beatportUrl.name : query;
+
     const demoTracks = [
-        { title: `${query} (Original Mix)`, artist: 'Various Artists', artwork: '' },
-        { title: `${query} - Extended Mix`, artist: 'DJ Producer', artwork: '' },
-        { title: `${query} (Remix)`, artist: 'Top Artist', artwork: '' },
+        { title: `${displayName} (Original Mix)`, artist: 'Various Artists', artwork: '' },
+        { title: `${displayName} - Extended Mix`, artist: 'DJ Producer', artwork: '' },
+        { title: `${displayName} (Remix)`, artist: 'Top Artist', artwork: '' },
     ];
 
     demoTracks.forEach((track, i) => {
@@ -166,15 +242,26 @@ function displayDemoResults(query) {
 function createTrackElement(title, artist, artwork, id) {
     const el = document.createElement('div');
     el.className = 'track-result';
+
+    const safeTitle = escapeHtml(title);
+    const safeArtist = escapeHtml(artist);
+
     el.innerHTML = `
         <div class="track-art">
-            ${artwork ? `<img src="${artwork}" alt="${title}" onerror="this.parentElement.innerHTML='<div style=\\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.3);font-size:20px\\'>♪</div>'">` : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.3);font-size:20px">♪</div>'}
+            ${artwork
+                ? `<img src="${escapeHtml(artwork)}" alt="${safeTitle}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                   <div class="track-art-placeholder" style="display:none;">
+                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                   </div>`
+                : `<div class="track-art-placeholder">
+                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                   </div>`
+            }
         </div>
         <div class="track-info">
-            <div class="track-title">${escapeHtml(title)}</div>
-            <div class="track-artist">${escapeHtml(artist)}</div>
+            <div class="track-title">${safeTitle}</div>
+            <div class="track-artist">${safeArtist}</div>
         </div>
-        <button class="track-select-btn">Selectionner</button>
     `;
 
     el.addEventListener('click', () => {
@@ -199,8 +286,8 @@ function selectTrack(title, artist, artwork, id) {
     const artistEl = document.getElementById('selectedTrackArtist');
 
     artEl.innerHTML = artwork
-        ? `<img src="${artwork}" alt="${escapeHtml(title)}" style="width:100%;height:100%;object-fit:cover;">`
-        : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.3);font-size:24px">♪</div>';
+        ? `<img src="${escapeHtml(artwork)}" alt="${escapeHtml(title)}" style="width:100%;height:100%;object-fit:cover;">`
+        : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.3);font-size:24px"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>';
     titleEl.textContent = title;
     artistEl.textContent = artist;
 
@@ -218,6 +305,7 @@ function selectTrack(title, artist, artwork, id) {
 
 function changeTrack() {
     selectedTrack = null;
+    currentSearchQuery = '';
     pricingSection.style.display = 'none';
     document.getElementById('search').scrollIntoView({ behavior: 'smooth' });
     searchInput.focus();
