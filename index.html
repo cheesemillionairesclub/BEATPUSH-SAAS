@@ -55,11 +55,38 @@
             <div class="hero-particles"></div>
         </div>
         <div class="hero-content">
-            <div class="hero-badge">Industry-Level Promotion. Real Results.</div>
-            <h1 class="hero-title">Professional Beatport promotion for <span class="text-gradient">DJs</span>, <span class="text-gradient">producers</span> and <span class="text-gradient">labels.</span></h1>
-            <p class="hero-subtitle">For over 10 years, Beatpush has helped artists generate visibility and momentum on Beatport charts.<br>No shortcuts. No automation. Just real strategy.</p>
+            <div class="hero-badge" data-i18n="hero_badge">Industry-Level Promotion. Real Results.</div>
+            <h1 class="hero-title" data-i18n-html="hero_title">Professional Beatport promotion for <span class="text-gradient">DJs</span>, <span class="text-gradient">producers</span> and <span class="text-gradient">labels.</span></h1>
+            <p class="hero-subtitle" data-i18n-html="hero_subtitle">For over 10 years, Beatpush has helped artists generate visibility and momentum on Beatport charts.</p>
             <div class="hero-actions">
-                <a href="#search" class="btn-primary">GET STARTED</a>
+                <a href="#search" class="btn-primary" data-i18n="hero_cta_btn">GET STARTED</a>
+            </div>
+            <!-- Features under Get Started -->
+            <div class="hero-features">
+                <div class="hero-feature-item">
+                    <div class="hero-feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                    </div>
+                    <span data-i18n="feature_no_bots">No Bots. No Artificial Traffic.</span>
+                </div>
+                <div class="hero-feature-item">
+                    <div class="hero-feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
+                    </div>
+                    <span data-i18n="feature_scheduling">Custom Campaign Scheduling</span>
+                </div>
+                <div class="hero-feature-item">
+                    <div class="hero-feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    </div>
+                    <span data-i18n="feature_strategy">Chart Strategy & Insider Guidance</span>
+                </div>
+                <div class="hero-feature-item">
+                    <div class="hero-feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.85.84 6.71 2.25"/><path d="M21 3v6h-6"/><path d="M12 8v4l3 3"/></svg>
+                    </div>
+                    <span data-i18n="feature_guarantee">Money-back guarantee</span>
+                </div>
             </div>
         </div>
     </section>
@@ -68,15 +95,16 @@
     <section class="search-section" id="search">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Start your Beatport promotion today</h2>
-                <p class="section-desc">Search for your track on Beatport and select it to begin.</p>
+                <h2 class="section-title" data-i18n-html="search_title">Start your Beatport campaign <span class="text-green">today</span></h2>
+                <p class="section-desc" data-i18n="search_desc">Search for your track on Beatport and select it to begin.</p>
+                <p class="section-desc-highlight" data-i18n="search_tagline">No shortcuts. No automation. Just real strategy.</p>
             </div>
             <div class="search-box">
                 <div class="search-input-wrap" id="searchWrap">
                     <svg class="search-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input type="text" id="trackSearch" placeholder="Track name, artist or Beatport URL..." autocomplete="off">
+                    <input type="text" id="trackSearch" data-i18n-placeholder="search_placeholder" placeholder="Track name, artist or Beatport URL..." autocomplete="off">
                     <button id="searchBtn" class="search-btn">
-                        <span class="search-btn-text">SEARCH</span>
+                        <span class="search-btn-text" data-i18n="search_btn">SEARCH</span>
                         <div class="search-spinner" style="display:none;"></div>
                     </button>
                 </div>
@@ -86,49 +114,103 @@
     </section>
 
     <!-- Pricing Section -->
-    <section class="pricing-section" id="pricing" style="display: none;">
+    <section class="pricing-section" id="pricing">
         <div class="container">
             <div class="section-header">
-                <span class="section-badge">PRICING</span>
-                <h2 class="section-title">Choose your pack</h2>
-                <p class="section-desc">Select the number of copies to boost your track in the Beatport charts.</p>
+                <span class="section-badge" data-i18n="pricing_badge">PRICING</span>
+                <h2 class="section-title" data-i18n="pricing_title">Choose your pack</h2>
+                <p class="section-desc" data-i18n="pricing_desc">Select the number of copies to boost your track in the Beatport charts.</p>
             </div>
             <div class="pricing-grid">
-                <div class="product-card">
+                <div class="product-card" data-pack="50">
                     <div class="product-card-image">
                         <img src="https://i.ibb.co/5hkHzDBn/50.png" alt="Beatport - 50 Copies">
                     </div>
                     <div class="product-card-price">$210</div>
-                    <a href="https://buy.stripe.com/test_fZu3cw2m4aBG8Di9vy2VG00" target="_blank" rel="noopener" class="product-card-btn">Buy Now</a>
+                    <button class="product-card-btn pack-select-btn" data-pack="50" data-i18n="choose_btn">Choose</button>
                 </div>
-                <div class="product-card">
+                <div class="product-card" data-pack="100">
                     <div class="product-card-image">
                         <img src="https://i.ibb.co/wh8prmpG/100.png" alt="Beatport - 100 Copies">
                     </div>
                     <div class="product-card-price">$380</div>
-                    <a href="https://buy.stripe.com/test_dRm9AU2m4aBG2eU2362VG01" target="_blank" rel="noopener" class="product-card-btn">Buy Now</a>
+                    <button class="product-card-btn pack-select-btn" data-pack="100" data-i18n="choose_btn">Choose</button>
                 </div>
-                <div class="product-card popular">
-                    <div class="popular-badge">POPULAR</div>
+                <div class="product-card popular" data-pack="200">
+                    <div class="popular-badge" data-i18n="popular_badge">POPULAR</div>
                     <div class="product-card-image">
                         <img src="https://i.ibb.co/yBbwTBMp/200.png" alt="Beatport - 200 Copies">
                     </div>
                     <div class="product-card-price">$720</div>
-                    <a href="https://buy.stripe.com/test_8x2eVe3q8dNS7zegY02VG02" target="_blank" rel="noopener" class="product-card-btn">Buy Now</a>
+                    <button class="product-card-btn pack-select-btn" data-pack="200" data-i18n="choose_btn">Choose</button>
                 </div>
-                <div class="product-card">
+                <div class="product-card" data-pack="500">
                     <div class="product-card-image">
                         <img src="https://i.ibb.co/5hptmm29/500.png" alt="Beatport - 500 Copies">
                     </div>
                     <div class="product-card-price">$1,650</div>
-                    <a href="https://buy.stripe.com/test_eVq6oIe4Mh04g5K4be2VG03" target="_blank" rel="noopener" class="product-card-btn">Buy Now</a>
+                    <button class="product-card-btn pack-select-btn" data-pack="500" data-i18n="choose_btn">Choose</button>
                 </div>
-                <div class="product-card">
+                <div class="product-card" data-pack="1000">
                     <div class="product-card-image">
                         <img src="https://i.ibb.co/tTT3cwSV/1000.png" alt="Beatport - 1,000 Copies">
                     </div>
                     <div class="product-card-price">$3,000</div>
-                    <a href="https://buy.stripe.com/test_00wdRa6Ckh04aLq5fi2VG04" target="_blank" rel="noopener" class="product-card-btn">Buy Now</a>
+                    <button class="product-card-btn pack-select-btn" data-pack="1000" data-i18n="choose_btn">Choose</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Campaign Setup Section (hidden by default) -->
+    <section class="campaign-setup-section" id="campaignSetup" style="display:none;">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge" data-i18n="campaign_badge">STEP 3</span>
+                <h2 class="section-title" data-i18n="campaign_title">Campaign Setup</h2>
+                <p class="section-desc" data-i18n="campaign_desc">Configure your campaign before launching.</p>
+            </div>
+            <div class="campaign-setup-card">
+                <!-- Selected pack summary -->
+                <div class="campaign-summary" id="campaignSummary"></div>
+
+                <div class="campaign-form">
+                    <!-- Genre confirmation -->
+                    <div class="campaign-field">
+                        <label class="campaign-label" data-i18n="campaign_genre_label">Genre</label>
+                        <p class="campaign-field-hint" data-i18n="campaign_genre_hint">Confirm the genre detected for your track.</p>
+                        <div class="campaign-genre-display" id="campaignGenre">
+                            <span class="campaign-genre-tag" id="campaignGenreTag">--</span>
+                            <button class="campaign-genre-confirm" id="genreConfirmBtn" data-i18n="campaign_confirm">Confirm</button>
+                        </div>
+                    </div>
+
+                    <!-- Similar artists -->
+                    <div class="campaign-field">
+                        <label class="campaign-label" data-i18n="campaign_artists_label">Similar Artists</label>
+                        <p class="campaign-field-hint" data-i18n="campaign_artists_hint">Enter 3 artists with a similar style to your track.</p>
+                        <input type="text" class="campaign-input" id="similarArtists" data-i18n-placeholder="campaign_artists_placeholder" placeholder="Example: Adam Port, Black Coffee, Keinemusik">
+                    </div>
+
+                    <!-- Release status -->
+                    <div class="campaign-field">
+                        <label class="campaign-label" data-i18n="campaign_release_label">Release Status</label>
+                        <p class="campaign-field-hint" data-i18n="campaign_release_hint">Is your track already released or in pre-order?</p>
+                        <div class="campaign-release-options">
+                            <label class="campaign-radio">
+                                <input type="radio" name="releaseStatus" value="released" checked>
+                                <span class="campaign-radio-mark"></span>
+                                <span data-i18n="campaign_released">Already Released</span>
+                            </label>
+                            <label class="campaign-radio">
+                                <input type="radio" name="releaseStatus" value="preorder">
+                                <span class="campaign-radio-mark"></span>
+                                <span data-i18n="campaign_preorder">Pre-Order</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary btn-large campaign-launch-btn" id="launchCampaignBtn" data-i18n="campaign_launch_btn">Run my campaign</button>
                 </div>
             </div>
         </div>
@@ -138,8 +220,8 @@
     <section class="how-section" id="how-it-works">
         <div class="container">
             <div class="section-header">
-                <span class="section-badge">OUR PROCESS</span>
-                <h2 class="section-title">How Beatpush Promotion <span class="text-gradient">Works</span></h2>
+                <span class="section-badge" data-i18n="how_badge">OUR PROCESS</span>
+                <h2 class="section-title" data-i18n-html="how_title">How Beatpush Promotion <span class="text-gradient">Works</span></h2>
             </div>
             <div class="steps-timeline">
                 <div class="step-card-v2">
@@ -148,9 +230,9 @@
                         <div class="step-line"></div>
                     </div>
                     <div class="step-content">
-                        <h3 class="step-title-v2">Submit Your Beatport Track</h3>
-                        <p class="step-desc-v2">Send us the Beatport track link of your release.</p>
-                        <p class="step-detail">Our team quickly analyzes the track and confirms the campaign feasibility.</p>
+                        <h3 class="step-title-v2" data-i18n="how_step1_title">Submit Your Beatport Track</h3>
+                        <p class="step-desc-v2" data-i18n="how_step1_desc">Find & select your Beatport track using our search bar.</p>
+                        <p class="step-detail" data-i18n="how_step1_detail">Our algorithm analyzes the track and confirms the campaign feasibility.</p>
                     </div>
                 </div>
                 <div class="step-card-v2">
@@ -159,15 +241,15 @@
                         <div class="step-line"></div>
                     </div>
                     <div class="step-content">
-                        <h3 class="step-title-v2">Campaign Strategy Setup</h3>
-                        <p class="step-desc-v2">We plan the promotion based on:</p>
+                        <h3 class="step-title-v2" data-i18n="how_step2_title">Campaign Strategy Setup</h3>
+                        <p class="step-desc-v2" data-i18n="how_step2_desc">We plan the promotion based on:</p>
                         <ul class="step-list">
-                            <li>Genre competition</li>
-                            <li>Release timing</li>
-                            <li>Beatport chart dynamics</li>
-                            <li>Release visibility potential</li>
+                            <li data-i18n="how_step2_li1">Genre competition</li>
+                            <li data-i18n="how_step2_li2">Release timing</li>
+                            <li data-i18n="how_step2_li3">Beatport chart dynamics</li>
+                            <li data-i18n="how_step2_li4">Release visibility potential</li>
                         </ul>
-                        <p class="step-detail">Each campaign is structured to maximize momentum during the key release window.</p>
+                        <p class="step-detail" data-i18n="how_step2_detail">Each campaign is structured to maximize momentum during the key release window.</p>
                     </div>
                 </div>
                 <div class="step-card-v2">
@@ -176,9 +258,9 @@
                         <div class="step-line"></div>
                     </div>
                     <div class="step-content">
-                        <h3 class="step-title-v2">Campaign Launch</h3>
-                        <p class="step-desc-v2">Your promotion campaign begins.</p>
-                        <p class="step-detail">Our team monitors the campaign daily and tracks the chart activity and visibility of the release.</p>
+                        <h3 class="step-title-v2" data-i18n="how_step3_title">Campaign Launch</h3>
+                        <p class="step-desc-v2" data-i18n="how_step3_desc">Your promotion campaign begins.</p>
+                        <p class="step-detail" data-i18n="how_step3_detail">Our team monitors the campaign daily and tracks the chart activity and visibility of the release.</p>
                     </div>
                 </div>
                 <div class="step-card-v2">
@@ -186,69 +268,49 @@
                         <div class="step-dot">4</div>
                     </div>
                     <div class="step-content">
-                        <h3 class="step-title-v2">Chart Monitoring</h3>
-                        <p class="step-desc-v2">During the promotion, we monitor:</p>
+                        <h3 class="step-title-v2" data-i18n="how_step4_title">Chart Monitoring</h3>
+                        <p class="step-desc-v2" data-i18n="how_step4_desc">During the promotion, we monitor:</p>
                         <ul class="step-list">
-                            <li>Chart movements</li>
-                            <li>Visibility growth</li>
-                            <li>Campaign performance</li>
+                            <li data-i18n="how_step4_li1">Chart movements</li>
+                            <li data-i18n="how_step4_li2">Visibility growth</li>
+                            <li data-i18n="how_step4_li3">Campaign performance</li>
                         </ul>
-                        <p class="step-detail">Clients receive updates on the campaign progress.</p>
+                        <p class="step-detail" data-i18n="how_step4_detail">Clients receive updates on the campaign progress.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Social Proof -->
-    <section class="social-proof">
+    <!-- Why Choose Us Section -->
+    <section class="why-choose-section" id="why-choose">
         <div class="container">
             <div class="section-header">
-                <span class="section-badge">TESTIMONIALS</span>
-                <h2 class="section-title">They trust us</h2>
+                <span class="section-badge" data-i18n="why_badge">WHY BEATPUSH</span>
+                <h2 class="section-title" data-i18n="why_title">Why Choose BeatPush to Promote Your Music</h2>
+                <p class="section-desc" data-i18n="why_subtitle">Build consistent growth</p>
             </div>
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <div class="testimonial-stars">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <div class="why-choose-grid">
+                <div class="why-choose-card">
+                    <div class="why-choose-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
                     </div>
-                    <p class="testimonial-text">"My track went from nowhere to Top 30 Techno in 3 days. Incredible and fast service."</p>
-                    <div class="testimonial-author">
-                        <span class="testimonial-name">DJ Marco K.</span>
-                        <span class="testimonial-role">Techno Producer</span>
-                    </div>
+                    <h3 class="why-choose-card-title" data-i18n="why_card1_title">Real Beatport Promotion</h3>
+                    <p class="why-choose-card-text" data-i18n="why_card1_text">Get your track strategically pushed inside the Beatport ecosystem by experienced industry insiders. Our campaigns are designed to generate real purchases that influence the charts, helping your track gain visibility where it matters most.</p>
                 </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-stars">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <div class="why-choose-card">
+                    <div class="why-choose-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
                     </div>
-                    <p class="testimonial-text">"We use BeatPush for all our releases. The value for money is unbeatable. Our artists love it."</p>
-                    <div class="testimonial-author">
-                        <span class="testimonial-name">Sarah L.</span>
-                        <span class="testimonial-role">Label Manager - Deep House</span>
-                    </div>
+                    <h3 class="why-choose-card-title" data-i18n="why_card2_title">Transparent & Measurable Impact</h3>
+                    <p class="why-choose-card-text" data-i18n="why_card2_text">Every promotion is structured to create tangible chart movement. Our team understands how Beatport charts behave and deploys campaigns in a precise and strategic way to maximize impact.</p>
                 </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-stars">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <div class="why-choose-card">
+                    <div class="why-choose-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
                     </div>
-                    <p class="testimonial-text">"First EP and straight into the Top 100. BeatPush was a game changer for my career."</p>
-                    <div class="testimonial-author">
-                        <span class="testimonial-name">Alex T.</span>
-                        <span class="testimonial-role">Melodic Techno Producer</span>
-                    </div>
+                    <h3 class="why-choose-card-title" data-i18n="why_card3_title">100% Organic & Bot-Free</h3>
+                    <p class="why-choose-card-text" data-i18n="why_card3_text">We strictly operate without bots or artificial traffic. All campaigns rely on real buyers and organic activity, ensuring safe and credible promotion that protects your artist profile and your label reputation.</p>
                 </div>
             </div>
         </div>
@@ -259,43 +321,43 @@
         <div class="container">
             <div class="section-header">
                 <span class="section-badge">FAQ</span>
-                <h2 class="section-title">Frequently asked questions</h2>
+                <h2 class="section-title" data-i18n="faq_title">Frequently asked questions</h2>
             </div>
             <div class="faq-list">
                 <div class="faq-item">
                     <button class="faq-question" onclick="toggleFaq(this)">
-                        <span>How long does a campaign take?</span>
+                        <span data-i18n="faq1_q">How long does a campaign take?</span>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
                     <div class="faq-answer">
-                        <p>Most promotions are delivered within 2–10 days, depending on genre competition and chart activity.</p>
+                        <p data-i18n="faq1_a">Most promotions are delivered within 2–10 days, depending on genre competition and chart activity.</p>
                     </div>
                 </div>
                 <div class="faq-item">
                     <button class="faq-question" onclick="toggleFaq(this)">
-                        <span>Do you use bots?</span>
+                        <span data-i18n="faq2_q">Do you use bots?</span>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
                     <div class="faq-answer">
-                        <p>No. Beatpush campaigns rely on real promotion strategies and industry experience.</p>
+                        <p data-i18n="faq2_a">No. Beatpush campaigns rely on real promotion strategies and industry experience.</p>
                     </div>
                 </div>
                 <div class="faq-item">
                     <button class="faq-question" onclick="toggleFaq(this)">
-                        <span>Can new artists use the service?</span>
+                        <span data-i18n="faq3_q">Can new artists use the service?</span>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
                     <div class="faq-answer">
-                        <p>Yes. We work with independent artists, labels and distributors.</p>
+                        <p data-i18n="faq3_a">Yes. We work with independent artists, labels and distributors.</p>
                     </div>
                 </div>
                 <div class="faq-item">
                     <button class="faq-question" onclick="toggleFaq(this)">
-                        <span>Do exclusive releases perform better?</span>
+                        <span data-i18n="faq4_q">Do exclusive releases perform better?</span>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
                     <div class="faq-answer">
-                        <p>In most cases yes, because all activity is concentrated on a single platform, increasing chart visibility.</p>
+                        <p data-i18n="faq4_a">In most cases yes, because all activity is concentrated on a single platform, increasing chart visibility.</p>
                     </div>
                 </div>
             </div>
@@ -306,9 +368,9 @@
     <section class="cta-section">
         <div class="container">
             <div class="cta-box">
-                <h2 class="cta-title">Ready to dominate the charts?</h2>
-                <p class="cta-desc">Join hundreds of artists using BeatPush to boost their career.</p>
-                <a href="#search" class="btn-primary btn-large">GET STARTED NOW</a>
+                <h2 class="cta-title" data-i18n="cta_title">Ready to dominate the charts?</h2>
+                <p class="cta-desc" data-i18n="cta_desc">Join hundreds of artists using BeatPush to boost their career.</p>
+                <a href="#search" class="btn-primary btn-large" data-i18n="cta_btn">GET STARTED NOW</a>
             </div>
         </div>
     </section>
@@ -319,14 +381,14 @@
             <div class="footer-inner">
                 <div class="footer-brand">
                     <img src="https://i.ibb.co/nMjbdTkQ/White-and-Black-Modern-Initial-B-Logo-5000-x-5000-px-1.png" alt="BeatPush" class="footer-logo-img">
-                    <p class="footer-desc">The #1 music promotion platform on Beatport.</p>
+                    <p class="footer-desc" data-i18n="footer_desc">The #1 music promotion platform on Beatport.</p>
                 </div>
                 <div class="footer-links">
                     <div class="footer-col">
-                        <h4>Navigation</h4>
-                        <a href="#search">Boost my track</a>
-                        <a href="#pricing">Pricing</a>
-                        <a href="#how-it-works">How it works</a>
+                        <h4 data-i18n="footer_nav">Navigation</h4>
+                        <a href="#search" data-i18n="footer_boost">Boost my track</a>
+                        <a href="#pricing" data-i18n="nav_pricing">Pricing</a>
+                        <a href="#how-it-works" data-i18n="footer_how">How it works</a>
                     </div>
                     <div class="footer-col">
                         <h4>Support</h4>
@@ -336,7 +398,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 BeatPush. All rights reserved.</p>
+                <p data-i18n-html="footer_copy">&copy; 2026 BeatPush. All rights reserved.</p>
             </div>
         </div>
     </footer>
