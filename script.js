@@ -1028,12 +1028,6 @@ function showToast(message, scrollToSearch) {
                 <img src="https://i.ibb.co/nMjbdTkQ/White-and-Black-Modern-Initial-B-Logo-5000-x-5000-px-1.png" alt="BeatPush" class="toast-logo">
             </div>
             <p class="toast-msg">${message}</p>
-            <ul class="toast-features">
-                <li>No Bots. No Artificial Traffic.</li>
-                <li>Custom Campaign Scheduling</li>
-                <li>Chart Strategy & Insider Guidance</li>
-                <li>Money-back guarantee</li>
-            </ul>
             <button class="toast-close">OK</button>
         </div>
     `;
