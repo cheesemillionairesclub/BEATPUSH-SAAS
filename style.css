@@ -915,6 +915,26 @@ body {
     margin-bottom: 36px;
 }
 
+.campaign-summary-track {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.campaign-summary-art {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1px solid var(--white-10);
+}
+
+.campaign-summary-details {
+    flex: 1;
+    min-width: 0;
+}
+
 .campaign-summary-row {
     display: flex;
     align-items: center;
@@ -1443,6 +1463,18 @@ body {
 .footer-bottom p {
     font-size: 0.75rem;
     color: var(--white-30);
+}
+
+/* ===== Field Highlight ===== */
+.field-highlight {
+    animation: fieldPulse 0.6s ease-out;
+    box-shadow: 0 0 0 3px rgba(255, 82, 82, 0.4) !important;
+    border-color: #ff5252 !important;
+}
+
+@keyframes fieldPulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.6); }
+    100% { box-shadow: 0 0 0 3px rgba(255, 82, 82, 0.4); }
 }
 
 /* ===== Toast Popup ===== */

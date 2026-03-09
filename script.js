@@ -932,14 +932,20 @@ function showCampaignSetup(pack) {
     if (summary && selectedTrack) {
         const safeTitle = escapeHtml(selectedTrack.title);
         const safeArtist = escapeHtml(selectedTrack.artist);
+        const artworkUrl = selectedTrack.artwork ? escapeHtml(selectedTrack.artwork.replace('200x200', '500x500')) : '';
         summary.innerHTML = `
-            <div class="campaign-summary-row">
-                <span class="campaign-summary-label">${t.campaign_summary_track || 'Track'}:</span>
-                <span class="campaign-summary-value">${safeTitle} - ${safeArtist}</span>
-            </div>
-            <div class="campaign-summary-row">
-                <span class="campaign-summary-label">${t.campaign_summary_pack || 'Package'}:</span>
-                <span class="campaign-summary-value">${pack} ${t.campaign_summary_copies || 'copies'}</span>
+            <div class="campaign-summary-track">
+                ${artworkUrl ? `<img src="${artworkUrl}" alt="${safeTitle}" class="campaign-summary-art">` : ''}
+                <div class="campaign-summary-details">
+                    <div class="campaign-summary-row">
+                        <span class="campaign-summary-label">${t.campaign_summary_track || 'Track'}:</span>
+                        <span class="campaign-summary-value">${safeTitle} - ${safeArtist}</span>
+                    </div>
+                    <div class="campaign-summary-row">
+                        <span class="campaign-summary-label">${t.campaign_summary_pack || 'Package'}:</span>
+                        <span class="campaign-summary-value">${pack} ${t.campaign_summary_copies || 'copies'}</span>
+                    </div>
+                </div>
             </div>
         `;
     }
@@ -984,19 +990,29 @@ document.getElementById('launchCampaignBtn').addEventListener('click', function(
     // Validate genre confirmed
     if (!genreConfirmed) {
         showToast(t.campaign_validate_genre || 'Please confirm the genre of your track before launching.');
+        highlightField(document.getElementById('genreConfirmBtn'));
         return;
     }
 
     // Validate at least 1 similar artist
-    const artistsInput = document.getElementById('similarArtists').value.trim();
+    const artistsField = document.getElementById('similarArtists');
+    const artistsInput = artistsField.value.trim();
     if (!artistsInput) {
         showToast(t.campaign_validate_artists || 'Please enter at least 1 similar artist.');
+        highlightField(artistsField);
         return;
     }
 
     // Redirect to Stripe
     window.open(STRIPE_LINKS[selectedPack], '_blank');
 });
+
+// ===== Field Highlight =====
+function highlightField(el) {
+    if (!el) return;
+    el.classList.add('field-highlight');
+    setTimeout(() => el.classList.remove('field-highlight'), 2000);
+}
 
 // ===== Toast Popup =====
 function showToast(message) {
