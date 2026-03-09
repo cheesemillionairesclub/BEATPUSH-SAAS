@@ -326,7 +326,50 @@ const translations = {
     }
 };
 
+// French default texts (for switching back to FR)
+const frDefaults = {
+    page_title: 'BeatPush - Promotion Beatport | Boostez vos ventes',
+    page_desc: 'Boostez vos tracks sur Beatport avec BeatPush. Achetez des copies pour propulser votre musique dans les charts.',
+    nav_how: 'COMMENT CA MARCHE', nav_pricing: 'TARIFS', nav_cta: 'BOOSTER MA TRACK',
+    hero_badge: 'PROMOTION BEATPORT #1',
+    hero_title: 'Propulsez votre musique<br>dans les <span class="text-gradient">Charts Beatport</span>',
+    hero_subtitle: 'Boostez vos ventes sur Beatport et grimpez dans les classements. Service fiable, rapide et discret utilise par des artistes et labels professionnels.',
+    stat_tracks: 'Tracks boostees', stat_artists: 'Artistes satisfaits', stat_delivery: 'Livraison rapide',
+    trust_payment: 'Paiement securise', trust_delivery: 'Livraison sous 24-72h', trust_confidential: '100% confidentiel', trust_support: 'Support 7j/7',
+    search_badge: 'ETAPE 1', search_title: 'Trouvez votre track',
+    search_desc: 'Recherchez votre morceau sur Beatport et selectionnez-le pour commencer la promotion.',
+    search_placeholder: 'Nom de track, artiste ou URL Beatport...', search_btn: 'RECHERCHER',
+    search_empty: 'Aucun titre trouve sur Beatport. Essayez un autre terme.',
+    pricing_badge: 'ETAPE 2', pricing_title: 'Choisissez votre pack',
+    pricing_desc: 'Selectionnez le nombre de copies pour booster votre track dans les charts.',
+    change_track: 'Changer', select_btn: 'SELECTIONNER', popular_badge: 'POPULAIRE',
+    pack_starter_f1: 'Livraison sous 72h', pack_starter_f2: 'Boost dans le Top 100 genre', pack_starter_f3: 'Support par email',
+    pack_pro_f1: 'Livraison sous 48h', pack_pro_f2: 'Boost dans le Top 50 genre', pack_pro_f3: 'Support prioritaire', pack_pro_f4: 'Rapport de progression',
+    pack_elite_f1: 'Livraison sous 24h', pack_elite_f2: 'Boost dans le Top 10 genre', pack_elite_f3: 'Support VIP 24/7', pack_elite_f4: 'Rapport detaille',
+    pack_label_f1: 'Livraison express', pack_label_f2: 'Boost dans le Top 10 overall', pack_label_f3: 'Manager dedie', pack_label_f4: 'Garantie de resultats',
+    how_badge: 'SIMPLE & EFFICACE', how_title: 'Comment ca marche ?',
+    how_desc: 'En 3 etapes simples, boostez votre track dans les charts Beatport.',
+    step1_title: 'Recherchez votre track', step1_desc: 'Entrez le nom de votre morceau ou artiste et selectionnez votre track depuis notre base de donnees Beatport.',
+    step2_title: 'Choisissez votre pack', step2_desc: 'Selectionnez le nombre de copies que vous souhaitez acheter selon vos objectifs de classement.',
+    step3_title: 'Regardez votre track monter', step3_desc: 'Apres paiement, votre promotion demarre immediatement. Suivez vos resultats en temps reel.',
+    testimonials_badge: 'TEMOIGNAGES', testimonials_title: 'Ils nous font confiance',
+    testimonial1_text: '"Ma track est passee de nulle part au Top 30 Techno en 3 jours. Service incroyable et rapide."', testimonial1_role: 'Producteur Techno',
+    testimonial2_text: '"On utilise BeatPush pour toutes nos sorties. Le rapport qualite-prix est imbattable. Nos artistes adorent."', testimonial2_role: 'Label Manager - Deep House',
+    testimonial3_text: '"Premier EP et directement dans le Top 100. BeatPush a change la donne pour ma carriere."', testimonial3_role: 'Producteur Melodic Techno',
+    faq_title: 'Questions frequentes',
+    faq1_q: 'Comment fonctionne la promotion Beatport ?', faq1_a: 'Nous utilisons un reseau de DJs et de passionnes de musique electronique pour generer des achats reels de votre track sur Beatport. Cela permet d\'augmenter votre classement dans les charts de maniere organique.',
+    faq2_q: 'En combien de temps vais-je voir les resultats ?', faq2_a: 'Les resultats sont visibles dans les 24 a 72 heures suivant votre commande, selon le pack choisi. Le pack Elite et Label beneficient d\'un traitement prioritaire.',
+    faq3_q: 'Est-ce que c\'est sans risque pour mon compte ?', faq3_a: 'Oui, notre methode est 100% sure. Nous generons de vrais achats par de vrais utilisateurs, ce qui est completement conforme aux conditions d\'utilisation de Beatport.',
+    faq4_q: 'Quels genres musicaux sont supportes ?', faq4_a: 'Tous les genres disponibles sur Beatport sont supportes : Techno, House, Trance, Drum & Bass, Melodic House & Techno, Deep House, et bien d\'autres.',
+    faq5_q: 'Quels moyens de paiement acceptez-vous ?', faq5_a: 'Nous acceptons toutes les cartes bancaires (Visa, Mastercard, Amex) via notre plateforme de paiement securisee Stripe. Apple Pay et Google Pay sont egalement disponibles.',
+    cta_title: 'Pret a dominer les charts ?', cta_desc: 'Rejoignez des centaines d\'artistes qui utilisent BeatPush pour booster leur carriere.', cta_btn: 'COMMENCER MAINTENANT',
+    footer_desc: 'La plateforme #1 de promotion musicale sur Beatport.', footer_nav: 'Navigation', footer_boost: 'Booster ma track', footer_how: 'Comment ca marche',
+    footer_copy: '&copy; 2026 BeatPush. Tous droits reserves.',
+};
+
 function detectLanguage() {
+    const saved = localStorage.getItem('beatpush_lang');
+    if (saved && (saved === 'fr' || translations[saved])) return saved;
     const lang = (navigator.language || navigator.userLanguage || 'fr').toLowerCase();
     if (lang.startsWith('fr')) return 'fr';
     if (lang.startsWith('pt')) return 'pt';
@@ -335,12 +378,11 @@ function detectLanguage() {
     return 'en';
 }
 
-function applyTranslations() {
-    const lang = detectLanguage();
-    if (lang === 'fr') return; // French is the default in HTML
+function applyTranslations(lang) {
+    if (!lang) lang = detectLanguage();
 
     document.documentElement.lang = lang;
-    const t = translations[lang] || translations.en;
+    const t = lang === 'fr' ? frDefaults : (translations[lang] || translations.en);
 
     // data-i18n: textContent
     document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -348,30 +390,62 @@ function applyTranslations() {
         if (t[key]) el.textContent = t[key];
     });
 
-    // data-i18n-html: innerHTML (for <br>, <span>, &copy; etc.)
+    // data-i18n-html: innerHTML
     document.querySelectorAll('[data-i18n-html]').forEach(el => {
         const key = el.getAttribute('data-i18n-html');
         if (t[key]) el.innerHTML = t[key];
     });
 
-    // data-i18n-placeholder: placeholder attribute
+    // data-i18n-placeholder
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
         const key = el.getAttribute('data-i18n-placeholder');
         if (t[key]) el.placeholder = t[key];
     });
 
-    // data-i18n-content: content attribute (meta tags)
+    // data-i18n-content: meta tags
     document.querySelectorAll('[data-i18n-content]').forEach(el => {
         const key = el.getAttribute('data-i18n-content');
         if (t[key]) el.setAttribute('content', t[key]);
     });
 
-    // Update page title
     if (t.page_title) document.title = t.page_title;
+
+    // Update lang selector UI
+    const currentLangEl = document.getElementById('currentLang');
+    if (currentLangEl) currentLangEl.textContent = lang.toUpperCase();
+    document.querySelectorAll('.lang-option').forEach(opt => {
+        opt.classList.toggle('active', opt.dataset.lang === lang);
+    });
 }
 
-// Apply translations as soon as possible
+// Apply on load
 applyTranslations();
+
+// Language selector logic
+document.addEventListener('click', (e) => {
+    const dropdown = document.getElementById('langDropdown');
+    const langBtn = document.getElementById('langBtn');
+
+    // Toggle dropdown
+    if (langBtn && langBtn.contains(e.target)) {
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
+        return;
+    }
+
+    // Select language
+    const option = e.target.closest('.lang-option');
+    if (option) {
+        const lang = option.dataset.lang;
+        localStorage.setItem('beatpush_lang', lang);
+        applyTranslations(lang);
+        dropdown.classList.remove('open');
+        return;
+    }
+
+    // Close dropdown on outside click
+    if (dropdown) dropdown.classList.remove('open');
+});
 
 // ===== DOM Elements =====
 const menuToggle = document.querySelector('.menu-toggle');
