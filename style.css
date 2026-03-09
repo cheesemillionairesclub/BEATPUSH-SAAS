@@ -368,6 +368,7 @@ body {
     font-size: 0.88rem;
     color: var(--white-70);
     font-weight: 500;
+    white-space: nowrap;
 }
 
 .hero-feature-icon {
@@ -1530,30 +1531,6 @@ body {
     border-radius: 50%;
 }
 
-.toast-features {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 24px 0;
-    text-align: left;
-}
-
-.toast-features li {
-    font-size: 0.85rem;
-    color: var(--white-70);
-    padding: 6px 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
-}
-
-.toast-features li::before {
-    content: '✓';
-    color: var(--green-primary);
-    font-weight: 700;
-    flex-shrink: 0;
-}
-
 .toast-msg {
     font-size: 0.95rem;
     color: var(--white-70);
@@ -1667,8 +1644,11 @@ body {
     }
 
     .hero-features {
-        flex-wrap: wrap;
-        gap: 16px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        width: fit-content;
+        margin: 0 auto;
     }
 
     .step-card-v2 {
@@ -1731,14 +1711,6 @@ body {
         gap: 16px;
     }
 
-    .toast-box {
-        padding: 28px 20px;
-        max-width: 340px;
-    }
-
-    .toast-features li {
-        font-size: 0.75rem;
-    }
 }
 
 @media (max-width: 480px) {
@@ -1752,12 +1724,4 @@ body {
         gap: 28px;
     }
 
-    .toast-box {
-        padding: 24px 16px;
-        max-width: 300px;
-    }
-
-    .toast-features li {
-        font-size: 0.7rem;
-    }
 }
