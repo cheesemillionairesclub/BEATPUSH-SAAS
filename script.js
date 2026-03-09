@@ -2,6 +2,133 @@
 const SEARCH_API_URL = '/api/search';
 const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_eVq28tdkwgOre3xbwS0RG00';
 
+// ===== i18n - Language Detection & Translations =====
+const translations = {
+    en: {
+        page_title: 'BeatPush - Beatport Promotion | Boost Your Sales',
+        page_desc: 'Boost your tracks on Beatport with BeatPush. Buy copies to propel your music into the charts.',
+        nav_how: 'HOW IT WORKS',
+        nav_pricing: 'PRICING',
+        nav_cta: 'BOOST MY TRACK',
+        hero_badge: 'BEATPORT PROMOTION #1',
+        hero_title: 'Propel your music<br>into the <span class="text-gradient">Beatport Charts</span>',
+        hero_subtitle: 'Boost your sales on Beatport and climb the rankings. Reliable, fast, and discreet service used by professional artists and labels.',
+        stat_tracks: 'Tracks boosted',
+        stat_artists: 'Satisfied artists',
+        stat_delivery: 'Fast delivery',
+        trust_payment: 'Secure payment',
+        trust_delivery: 'Delivery within 24-72h',
+        trust_confidential: '100% confidential',
+        trust_support: 'Support 7 days a week',
+        search_badge: 'STEP 1',
+        search_title: 'Find your track',
+        search_desc: 'Search for your track on Beatport and select it to start the promotion.',
+        search_placeholder: 'Track name, artist or Beatport URL...',
+        search_btn: 'SEARCH',
+        search_empty: 'No tracks found on Beatport. Try another search term.',
+        pricing_badge: 'STEP 2',
+        pricing_title: 'Choose your pack',
+        pricing_desc: 'Select the number of copies to boost your track in the charts.',
+        change_track: 'Change',
+        select_btn: 'SELECT',
+        popular_badge: 'POPULAR',
+        pack_starter_f1: 'Delivery within 72h',
+        pack_starter_f2: 'Boost into Top 100 genre',
+        pack_starter_f3: 'Email support',
+        pack_pro_f1: 'Delivery within 48h',
+        pack_pro_f2: 'Boost into Top 50 genre',
+        pack_pro_f3: 'Priority support',
+        pack_pro_f4: 'Progress report',
+        pack_elite_f1: 'Delivery within 24h',
+        pack_elite_f2: 'Boost into Top 10 genre',
+        pack_elite_f3: 'VIP support 24/7',
+        pack_elite_f4: 'Detailed report',
+        pack_label_f1: 'Express delivery',
+        pack_label_f2: 'Boost into Top 10 overall',
+        pack_label_f3: 'Dedicated manager',
+        pack_label_f4: 'Results guarantee',
+        how_badge: 'SIMPLE & EFFECTIVE',
+        how_title: 'How does it work?',
+        how_desc: 'In 3 simple steps, boost your track in the Beatport charts.',
+        step1_title: 'Search for your track',
+        step1_desc: 'Enter your track name or artist and select your track from our Beatport database.',
+        step2_title: 'Choose your pack',
+        step2_desc: 'Select the number of copies you want to purchase based on your ranking goals.',
+        step3_title: 'Watch your track rise',
+        step3_desc: 'After payment, your promotion starts immediately. Track your results in real time.',
+        testimonials_badge: 'TESTIMONIALS',
+        testimonials_title: 'They trust us',
+        testimonial1_text: '"My track went from nowhere to Top 30 Techno in 3 days. Incredible and fast service."',
+        testimonial1_role: 'Techno Producer',
+        testimonial2_text: '"We use BeatPush for all our releases. The value for money is unbeatable. Our artists love it."',
+        testimonial2_role: 'Label Manager - Deep House',
+        testimonial3_text: '"First EP and straight into the Top 100. BeatPush was a game changer for my career."',
+        testimonial3_role: 'Melodic Techno Producer',
+        faq_title: 'Frequently asked questions',
+        faq1_q: 'How does Beatport promotion work?',
+        faq1_a: 'We use a network of DJs and electronic music enthusiasts to generate real purchases of your track on Beatport. This helps increase your chart ranking organically.',
+        faq2_q: 'How quickly will I see results?',
+        faq2_a: 'Results are visible within 24 to 72 hours after your order, depending on the pack chosen. Elite and Label packs benefit from priority processing.',
+        faq3_q: 'Is it risk-free for my account?',
+        faq3_a: 'Yes, our method is 100% safe. We generate real purchases from real users, which is fully compliant with Beatport\'s terms of service.',
+        faq4_q: 'Which music genres are supported?',
+        faq4_a: 'All genres available on Beatport are supported: Techno, House, Trance, Drum & Bass, Melodic House & Techno, Deep House, and many more.',
+        faq5_q: 'What payment methods do you accept?',
+        faq5_a: 'We accept all major credit cards (Visa, Mastercard, Amex) via our secure Stripe payment platform. Apple Pay and Google Pay are also available.',
+        cta_title: 'Ready to dominate the charts?',
+        cta_desc: 'Join hundreds of artists using BeatPush to boost their career.',
+        cta_btn: 'GET STARTED NOW',
+        footer_desc: 'The #1 music promotion platform on Beatport.',
+        footer_nav: 'Navigation',
+        footer_boost: 'Boost my track',
+        footer_how: 'How it works',
+        footer_copy: '&copy; 2026 BeatPush. All rights reserved.',
+    }
+};
+
+function detectLanguage() {
+    const lang = navigator.language || navigator.userLanguage || 'fr';
+    return lang.startsWith('fr') ? 'fr' : 'en';
+}
+
+function applyTranslations() {
+    const lang = detectLanguage();
+    if (lang === 'fr') return; // French is the default in HTML
+
+    document.documentElement.lang = 'en';
+    const t = translations.en;
+
+    // data-i18n: textContent
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) el.textContent = t[key];
+    });
+
+    // data-i18n-html: innerHTML (for <br>, <span>, &copy; etc.)
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        if (t[key]) el.innerHTML = t[key];
+    });
+
+    // data-i18n-placeholder: placeholder attribute
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (t[key]) el.placeholder = t[key];
+    });
+
+    // data-i18n-content: content attribute (meta tags)
+    document.querySelectorAll('[data-i18n-content]').forEach(el => {
+        const key = el.getAttribute('data-i18n-content');
+        if (t[key]) el.setAttribute('content', t[key]);
+    });
+
+    // Update page title
+    if (t.page_title) document.title = t.page_title;
+}
+
+// Apply translations as soon as possible
+applyTranslations();
+
 // ===== DOM Elements =====
 const menuToggle = document.querySelector('.menu-toggle');
 const navLinks = document.querySelector('.nav-links');
@@ -186,7 +313,8 @@ function displayResults(data, targetTrackId) {
     tracks = tracks.filter(item => item.title);
 
     if (!tracks.length) {
-        searchResults.innerHTML = '<div class="search-empty">Aucun titre trouve sur Beatport. Essayez un autre terme.</div>';
+        const emptyMsg = (detectLanguage() === 'en' && translations.en.search_empty) || 'Aucun titre trouve sur Beatport. Essayez un autre terme.';
+        searchResults.innerHTML = `<div class="search-empty">${emptyMsg}</div>`;
         return;
     }
 
