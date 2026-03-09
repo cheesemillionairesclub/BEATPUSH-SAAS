@@ -83,7 +83,7 @@ body {
 }
 
 .logo-img {
-    height: 210px;
+    height: 168px;
     width: auto;
     border-radius: 6px;
 }
@@ -744,6 +744,70 @@ body {
     background: rgba(255, 82, 82, 0.08);
     border-radius: var(--radius-sm);
     border: 1px solid rgba(255, 82, 82, 0.15);
+}
+
+/* ===== Selected Track Banner ===== */
+.selected-track-banner {
+    max-width: 600px;
+    margin: 0 auto 40px;
+}
+
+.selected-track {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--green-20);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 20px rgba(0, 230, 118, 0.08);
+}
+
+.selected-track-art {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.selected-track-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.selected-track-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--white);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.selected-track-artist {
+    font-size: 0.85rem;
+    color: var(--white-50);
+}
+
+.selected-track-change {
+    padding: 8px 20px;
+    background: var(--white-10);
+    border: 1px solid var(--white-15);
+    border-radius: 50px;
+    color: var(--white-70);
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+    flex-shrink: 0;
+}
+
+.selected-track-change:hover {
+    background: var(--white-15);
+    color: var(--white);
+    border-color: var(--white-30);
 }
 
 /* ===== Pricing Section ===== */

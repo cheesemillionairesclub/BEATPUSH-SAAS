@@ -693,9 +693,36 @@ function escapeHtml(text) {
 function selectTrack(title, artist, artwork, id) {
     selectedTrack = { title, artist, artwork, id };
 
-    // Scroll to pricing
+    // Show pricing section
     const pricingSection = document.getElementById('pricing');
     if (pricingSection) {
+        pricingSection.style.display = '';
+
+        // Show selected track banner
+        let banner = document.getElementById('selectedTrackBanner');
+        if (!banner) {
+            banner = document.createElement('div');
+            banner.id = 'selectedTrackBanner';
+            banner.className = 'selected-track-banner';
+            const sectionHeader = pricingSection.querySelector('.section-header');
+            sectionHeader.parentNode.insertBefore(banner, sectionHeader.nextSibling);
+        }
+
+        const safeTitle = escapeHtml(title);
+        const safeArtist = escapeHtml(artist);
+        const largeArtwork = artwork ? artwork.replace('200x200', '500x500') : '';
+
+        banner.innerHTML = `
+            <div class="selected-track">
+                ${largeArtwork ? `<img src="${escapeHtml(largeArtwork)}" alt="${safeTitle}" class="selected-track-art">` : ''}
+                <div class="selected-track-info">
+                    <div class="selected-track-title">${safeTitle}</div>
+                    <div class="selected-track-artist">${safeArtist}</div>
+                </div>
+                <button class="selected-track-change" onclick="changeTrack()">Change</button>
+            </div>
+        `;
+
         setTimeout(() => {
             pricingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
@@ -703,6 +730,23 @@ function selectTrack(title, artist, artwork, id) {
 
     // Clear search results
     searchResults.innerHTML = '';
+}
+
+function changeTrack() {
+    selectedTrack = null;
+    const pricingSection = document.getElementById('pricing');
+    if (pricingSection) {
+        pricingSection.style.display = 'none';
+    }
+    const banner = document.getElementById('selectedTrackBanner');
+    if (banner) banner.remove();
+
+    // Scroll back to search
+    const searchSection = document.getElementById('search');
+    if (searchSection) {
+        searchSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    searchInput.focus();
 }
 
 // ===== FAQ Toggle =====
