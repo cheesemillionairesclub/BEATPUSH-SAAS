@@ -1,6 +1,12 @@
 // ===== Configuration =====
 const SEARCH_API_URL = '/api/search';
-const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_eVq28tdkwgOre3xbwS0RG00';
+const STRIPE_LINKS = {
+    50: 'https://buy.stripe.com/test_fZu3cw2m4aBG8Di9vy2VG00',
+    100: 'https://buy.stripe.com/test_dRm9AU2m4aBG2eU2362VG01',
+    200: 'https://buy.stripe.com/test_8x2eVe3q8dNS7zegY02VG02',
+    500: 'https://buy.stripe.com/test_eVq6oIe4Mh04g5K4be2VG03',
+    1000: 'https://buy.stripe.com/test_00wdRa6Ckh04aLq5fi2VG04'
+};
 
 // ===== i18n - Language Detection & Translations =====
 const translations = {
@@ -370,11 +376,6 @@ const frDefaults = {
 function detectLanguage() {
     const saved = localStorage.getItem('beatpush_lang');
     if (saved && (saved === 'fr' || translations[saved])) return saved;
-    const lang = (navigator.language || navigator.userLanguage || 'fr').toLowerCase();
-    if (lang.startsWith('fr')) return 'fr';
-    if (lang.startsWith('pt')) return 'pt';
-    if (lang.startsWith('es')) return 'es';
-    if (lang.startsWith('de')) return 'de';
     return 'en';
 }
 
@@ -453,8 +454,6 @@ const navLinks = document.querySelector('.nav-links');
 const searchInput = document.getElementById('trackSearch');
 const searchBtn = document.getElementById('searchBtn');
 const searchResults = document.getElementById('searchResults');
-const pricingSection = document.getElementById('pricing');
-
 // ===== State =====
 let selectedTrack = null;
 let searchTimeout = null;
@@ -497,6 +496,19 @@ window.addEventListener('scroll', () => {
     }
 });
 
+// ===== Search Bar Glow Animation =====
+const searchWrap = document.getElementById('searchWrap');
+if (searchWrap) {
+    searchWrap.addEventListener('click', function(e) {
+        // Create a pulse ripple on click
+        this.style.animation = 'none';
+        void this.offsetWidth; // trigger reflow
+        this.style.animation = '';
+        this.classList.add('search-pulse');
+        setTimeout(() => this.classList.remove('search-pulse'), 600);
+    });
+}
+
 // ===== Scroll Animations =====
 const observerOptions = {
     threshold: 0.1,
@@ -511,7 +523,7 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-document.querySelectorAll('.step-card, .testimonial-card, .pricing-card, .section-header, .search-box, .cta-box, .faq-item').forEach(el => {
+document.querySelectorAll('.step-card, .testimonial-card, .product-card, .section-header, .search-box, .cta-box, .faq-item').forEach(el => {
     el.classList.add('fade-in');
     observer.observe(el);
 });
@@ -722,53 +734,16 @@ function escapeHtml(text) {
 function selectTrack(title, artist, artwork, id) {
     selectedTrack = { title, artist, artwork, id };
 
-    // Update selected track display
-    const artEl = document.getElementById('selectedTrackArt');
-    const titleEl = document.getElementById('selectedTrackTitle');
-    const artistEl = document.getElementById('selectedTrackArtist');
-
-    artEl.innerHTML = artwork
-        ? `<img src="${escapeHtml(artwork)}" alt="${escapeHtml(title)}" style="width:100%;height:100%;object-fit:cover;">`
-        : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.3);font-size:24px"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>';
-    titleEl.textContent = title;
-    artistEl.textContent = artist;
-
-    // Show pricing section
-    pricingSection.style.display = 'block';
-
     // Scroll to pricing
-    setTimeout(() => {
-        pricingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+    const pricingSection = document.getElementById('pricing');
+    if (pricingSection) {
+        setTimeout(() => {
+            pricingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
 
     // Clear search results
     searchResults.innerHTML = '';
-}
-
-function changeTrack() {
-    selectedTrack = null;
-    currentSearchQuery = '';
-    pricingSection.style.display = 'none';
-    document.getElementById('search').scrollIntoView({ behavior: 'smooth' });
-    searchInput.focus();
-}
-
-// ===== Pack Selection =====
-function selectPack(cardEl, copies) {
-    if (!selectedTrack) {
-        document.getElementById('search').scrollIntoView({ behavior: 'smooth' });
-        searchInput.focus();
-        return;
-    }
-
-    // Visual feedback
-    document.querySelectorAll('.pricing-card').forEach(c => c.classList.remove('selected'));
-    cardEl.classList.add('selected');
-
-    // Redirect to Stripe after short delay
-    setTimeout(() => {
-        window.open(STRIPE_PAYMENT_LINK, '_blank');
-    }, 300);
 }
 
 // ===== FAQ Toggle =====
