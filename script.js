@@ -32,7 +32,7 @@ const translations = {
         search_btn: 'SEARCH',
         search_empty: 'No tracks found on Beatport. Try another search term.',
         pricing_badge: 'PRICING',
-        pricing_title: 'Choose your pack',
+        pricing_title: 'Choose your campaign',
         pricing_desc: 'Select the number of copies to boost your track in the Beatport charts.',
         choose_btn: 'Choose',
         popular_badge: 'POPULAR',
@@ -54,7 +54,7 @@ const translations = {
         campaign_launch_btn: 'Run my campaign',
         campaign_validate_genre: 'Please confirm the genre of your track before launching.',
         campaign_validate_artists: 'Please enter at least 1 similar artist.',
-        choose_validate_track: 'Please select a track first before choosing a pack.',
+        choose_validate_track: 'Please select a track first before choosing a campaign.',
         campaign_summary_track: 'Track',
         campaign_summary_pack: 'Package',
         campaign_summary_copies: 'copies',
@@ -907,7 +907,7 @@ document.querySelectorAll('.pack-select-btn').forEach(btn => {
         if (!selectedTrack) {
             const lang = detectLanguage();
             const t = translations[lang] || translations.en;
-            showToast(t.choose_validate_track || 'Please select a track first before choosing a pack.');
+            showToast(t.choose_validate_track || 'Please select a track first before choosing a campaign.', true);
             return;
         }
 
@@ -1015,7 +1015,7 @@ function highlightField(el) {
 }
 
 // ===== Toast Popup =====
-function showToast(message) {
+function showToast(message, scrollToSearch) {
     // Remove existing toast
     const existing = document.querySelector('.toast-overlay');
     if (existing) existing.remove();
@@ -1025,9 +1025,15 @@ function showToast(message) {
     overlay.innerHTML = `
         <div class="toast-box">
             <div class="toast-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <img src="https://i.ibb.co/nMjbdTkQ/White-and-Black-Modern-Initial-B-Logo-5000-x-5000-px-1.png" alt="BeatPush" class="toast-logo">
             </div>
             <p class="toast-msg">${message}</p>
+            <ul class="toast-features">
+                <li>No Bots. No Artificial Traffic.</li>
+                <li>Custom Campaign Scheduling</li>
+                <li>Chart Strategy & Insider Guidance</li>
+                <li>Money-back guarantee</li>
+            </ul>
             <button class="toast-close">OK</button>
         </div>
     `;
@@ -1037,7 +1043,15 @@ function showToast(message) {
 
     const close = () => {
         overlay.classList.remove('visible');
-        setTimeout(() => overlay.remove(), 300);
+        setTimeout(() => {
+            overlay.remove();
+            if (scrollToSearch) {
+                const searchSection = document.getElementById('search');
+                if (searchSection) {
+                    searchSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        }, 300);
     };
 
     overlay.querySelector('.toast-close').addEventListener('click', close);
