@@ -129,10 +129,16 @@ body {
     box-shadow: 0 4px 20px var(--green-glow);
 }
 
+/* ===== Nav Actions ===== */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 /* ===== Language Selector ===== */
 .lang-selector {
     position: relative;
-    margin-left: 16px;
 }
 
 .lang-btn {
@@ -1220,6 +1226,16 @@ body {
 
     .menu-toggle {
         display: flex;
+    }
+
+    .lang-btn {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
+
+    .lang-btn svg:first-child {
+        width: 14px;
+        height: 14px;
     }
 
     .hero {
