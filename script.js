@@ -24,7 +24,8 @@ const translations = {
         feature_scheduling: 'Custom Campaign Scheduling',
         feature_strategy: 'Chart Strategy & Insider Guidance',
         feature_guarantee: 'Money-back guarantee',
-        search_title: 'Start your Beatport campaign <span class="text-green">today</span>',
+        search_badge: 'CHOOSE YOUR TRACK',
+        search_title: 'Start Your Beatport Campaign <span class="text-green">Today!</span>',
         search_desc: 'Search for your track on Beatport and select it to begin.',
         search_tagline: 'No shortcuts. No automation. Just real strategy.',
         search_placeholder: 'Track name, artist or Beatport URL...',
@@ -36,7 +37,7 @@ const translations = {
         choose_btn: 'Choose',
         popular_badge: 'POPULAR',
         change_track: 'Change',
-        campaign_badge: 'STEP 3',
+        campaign_badge: 'LET\'S GET INTO DETAILS',
         campaign_title: 'Campaign Setup',
         campaign_desc: 'Configure your campaign before launching.',
         campaign_genre_label: 'Genre',
@@ -51,6 +52,9 @@ const translations = {
         campaign_released: 'Already Released',
         campaign_preorder: 'Pre-Order',
         campaign_launch_btn: 'Run my campaign',
+        campaign_validate_genre: 'Please confirm the genre of your track before launching.',
+        campaign_validate_artists: 'Please enter at least 1 similar artist.',
+        choose_validate_track: 'Please select a track first before choosing a pack.',
         campaign_summary_track: 'Track',
         campaign_summary_pack: 'Package',
         campaign_summary_copies: 'copies',
@@ -116,6 +120,7 @@ const translations = {
         feature_scheduling: 'Planification de campagne personnalis\u00e9e',
         feature_strategy: 'Strat\u00e9gie de charts & conseils d\'initi\u00e9s',
         feature_guarantee: 'Garantie satisfait ou rembours\u00e9',
+        search_badge: 'CHOISISSEZ VOTRE TRACK',
         search_title: 'Lancez votre campagne Beatport <span class="text-green">aujourd\'hui</span>',
         search_desc: 'Recherchez votre morceau sur Beatport et s\u00e9lectionnez-le pour commencer.',
         search_tagline: 'Pas de raccourcis. Pas d\'automatisation. Juste de la vraie strat\u00e9gie.',
@@ -128,7 +133,7 @@ const translations = {
         choose_btn: 'Choisir',
         popular_badge: 'POPULAIRE',
         change_track: 'Changer',
-        campaign_badge: '\u00c9TAPE 3',
+        campaign_badge: 'ENTRONS DANS LES D\u00c9TAILS',
         campaign_title: 'Param\u00e9trage de la campagne',
         campaign_desc: 'Configurez votre campagne avant de la lancer.',
         campaign_genre_label: 'Genre',
@@ -143,6 +148,9 @@ const translations = {
         campaign_released: 'D\u00e9j\u00e0 sortie',
         campaign_preorder: 'Pr\u00e9-commande',
         campaign_launch_btn: 'Lancer ma campagne',
+        campaign_validate_genre: 'Veuillez confirmer le genre de votre track avant de lancer.',
+        campaign_validate_artists: 'Veuillez entrer au moins 1 artiste similaire.',
+        choose_validate_track: 'Veuillez d\'abord s\u00e9lectionner une track avant de choisir un pack.',
         campaign_summary_track: 'Track',
         campaign_summary_pack: 'Pack',
         campaign_summary_copies: 'copies',
@@ -208,6 +216,7 @@ const translations = {
         feature_scheduling: 'Agendamento de campanha personalizado',
         feature_strategy: 'Estrat\u00e9gia de charts e orienta\u00e7\u00e3o privilegiada',
         feature_guarantee: 'Garantia de devolu\u00e7\u00e3o',
+        search_badge: 'ESCOLHA SUA TRACK',
         search_title: 'Inicie sua campanha Beatport <span class="text-green">hoje</span>',
         search_desc: 'Pesquise sua m\u00fasica no Beatport e selecione para come\u00e7ar.',
         search_tagline: 'Sem atalhos. Sem automa\u00e7\u00e3o. Apenas estrat\u00e9gia real.',
@@ -220,7 +229,7 @@ const translations = {
         choose_btn: 'Escolher',
         popular_badge: 'POPULAR',
         change_track: 'Alterar',
-        campaign_badge: 'PASSO 3',
+        campaign_badge: 'VAMOS AOS DETALHES',
         campaign_title: 'Configura\u00e7\u00e3o da campanha',
         campaign_desc: 'Configure sua campanha antes de lan\u00e7ar.',
         campaign_genre_label: 'G\u00eanero',
@@ -235,6 +244,9 @@ const translations = {
         campaign_released: 'J\u00e1 lan\u00e7ada',
         campaign_preorder: 'Pr\u00e9-venda',
         campaign_launch_btn: 'Lan\u00e7ar minha campanha',
+        campaign_validate_genre: 'Por favor, confirme o g\u00eanero da sua track antes de lan\u00e7ar.',
+        campaign_validate_artists: 'Por favor, insira pelo menos 1 artista similar.',
+        choose_validate_track: 'Por favor, selecione uma track antes de escolher um pacote.',
         campaign_summary_track: 'Track',
         campaign_summary_pack: 'Pacote',
         campaign_summary_copies: 'c\u00f3pias',
@@ -300,6 +312,7 @@ const translations = {
         feature_scheduling: 'Programaci\u00f3n de campa\u00f1a personalizada',
         feature_strategy: 'Estrategia de charts y gu\u00eda privilegiada',
         feature_guarantee: 'Garant\u00eda de devoluci\u00f3n',
+        search_badge: 'ELIGE TU TRACK',
         search_title: 'Inicia tu campa\u00f1a Beatport <span class="text-green">hoy</span>',
         search_desc: 'Busca tu track en Beatport y selecci\u00f3nala para comenzar.',
         search_tagline: 'Sin atajos. Sin automatizaci\u00f3n. Solo estrategia real.',
@@ -312,7 +325,7 @@ const translations = {
         choose_btn: 'Elegir',
         popular_badge: 'POPULAR',
         change_track: 'Cambiar',
-        campaign_badge: 'PASO 3',
+        campaign_badge: 'ENTREMOS EN DETALLES',
         campaign_title: 'Configuraci\u00f3n de la campa\u00f1a',
         campaign_desc: 'Configura tu campa\u00f1a antes de lanzarla.',
         campaign_genre_label: 'G\u00e9nero',
@@ -327,6 +340,9 @@ const translations = {
         campaign_released: 'Ya lanzada',
         campaign_preorder: 'Preventa',
         campaign_launch_btn: 'Lanzar mi campa\u00f1a',
+        campaign_validate_genre: 'Por favor, confirma el g\u00e9nero de tu track antes de lanzar.',
+        campaign_validate_artists: 'Por favor, ingresa al menos 1 artista similar.',
+        choose_validate_track: 'Por favor, selecciona una track antes de elegir un paquete.',
         campaign_summary_track: 'Track',
         campaign_summary_pack: 'Paquete',
         campaign_summary_copies: 'copias',
@@ -392,6 +408,7 @@ const translations = {
         feature_scheduling: 'Individuelle Kampagnenplanung',
         feature_strategy: 'Chart-Strategie & Insider-Beratung',
         feature_guarantee: 'Geld-zur\u00fcck-Garantie',
+        search_badge: 'W\u00c4HLE DEINEN TRACK',
         search_title: 'Starte deine Beatport-Kampagne <span class="text-green">heute</span>',
         search_desc: 'Suche deinen Track auf Beatport und w\u00e4hle ihn aus, um zu starten.',
         search_tagline: 'Keine Abk\u00fcrzungen. Keine Automatisierung. Nur echte Strategie.',
@@ -404,7 +421,7 @@ const translations = {
         choose_btn: 'W\u00e4hlen',
         popular_badge: 'BELIEBT',
         change_track: '\u00c4ndern',
-        campaign_badge: 'SCHRITT 3',
+        campaign_badge: 'AB IN DIE DETAILS',
         campaign_title: 'Kampagnen-Einrichtung',
         campaign_desc: 'Konfiguriere deine Kampagne vor dem Start.',
         campaign_genre_label: 'Genre',
@@ -419,6 +436,9 @@ const translations = {
         campaign_released: 'Bereits ver\u00f6ffentlicht',
         campaign_preorder: 'Vorbestellung',
         campaign_launch_btn: 'Meine Kampagne starten',
+        campaign_validate_genre: 'Bitte best\u00e4tige das Genre deines Tracks vor dem Start.',
+        campaign_validate_artists: 'Bitte gib mindestens 1 \u00e4hnlichen K\u00fcnstler ein.',
+        choose_validate_track: 'Bitte w\u00e4hle zuerst einen Track aus, bevor du ein Paket w\u00e4hlst.',
         campaign_summary_track: 'Track',
         campaign_summary_pack: 'Paket',
         campaign_summary_copies: 'Kopien',
@@ -882,6 +902,19 @@ function changeTrack() {
 document.querySelectorAll('.pack-select-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.preventDefault();
+
+        // Require a track to be selected first
+        if (!selectedTrack) {
+            const lang = detectLanguage();
+            const t = translations[lang] || translations.en;
+            alert(t.choose_validate_track || 'Please select a track first before choosing a pack.');
+            const searchSection = document.getElementById('search');
+            if (searchSection) {
+                searchSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            return;
+        }
+
         const pack = btn.dataset.pack;
         selectedPack = pack;
         showCampaignSetup(pack);
@@ -948,6 +981,22 @@ document.getElementById('genreConfirmBtn').addEventListener('click', function() 
 // Launch campaign button
 document.getElementById('launchCampaignBtn').addEventListener('click', function() {
     if (!selectedPack || !STRIPE_LINKS[selectedPack]) return;
+
+    const lang = detectLanguage();
+    const t = translations[lang] || translations.en;
+
+    // Validate genre confirmed
+    if (!genreConfirmed) {
+        alert(t.campaign_validate_genre || 'Please confirm the genre of your track before launching.');
+        return;
+    }
+
+    // Validate at least 1 similar artist
+    const artistsInput = document.getElementById('similarArtists').value.trim();
+    if (!artistsInput) {
+        alert(t.campaign_validate_artists || 'Please enter at least 1 similar artist.');
+        return;
+    }
 
     // Redirect to Stripe
     window.open(STRIPE_LINKS[selectedPack], '_blank');
