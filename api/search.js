@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        const response = await fetch(`https://demo.blaron.com/search?q=${encodeURIComponent(q)}`);
+        const response = await fetch(`http://185.209.228.153:8080/search?q=${encodeURIComponent(q)}`);
 
         if (!response.ok) {
             return res.status(response.status).json({ error: `Upstream error: ${response.status}` });
