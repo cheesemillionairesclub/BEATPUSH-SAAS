@@ -1501,7 +1501,7 @@ body {
     border-radius: var(--radius-lg);
     padding: 36px 40px;
     text-align: center;
-    max-width: 400px;
+    max-width: 440px;
     width: 90%;
     transform: scale(0.95) translateY(10px);
     transition: transform 0.3s ease;
@@ -1730,6 +1730,15 @@ body {
         flex-direction: column;
         gap: 16px;
     }
+
+    .toast-box {
+        padding: 28px 20px;
+        max-width: 340px;
+    }
+
+    .toast-features li {
+        font-size: 0.75rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1741,5 +1750,14 @@ body {
     .footer-links {
         flex-direction: column;
         gap: 28px;
+    }
+
+    .toast-box {
+        padding: 24px 16px;
+        max-width: 300px;
+    }
+
+    .toast-features li {
+        font-size: 0.7rem;
     }
 }
