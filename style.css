@@ -83,8 +83,9 @@ body {
 }
 
 .logo-img {
-    height: 32px;
+    height: 42px;
     width: auto;
+    border-radius: 6px;
 }
 
 .logo-text {
