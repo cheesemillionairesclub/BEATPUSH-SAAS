@@ -353,12 +353,12 @@ body {
 
 /* ===== Hero Features ===== */
 .hero-features {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px 40px;
-    max-width: 620px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: nowrap;
     margin: 0 auto;
-    justify-items: start;
 }
 
 .hero-feature-item {
@@ -1445,6 +1445,79 @@ body {
     color: var(--white-30);
 }
 
+/* ===== Toast Popup ===== */
+.toast-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.toast-overlay.visible {
+    opacity: 1;
+}
+
+.toast-box {
+    background: #111;
+    border: 1px solid var(--white-15);
+    border-radius: var(--radius-lg);
+    padding: 36px 40px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    transform: scale(0.95) translateY(10px);
+    transition: transform 0.3s ease;
+}
+
+.toast-overlay.visible .toast-box {
+    transform: scale(1) translateY(0);
+}
+
+.toast-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--green-10);
+    border: 1px solid var(--green-20);
+    color: var(--green-primary);
+    margin-bottom: 20px;
+}
+
+.toast-msg {
+    font-size: 0.95rem;
+    color: var(--white-70);
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.toast-close {
+    padding: 10px 32px;
+    background: var(--green-primary);
+    color: var(--bg-primary);
+    border: none;
+    border-radius: 50px;
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.toast-close:hover {
+    background: var(--green-light);
+    box-shadow: 0 4px 20px var(--green-glow);
+}
+
 /* ===== Animations ===== */
 .fade-in {
     opacity: 0;
@@ -1532,8 +1605,7 @@ body {
     }
 
     .hero-features {
-        grid-template-columns: 1fr;
-        justify-items: center;
+        flex-wrap: wrap;
         gap: 16px;
     }
 

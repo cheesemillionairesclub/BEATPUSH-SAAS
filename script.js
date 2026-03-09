@@ -907,11 +907,7 @@ document.querySelectorAll('.pack-select-btn').forEach(btn => {
         if (!selectedTrack) {
             const lang = detectLanguage();
             const t = translations[lang] || translations.en;
-            alert(t.choose_validate_track || 'Please select a track first before choosing a pack.');
-            const searchSection = document.getElementById('search');
-            if (searchSection) {
-                searchSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+            showToast(t.choose_validate_track || 'Please select a track first before choosing a pack.');
             return;
         }
 
@@ -987,20 +983,52 @@ document.getElementById('launchCampaignBtn').addEventListener('click', function(
 
     // Validate genre confirmed
     if (!genreConfirmed) {
-        alert(t.campaign_validate_genre || 'Please confirm the genre of your track before launching.');
+        showToast(t.campaign_validate_genre || 'Please confirm the genre of your track before launching.');
         return;
     }
 
     // Validate at least 1 similar artist
     const artistsInput = document.getElementById('similarArtists').value.trim();
     if (!artistsInput) {
-        alert(t.campaign_validate_artists || 'Please enter at least 1 similar artist.');
+        showToast(t.campaign_validate_artists || 'Please enter at least 1 similar artist.');
         return;
     }
 
     // Redirect to Stripe
     window.open(STRIPE_LINKS[selectedPack], '_blank');
 });
+
+// ===== Toast Popup =====
+function showToast(message) {
+    // Remove existing toast
+    const existing = document.querySelector('.toast-overlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'toast-overlay';
+    overlay.innerHTML = `
+        <div class="toast-box">
+            <div class="toast-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <p class="toast-msg">${message}</p>
+            <button class="toast-close">OK</button>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => overlay.classList.add('visible'));
+
+    const close = () => {
+        overlay.classList.remove('visible');
+        setTimeout(() => overlay.remove(), 300);
+    };
+
+    overlay.querySelector('.toast-close').addEventListener('click', close);
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) close();
+    });
+}
 
 // ===== FAQ Toggle =====
 function toggleFaq(btn) {
