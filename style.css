@@ -808,9 +808,9 @@ body {
 }
 
 .product-card-image {
-    width: 100%;
-    margin-bottom: 20px;
-    border-radius: var(--radius-md);
+    width: calc(100% + 48px);
+    margin: -36px -24px 20px -24px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     overflow: hidden;
     transition: all var(--transition);
 }
@@ -819,7 +819,6 @@ body {
     width: 100%;
     height: auto;
     display: block;
-    border-radius: var(--radius-md);
     transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
