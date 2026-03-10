@@ -1560,7 +1560,7 @@ body {
 }
 
 .campaign-tips.open .campaign-tips-content {
-    max-height: 600px;
+    max-height: 1200px;
 }
 
 .campaign-tips-content ul {
@@ -1575,9 +1575,9 @@ body {
 .campaign-tips-content li {
     position: relative;
     padding-left: 16px;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: var(--white-50);
-    line-height: 1.6;
+    line-height: 1.5;
 }
 
 .campaign-tips-content li::before {
