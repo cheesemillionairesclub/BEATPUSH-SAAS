@@ -105,6 +105,12 @@ body {
     align-items: center;
     gap: 32px;
     list-style: none;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 72px;
+    z-index: 1001;
 }
 
 .nav-links a {
@@ -1790,6 +1796,8 @@ body {
         left: 0;
         right: 0;
         bottom: 0;
+        height: auto;
+        transform: none;
         flex-direction: column;
         justify-content: center;
         align-items: center;
