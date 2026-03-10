@@ -19,7 +19,7 @@ const translations = {
         nav_cta: 'BOOST MY TRACK',
         hero_badge: 'Industry-Level Promotion. Real Results.',
         hero_title: 'Professional Beatport promotion for <span class="text-gradient">DJs</span>, <span class="text-gradient">producers</span> and <span class="text-gradient">labels.</span>',
-        hero_subtitle: 'For over 10 years, Beatpush has helped artists generate visibility and momentum on Beatport charts.',
+        hero_subtitle: '10+ years of pushing artists up the Beatport charts.',
         hero_cta_btn: 'GET STARTED',
         feature_no_bots: 'No Bots. No Artificial Traffic.',
         feature_scheduling: 'Custom Campaign Scheduling',
@@ -43,7 +43,7 @@ const translations = {
         campaign_desc: 'Configure your campaign before launching.',
         campaign_genre_label: 'Genre',
         campaign_genre_hint: 'Confirm the genre detected for your track.',
-        campaign_genre_hint_manual: 'No genre detected. Please type your genre below.',
+        campaign_genre_hint_manual: 'Please type your genre below.',
         campaign_genre_input_placeholder: 'Type your genre (e.g. Afro House, Melodic Techno...)',
         campaign_confirm: 'Confirm',
         campaign_confirmed: 'Confirmed',
@@ -131,7 +131,7 @@ const translations = {
         nav_cta: 'BOOSTER MA TRACK',
         hero_badge: 'Promotion de niveau professionnel. Des résultats concrets.',
         hero_title: 'Promotion Beatport professionnelle pour <span class="text-gradient">DJs</span>, <span class="text-gradient">producteurs</span> et <span class="text-gradient">labels.</span>',
-        hero_subtitle: 'Depuis plus de 10 ans, Beatpush aide les artistes \u00e0 g\u00e9n\u00e9rer de la visibilit\u00e9 et de l\'\u00e9lan sur les charts Beatport.',
+        hero_subtitle: '10+ ans \u00e0 propulser les artistes dans les charts Beatport.',
         hero_cta_btn: 'COMMENCER',
         feature_no_bots: 'Pas de bots. Pas de trafic artificiel.',
         feature_scheduling: 'Planification de campagne personnalis\u00e9e',
@@ -155,7 +155,7 @@ const translations = {
         campaign_desc: 'Configurez votre campagne avant de la lancer.',
         campaign_genre_label: 'Genre',
         campaign_genre_hint: 'Confirmez le genre d\u00e9tect\u00e9 pour votre track.',
-        campaign_genre_hint_manual: 'Aucun genre du00e9tectu00e9. Veuillez taper votre genre ci-dessous.',
+        campaign_genre_hint_manual: 'Veuillez taper votre genre ci-dessous.',
         campaign_genre_input_placeholder: 'Tapez votre genre (ex: Afro House, Melodic Techno...)',
         campaign_confirm: 'Confirmer',
         campaign_confirmed: 'Confirm\u00e9',
@@ -243,7 +243,7 @@ const translations = {
         nav_cta: 'IMPULSIONAR MINHA TRACK',
         hero_badge: 'Promo\u00e7\u00e3o de n\u00edvel profissional. Resultados reais.',
         hero_title: 'Promo\u00e7\u00e3o profissional no Beatport para <span class="text-gradient">DJs</span>, <span class="text-gradient">produtores</span> e <span class="text-gradient">labels.</span>',
-        hero_subtitle: 'H\u00e1 mais de 10 anos, a Beatpush ajuda artistas a gerar visibilidade e impulso nos charts do Beatport.',
+        hero_subtitle: '10+ anos impulsionando artistas nos charts do Beatport.',
         hero_cta_btn: 'COME\u00c7AR',
         feature_no_bots: 'Sem bots. Sem tr\u00e1fego artificial.',
         feature_scheduling: 'Agendamento de campanha personalizado',
@@ -267,7 +267,7 @@ const translations = {
         campaign_desc: 'Configure sua campanha antes de lan\u00e7ar.',
         campaign_genre_label: 'G\u00eanero',
         campaign_genre_hint: 'Confirme o g\u00eanero detectado para sua track.',
-        campaign_genre_hint_manual: 'Nenhum gu00eanero detectado. Por favor, digite seu gu00eanero abaixo.',
+        campaign_genre_hint_manual: 'Por favor, digite seu g\u00eanero abaixo.',
         campaign_genre_input_placeholder: 'Digite seu gu00eanero (ex: Afro House, Melodic Techno...)',
         campaign_confirm: 'Confirmar',
         campaign_confirmed: 'Confirmado',
@@ -355,7 +355,7 @@ const translations = {
         nav_cta: 'IMPULSAR MI TRACK',
         hero_badge: 'Promoci\u00f3n de nivel profesional. Resultados reales.',
         hero_title: 'Promoci\u00f3n profesional en Beatport para <span class="text-gradient">DJs</span>, <span class="text-gradient">productores</span> y <span class="text-gradient">sellos.</span>',
-        hero_subtitle: 'Desde hace m\u00e1s de 10 a\u00f1os, Beatpush ayuda a los artistas a generar visibilidad e impulso en los charts de Beatport.',
+        hero_subtitle: '10+ a\u00f1os impulsando artistas en los charts de Beatport.',
         hero_cta_btn: 'EMPEZAR',
         feature_no_bots: 'Sin bots. Sin tr\u00e1fico artificial.',
         feature_scheduling: 'Programaci\u00f3n de campa\u00f1a personalizada',
@@ -379,7 +379,7 @@ const translations = {
         campaign_desc: 'Configura tu campa\u00f1a antes de lanzarla.',
         campaign_genre_label: 'G\u00e9nero',
         campaign_genre_hint: 'Confirma el g\u00e9nero detectado para tu track.',
-        campaign_genre_hint_manual: 'No se detectu00f3 ningu00fan gu00e9nero. Por favor, escribe tu gu00e9nero a continuaciu00f3n.',
+        campaign_genre_hint_manual: 'Por favor, escribe tu g\u00e9nero a continuaci\u00f3n.',
         campaign_genre_input_placeholder: 'Escribe tu gu00e9nero (ej: Afro House, Melodic Techno...)',
         campaign_confirm: 'Confirmar',
         campaign_confirmed: 'Confirmado',
@@ -467,7 +467,7 @@ const translations = {
         nav_cta: 'MEINEN TRACK BOOSTEN',
         hero_badge: 'Promotion auf Branchenniveau. Echte Ergebnisse.',
         hero_title: 'Professionelle Beatport-Promotion f\u00fcr <span class="text-gradient">DJs</span>, <span class="text-gradient">Produzenten</span> und <span class="text-gradient">Labels.</span>',
-        hero_subtitle: 'Seit \u00fcber 10 Jahren hilft Beatpush K\u00fcnstlern, Sichtbarkeit und Dynamik in den Beatport-Charts zu erzeugen.',
+        hero_subtitle: '10+ Jahre, K\u00fcnstler in den Beatport-Charts nach oben zu bringen.',
         hero_cta_btn: 'JETZT STARTEN',
         feature_no_bots: 'Keine Bots. Kein k\u00fcnstlicher Traffic.',
         feature_scheduling: 'Individuelle Kampagnenplanung',
@@ -491,7 +491,7 @@ const translations = {
         campaign_desc: 'Konfiguriere deine Kampagne vor dem Start.',
         campaign_genre_label: 'Genre',
         campaign_genre_hint: 'Best\u00e4tige das erkannte Genre deines Tracks.',
-        campaign_genre_hint_manual: 'Kein Genre erkannt. Bitte gib dein Genre unten ein.',
+        campaign_genre_hint_manual: 'Bitte gib dein Genre unten ein.',
         campaign_genre_input_placeholder: 'Genre eingeben (z.B. Afro House, Melodic Techno...)',
         campaign_confirm: 'Best\u00e4tigen',
         campaign_confirmed: 'Best\u00e4tigt',
@@ -1179,7 +1179,7 @@ function showCampaignSetup(pack) {
     if (genreHint) {
         genreHint.textContent = hasGenre
             ? (t.campaign_genre_hint || 'Confirm the genre detected for your track.')
-            : (t.campaign_genre_hint_manual || 'No genre detected. Please type your genre below.');
+            : (t.campaign_genre_hint_manual || 'Please type your genre below.');
     }
 
     // Reset confirm button
