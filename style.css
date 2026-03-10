@@ -965,6 +965,23 @@ body {
     border-color: var(--green-primary);
 }
 
+/* When tooltip is open: "i" becomes "×" */
+.product-card.tooltip-active .product-card-info {
+    font-size: 0;
+    background: var(--green-primary);
+    color: var(--bg-primary);
+    border-color: var(--green-primary);
+}
+
+.product-card.tooltip-active .product-card-info::after {
+    content: '×';
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+}
+
 .product-card-tooltip {
     position: absolute;
     inset: 0;

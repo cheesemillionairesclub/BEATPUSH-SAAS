@@ -1332,15 +1332,9 @@ document.querySelectorAll('.product-card-info').forEach(btn => {
         card.classList.remove('tooltip-active');
     });
 
-    /* Mobile: tap icon to open, tap anywhere on card to close */
+    /* Mobile & desktop click: tap icon to toggle */
     btn.addEventListener('click', (e) => {
         e.stopPropagation();
         card.classList.toggle('tooltip-active');
-    });
-
-    card.addEventListener('click', () => {
-        if (card.classList.contains('tooltip-active')) {
-            card.classList.remove('tooltip-active');
-        }
     });
 });
