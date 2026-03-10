@@ -2152,7 +2152,7 @@ body {
 .footer-address {
     font-style: normal;
     font-size: 0.8rem;
-    color: var(--text-secondary);
+    color: var(--white-50);
     margin-top: 12px;
     line-height: 1.6;
 }
