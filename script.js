@@ -1,5 +1,5 @@
 // ===== Configuration =====
-const SEARCH_API_URL = '/api/search';
+const SEARCH_API_BASE = 'http://185.209.228.153:8080/search';
 const STRIPE_LINKS = {
     50: 'https://buy.stripe.com/test_fZu3cw2m4aBG8Di9vy2VG00',
     100: 'https://buy.stripe.com/test_dRm9AU2m4aBG2eU2362VG01',
@@ -674,6 +674,87 @@ navLinks.querySelectorAll('a').forEach(link => {
     });
 });
 
+// ===== Artist Autocomplete Search =====
+const artistInput = document.getElementById('similarArtists');
+const artistResults = document.getElementById('artistSearchResults');
+const artistTagsContainer = document.getElementById('artistTags');
+let selectedArtists = [];
+let artistSearchTimeout = null;
+
+if (artistInput && artistResults) {
+    artistInput.addEventListener('input', () => {
+        clearTimeout(artistSearchTimeout);
+        const query = artistInput.value.trim();
+        if (query.length < 2) {
+            artistResults.classList.remove('visible');
+            return;
+        }
+        artistSearchTimeout = setTimeout(async () => {
+            try {
+                const response = await fetch(`${SEARCH_API_BASE}?q=${encodeURIComponent(query)}&type=artist`);
+                if (!response.ok) throw new Error('API error');
+                const data = await response.json();
+                renderArtistResults(data);
+            } catch (err) {
+                console.error('Artist search error:', err);
+                artistResults.classList.remove('visible');
+            }
+        }, 300);
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.artist-search-wrapper')) {
+            artistResults.classList.remove('visible');
+        }
+    });
+}
+
+function renderArtistResults(data) {
+    const artists = data.results || data.artists || data || [];
+    if (!artists.length) {
+        artistResults.classList.remove('visible');
+        return;
+    }
+    artistResults.innerHTML = artists.slice(0, 8).map(artist => {
+        const name = artist.name || artist.title || artist;
+        const img = artist.image || artist.artwork || artist.thumb || '';
+        const id = artist.id || name;
+        return `<div class="artist-result-item" data-name="${typeof name === 'string' ? name.replace(/"/g, '&quot;') : name}" data-id="${id}">
+            ${img ? `<img src="${img}" alt="" onerror="this.remove()">` : ''}
+            <span>${typeof name === 'string' ? name : name}</span>
+        </div>`;
+    }).join('');
+    artistResults.classList.add('visible');
+
+    artistResults.querySelectorAll('.artist-result-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const name = item.dataset.name;
+            if (!selectedArtists.includes(name)) {
+                selectedArtists.push(name);
+                renderArtistTags();
+            }
+            artistInput.value = '';
+            artistResults.classList.remove('visible');
+        });
+    });
+}
+
+function renderArtistTags() {
+    artistTagsContainer.innerHTML = selectedArtists.map((name, i) => `
+        <span class="artist-tag">
+            ${name}
+            <button class="artist-tag-remove" data-index="${i}" type="button">&times;</button>
+        </span>
+    `).join('');
+
+    artistTagsContainer.querySelectorAll('.artist-tag-remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+            selectedArtists.splice(parseInt(btn.dataset.index), 1);
+            renderArtistTags();
+        });
+    });
+}
+
 // ===== Smooth Scroll =====
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -819,7 +900,7 @@ async function performSearch() {
         const beatportUrl = parseBeatportUrl(query);
         let searchQuery = beatportUrl ? beatportUrl.name : query;
 
-        const response = await fetch(`${SEARCH_API_URL}?q=${encodeURIComponent(searchQuery)}`);
+        const response = await fetch(`${SEARCH_API_BASE}?q=${encodeURIComponent(searchQuery)}&type=track`);
 
         if (!response.ok) {
             throw new Error(`API error: ${response.status}`);
@@ -1098,8 +1179,7 @@ document.getElementById('launchCampaignBtn').addEventListener('click', function(
 
     // Validate at least 1 similar artist
     const artistsField = document.getElementById('similarArtists');
-    const artistsInput = artistsField.value.trim();
-    if (!artistsInput) {
+    if (!selectedArtists.length) {
         showToast(t.campaign_validate_artists || 'Please enter at least 1 similar artist.');
         highlightField(artistsField);
         return;
