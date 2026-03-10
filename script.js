@@ -729,6 +729,23 @@ document.querySelectorAll('.step-card, .product-card, .section-header, .search-b
     observer.observe(el);
 });
 
+// ===== Step Timeline Scroll Highlight =====
+const stepCards = document.querySelectorAll('.step-card-v2');
+const stepObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('step-active');
+        }
+    });
+}, {
+    threshold: 0.3,
+    rootMargin: '0px 0px -20% 0px'
+});
+
+stepCards.forEach(card => {
+    stepObserver.observe(card);
+});
+
 // ===== Beatport URL Detection =====
 function parseBeatportUrl(input) {
     const urlPattern = /(?:https?:\/\/)?(?:www\.)?beatport\.com\/track\/([^/]+)\/(\d+)/i;
