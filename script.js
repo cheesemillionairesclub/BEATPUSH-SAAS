@@ -691,6 +691,7 @@ if (artistInput && artistResults) {
             return;
         }
         artistSearchTimeout = setTimeout(async () => {
+            artistInput.classList.add('loading');
             try {
                 let response;
                 try {
@@ -708,6 +709,8 @@ if (artistInput && artistResults) {
             } catch (err) {
                 console.error('Artist search error:', err);
                 artistResults.classList.remove('visible');
+            } finally {
+                artistInput.classList.remove('loading');
             }
         }, 300);
     });
@@ -727,10 +730,14 @@ function renderArtistResults(data) {
     }
     artistResults.innerHTML = artists.slice(0, 8).map(artist => {
         const name = artist.name || artist.title || artist;
-        const img = artist.image || artist.artwork || artist.thumb || '';
+        const img = artist.image || artist.image_url || artist.artwork || artist.thumb || '';
         const id = artist.id || name;
-        return `<div class="artist-result-item" data-name="${typeof name === 'string' ? name.replace(/"/g, '&quot;') : name}" data-id="${id}">
-            ${img ? `<img src="${img}" alt="" onerror="this.remove()">` : ''}
+        const safeImg = typeof img === 'string' ? img.replace(/"/g, '&quot;') : '';
+        return `<div class="artist-result-item" data-name="${typeof name === 'string' ? name.replace(/"/g, '&quot;') : name}" data-id="${id}" data-img="${safeImg}">
+            ${img
+                ? `<img src="${safeImg}" alt="" onerror="this.outerHTML='<div class=\\'artist-avatar-placeholder\\'><svg width=\\'16\\' height=\\'16\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1.5\\'><path d=\\'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\\'/><circle cx=\\'12\\' cy=\\'7\\' r=\\'4\\'/></svg></div>'">`
+                : `<div class="artist-avatar-placeholder"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>`
+            }
             <span>${typeof name === 'string' ? name : name}</span>
         </div>`;
     }).join('');
@@ -739,8 +746,9 @@ function renderArtistResults(data) {
     artistResults.querySelectorAll('.artist-result-item').forEach(item => {
         item.addEventListener('click', () => {
             const name = item.dataset.name;
-            if (!selectedArtists.includes(name)) {
-                selectedArtists.push(name);
+            const img = item.dataset.img || '';
+            if (!selectedArtists.find(a => a.name === name)) {
+                selectedArtists.push({ name, img });
                 renderArtistTags();
             }
             artistInput.value = '';
@@ -750,12 +758,18 @@ function renderArtistResults(data) {
 }
 
 function renderArtistTags() {
-    artistTagsContainer.innerHTML = selectedArtists.map((name, i) => `
-        <span class="artist-tag">
+    artistTagsContainer.innerHTML = selectedArtists.map((artist, i) => {
+        const name = typeof artist === 'string' ? artist : artist.name;
+        const img = typeof artist === 'string' ? '' : (artist.img || '');
+        return `<span class="artist-tag">
+            ${img
+                ? `<img src="${img}" alt="" class="artist-tag-img" onerror="this.remove()">`
+                : `<span class="artist-tag-avatar"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>`
+            }
             ${name}
             <button class="artist-tag-remove" data-index="${i}" type="button">&times;</button>
-        </span>
-    `).join('');
+        </span>`;
+    }).join('');
 
     artistTagsContainer.querySelectorAll('.artist-tag-remove').forEach(btn => {
         btn.addEventListener('click', () => {

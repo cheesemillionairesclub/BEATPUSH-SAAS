@@ -1145,6 +1145,61 @@ body {
     position: relative;
 }
 
+.artist-search-wrapper .campaign-input.loading {
+    padding-right: 40px;
+}
+
+.artist-search-wrapper:has(.campaign-input.loading)::after {
+    content: '';
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--white-10);
+    border-top-color: var(--green-primary);
+    border-radius: 50%;
+    animation: artist-spinner 0.6s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes artist-spinner {
+    to { transform: translateY(-50%) rotate(360deg); }
+}
+
+.artist-avatar-placeholder {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--white-05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--white-30);
+}
+
+.artist-tag-img {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.artist-tag-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--white-10);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--white-30);
+}
+
 .artist-search-results {
     display: none;
     position: absolute;
