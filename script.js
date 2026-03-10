@@ -1,5 +1,6 @@
 // ===== Configuration =====
-const SEARCH_API_BASE = '/api/search';
+const SEARCH_API_BASE = 'http://185.209.228.153:8080/search';
+const SEARCH_API_PROXY = '/api/search';
 const STRIPE_LINKS = {
     50: 'https://buy.stripe.com/test_fZu3cw2m4aBG8Di9vy2VG00',
     100: 'https://buy.stripe.com/test_dRm9AU2m4aBG2eU2362VG01',
@@ -691,9 +692,18 @@ if (artistInput && artistResults) {
         }
         artistSearchTimeout = setTimeout(async () => {
             try {
-                const response = await fetch(`${SEARCH_API_BASE}?q=${encodeURIComponent(query)}&type=artist`);
+                let response;
+                try {
+                    response = await fetch(`${SEARCH_API_PROXY}?q=${encodeURIComponent(query)}&type=artist`);
+                } catch (e) {
+                    response = null;
+                }
+                if (!response || !response.ok) {
+                    response = await fetch(`${SEARCH_API_BASE}?q=${encodeURIComponent(query)}&type=artist`);
+                }
                 if (!response.ok) throw new Error('API error');
                 const data = await response.json();
+                console.log('Artist search response:', data);
                 renderArtistResults(data);
             } catch (err) {
                 console.error('Artist search error:', err);
@@ -900,13 +910,22 @@ async function performSearch() {
         const beatportUrl = parseBeatportUrl(query);
         let searchQuery = beatportUrl ? beatportUrl.name : query;
 
-        const response = await fetch(`${SEARCH_API_BASE}?q=${encodeURIComponent(searchQuery)}&type=track`);
+        let response;
+        try {
+            response = await fetch(`${SEARCH_API_PROXY}?q=${encodeURIComponent(searchQuery)}&type=track`);
+        } catch (e) {
+            response = null;
+        }
+        if (!response || !response.ok) {
+            response = await fetch(`${SEARCH_API_BASE}?q=${encodeURIComponent(searchQuery)}&type=track`);
+        }
 
         if (!response.ok) {
             throw new Error(`API error: ${response.status}`);
         }
 
         const data = await response.json();
+        console.log('Track search response:', data);
         displayResults(data, beatportUrl ? beatportUrl.id : null);
     } catch (error) {
         console.error('Search error:', error);
@@ -920,8 +939,8 @@ async function performSearch() {
 function displayResults(data, targetTrackId) {
     searchResults.innerHTML = '';
 
-    let tracks = Array.isArray(data) ? data : [];
-    tracks = tracks.filter(item => item.title);
+    let tracks = Array.isArray(data) ? data : (data.results || data.tracks || data.data || []);
+    tracks = tracks.filter(item => item.title || item.name);
 
     if (!tracks.length) {
         const lang = detectLanguage();
@@ -940,9 +959,9 @@ function displayResults(data, targetTrackId) {
     }
 
     tracks.slice(0, 10).forEach(track => {
-        const title = track.title;
-        const artist = Array.isArray(track.artists) ? track.artists.join(', ') : 'Unknown artist';
-        const artwork = track.image_url || '';
+        const title = track.title || track.name;
+        const artist = Array.isArray(track.artists) ? track.artists.join(', ') : (track.artist || 'Unknown artist');
+        const artwork = track.image_url || track.image || track.artwork || '';
         const genre = Array.isArray(track.genre) ? track.genre.join(', ') : '';
         const link = track.link || '';
 
