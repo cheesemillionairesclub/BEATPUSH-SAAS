@@ -1074,6 +1074,14 @@ body {
     margin-bottom: 4px;
 }
 
+.campaign-field-hint-secondary {
+    font-size: 0.8rem;
+    color: var(--white-30);
+    font-style: italic;
+    margin-top: 2px;
+    line-height: 1.4;
+}
+
 .campaign-genre-display {
     display: flex;
     align-items: center;
