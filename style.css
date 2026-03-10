@@ -1075,10 +1075,10 @@ body {
 }
 
 .campaign-field-hint-secondary {
-    font-size: 0.8rem;
-    color: var(--white-30);
-    font-style: italic;
-    margin-top: 2px;
+    font-size: 0.85rem;
+    color: var(--white-50);
+    font-style: normal;
+    margin-top: 0;
     line-height: 1.4;
 }
 
