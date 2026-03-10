@@ -1653,6 +1653,7 @@ body {
     border-radius: var(--radius-lg);
     transition: all var(--transition);
     position: relative;
+    text-align: center;
 }
 
 /* Connector lines between cards (desktop only) */
@@ -1701,7 +1702,7 @@ body {
     background: none;
     border: none;
     color: var(--green-primary);
-    margin-bottom: 24px;
+    margin: 0 auto 24px;
 }
 
 .why-choose-icon img {
