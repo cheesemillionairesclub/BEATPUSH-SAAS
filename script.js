@@ -1,5 +1,5 @@
 // ===== Configuration =====
-const SEARCH_API_BASE = 'http://185.209.228.153:8080/search';
+const SEARCH_API_BASE = '/api/search';
 const STRIPE_LINKS = {
     50: 'https://buy.stripe.com/test_fZu3cw2m4aBG8Di9vy2VG00',
     100: 'https://buy.stripe.com/test_dRm9AU2m4aBG2eU2362VG01',
