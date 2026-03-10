@@ -943,8 +943,8 @@ body {
     background: var(--white-10);
     border: 1px solid var(--white-15);
     border-radius: 50%;
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -952,6 +952,11 @@ body {
     color: var(--white-50);
     transition: all var(--transition);
     padding: 0;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 15px;
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1;
 }
 
 .product-card-info:hover {
