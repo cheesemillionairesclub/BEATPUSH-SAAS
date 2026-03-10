@@ -992,7 +992,7 @@ body {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: var(--radius-lg);
-    padding: 24px 20px;
+    padding: 16px 14px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1015,7 +1015,7 @@ body {
 }
 
 .product-card-tooltip-title {
-    font-size: 0.8rem;
+    font-size: 0.65rem;
     font-weight: 700;
     color: var(--green-primary);
     text-transform: uppercase;
@@ -1030,10 +1030,10 @@ body {
 }
 
 .product-card-tooltip li {
-    font-size: 0.75rem;
+    font-size: 0.55rem;
     color: var(--white-70);
-    line-height: 1.5;
-    padding: 5px 0;
+    line-height: 1.3;
+    padding: 3px 0;
     padding-left: 14px;
     position: relative;
 }
@@ -2301,6 +2301,20 @@ body {
     .campaign-tips-content li {
         font-size: 0.8rem;
         line-height: 1.6;
+    }
+
+    .product-card-tooltip {
+        padding: 24px 20px;
+    }
+
+    .product-card-tooltip-title {
+        font-size: 0.8rem;
+    }
+
+    .product-card-tooltip li {
+        font-size: 0.75rem;
+        line-height: 1.5;
+        padding: 5px 0;
     }
 
 }
