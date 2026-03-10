@@ -1642,7 +1642,7 @@ body {
 .why-choose-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
+    gap: 40px;
     position: relative;
 }
 
@@ -1655,17 +1655,17 @@ body {
     position: relative;
 }
 
-/* Curved connector lines between cards (desktop only) */
+/* Connector lines between cards (desktop only) */
 @media (min-width: 1025px) {
     .why-choose-card:not(:last-child)::after {
         content: '';
         position: absolute;
         top: 50%;
-        right: -20px;
-        width: 24px;
+        right: -32px;
+        width: calc(32px);
         height: 2px;
-        background: linear-gradient(90deg, var(--green-primary), var(--green-20));
-        opacity: 0.5;
+        background: linear-gradient(90deg, var(--green-primary), var(--green-20), var(--green-primary));
+        opacity: 0.7;
         z-index: 3;
     }
 
@@ -1673,14 +1673,14 @@ body {
         content: '';
         position: absolute;
         top: 50%;
-        right: -24px;
-        width: 8px;
-        height: 8px;
+        right: -36px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
         background: var(--green-primary);
         transform: translateY(-50%);
-        box-shadow: 0 0 12px var(--green-glow);
-        opacity: 0.6;
+        box-shadow: 0 0 16px var(--green-glow), 0 0 6px var(--green-primary);
+        opacity: 0.8;
         z-index: 4;
     }
 }
@@ -1711,7 +1711,7 @@ body {
 }
 
 .why-choose-card-title {
-    font-size: 1.15rem;
+    font-size: 1.35rem;
     font-weight: 700;
     margin-bottom: 16px;
     color: var(--white);
