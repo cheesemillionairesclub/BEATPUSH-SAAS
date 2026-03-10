@@ -2149,6 +2149,14 @@ body {
     transform: translateY(0);
 }
 
+.footer-address {
+    font-style: normal;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 12px;
+    line-height: 1.6;
+}
+
 /* ===== Sticky Support ===== */
 .sticky-support {
     position: fixed;
