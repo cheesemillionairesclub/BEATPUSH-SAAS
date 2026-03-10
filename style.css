@@ -879,6 +879,7 @@ body {
     letter-spacing: 1.5px;
     border-radius: 50px;
     white-space: nowrap;
+    z-index: 3;
 }
 
 .product-card-image {
