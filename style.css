@@ -1539,6 +1539,18 @@ body {
     line-height: 1.7;
 }
 
+.faq-tips-list {
+    padding: 0 24px 20px 40px;
+    font-size: 0.9rem;
+    color: var(--white-50);
+    line-height: 1.7;
+    list-style: disc;
+}
+
+.faq-tips-list li {
+    margin-bottom: 8px;
+}
+
 /* ===== CTA Section ===== */
 .cta-section {
     padding: 100px 0;
