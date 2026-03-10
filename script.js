@@ -1320,21 +1320,28 @@ function toggleFaq(btn) {
     }
 }
 
-/* Product card info tooltip — hover on desktop, tap to toggle on mobile */
-document.querySelectorAll('.product-card-info').forEach(btn => {
-    const card = btn.closest('.product-card');
+/* Product card info tooltip — hover on desktop, tap on mobile */
+(function() {
+    const isTouch = 'ontouchstart' in window;
 
-    btn.addEventListener('mouseenter', () => {
-        card.classList.add('tooltip-active');
-    });
+    document.querySelectorAll('.product-card-info').forEach(btn => {
+        const card = btn.closest('.product-card');
 
-    card.addEventListener('mouseleave', () => {
-        card.classList.remove('tooltip-active');
-    });
+        if (!isTouch) {
+            /* Desktop: hover to show, leave card to hide */
+            btn.addEventListener('mouseenter', () => {
+                card.classList.add('tooltip-active');
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('tooltip-active');
+            });
+        }
 
-    /* Mobile & desktop click: tap icon to toggle */
-    btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        card.classList.toggle('tooltip-active');
+        /* Touch & click: single tap to toggle */
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            card.classList.toggle('tooltip-active');
+        });
     });
-});
+})();

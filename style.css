@@ -959,10 +959,12 @@ body {
     line-height: 1;
 }
 
-.product-card-info:hover {
-    background: var(--green-primary);
-    color: var(--bg-primary);
-    border-color: var(--green-primary);
+@media (hover: hover) {
+    .product-card-info:hover {
+        background: var(--green-primary);
+        color: var(--bg-primary);
+        border-color: var(--green-primary);
+    }
 }
 
 /* When tooltip is open: "i" becomes "×" */
