@@ -1093,6 +1093,14 @@ body {
     letter-spacing: 0.5px;
 }
 
+.campaign-genre-input {
+    flex: 1;
+    max-width: 320px;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    border-radius: 50px;
+}
+
 .campaign-genre-confirm {
     padding: 10px 24px;
     background: var(--white-10);

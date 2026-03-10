@@ -43,6 +43,8 @@ const translations = {
         campaign_desc: 'Configure your campaign before launching.',
         campaign_genre_label: 'Genre',
         campaign_genre_hint: 'Confirm the genre detected for your track.',
+        campaign_genre_hint_manual: 'No genre detected. Please type your genre below.',
+        campaign_genre_input_placeholder: 'Type your genre (e.g. Afro House, Melodic Techno...)',
         campaign_confirm: 'Confirm',
         campaign_confirmed: 'Confirmed',
         campaign_artists_label: 'Similar Artists',
@@ -56,8 +58,6 @@ const translations = {
         campaign_tips_title: 'Tips / Requirements',
         campaign_tip_1: 'Tracks must be new.',
         campaign_tip_2: 'The artist/label should have a store presence.',
-        campaign_tip_3: 'The track should not have fallen off the official chart or genre hype.',
-        campaign_tip_4: 'It must not be trending downward and should be no older than 10 days.',
         campaign_tip_5: 'Beatport Hype: We suggest subscribing to Beatport Hype and completing your Beatport Artist profile with a picture and bio.',
         campaign_tip_6: 'Chart Climbing: Climbing charts is not just about numbers; it\'s also about the quality of the music.',
         campaign_tip_7: 'Variable Promotion Periods: Every period is different, depending on the skill of the artist/label.',
@@ -155,6 +155,8 @@ const translations = {
         campaign_desc: 'Configurez votre campagne avant de la lancer.',
         campaign_genre_label: 'Genre',
         campaign_genre_hint: 'Confirmez le genre d\u00e9tect\u00e9 pour votre track.',
+        campaign_genre_hint_manual: 'Aucun genre du00e9tectu00e9. Veuillez taper votre genre ci-dessous.',
+        campaign_genre_input_placeholder: 'Tapez votre genre (ex: Afro House, Melodic Techno...)',
         campaign_confirm: 'Confirmer',
         campaign_confirmed: 'Confirm\u00e9',
         campaign_artists_label: 'Artistes similaires',
@@ -168,8 +170,6 @@ const translations = {
         campaign_tips_title: 'Conseils / Pr\u00e9requis',
         campaign_tip_1: 'Les tracks doivent \u00eatre r\u00e9centes.',
         campaign_tip_2: 'L\'artiste/label doit avoir une pr\u00e9sence en store.',
-        campaign_tip_3: 'La track ne doit pas avoir quitt\u00e9 le classement officiel ou le genre hype.',
-        campaign_tip_4: 'Elle ne doit pas \u00eatre en tendance baissi\u00e8re et ne doit pas avoir plus de 10 jours.',
         campaign_tip_5: 'Beatport Hype : Nous sugg\u00e9rons de s\'abonner \u00e0 Beatport Hype et de compl\u00e9ter votre profil artiste Beatport avec une photo et une bio.',
         campaign_tip_6: 'Progression dans les charts : Grimper dans les charts n\'est pas seulement une question de chiffres, c\'est aussi la qualit\u00e9 de la musique.',
         campaign_tip_7: 'P\u00e9riodes de promotion variables : Chaque p\u00e9riode est diff\u00e9rente, selon le niveau de l\'artiste/label.',
@@ -267,6 +267,8 @@ const translations = {
         campaign_desc: 'Configure sua campanha antes de lan\u00e7ar.',
         campaign_genre_label: 'G\u00eanero',
         campaign_genre_hint: 'Confirme o g\u00eanero detectado para sua track.',
+        campaign_genre_hint_manual: 'Nenhum gu00eanero detectado. Por favor, digite seu gu00eanero abaixo.',
+        campaign_genre_input_placeholder: 'Digite seu gu00eanero (ex: Afro House, Melodic Techno...)',
         campaign_confirm: 'Confirmar',
         campaign_confirmed: 'Confirmado',
         campaign_artists_label: 'Artistas similares',
@@ -280,8 +282,6 @@ const translations = {
         campaign_tips_title: 'Dicas / Requisitos',
         campaign_tip_1: 'As tracks devem ser novas.',
         campaign_tip_2: 'O artista/label deve ter presen\u00e7a na loja.',
-        campaign_tip_3: 'A track n\u00e3o deve ter sa\u00eddo do chart oficial ou do g\u00eanero hype.',
-        campaign_tip_4: 'N\u00e3o deve estar em tend\u00eancia de queda e n\u00e3o deve ter mais de 10 dias.',
         campaign_tip_5: 'Beatport Hype: Sugerimos assinar o Beatport Hype e completar seu perfil de artista com foto e bio.',
         campaign_tip_6: 'Subida nos Charts: Subir nos charts n\u00e3o \u00e9 apenas sobre n\u00fameros; \u00e9 tamb\u00e9m sobre a qualidade da m\u00fasica.',
         campaign_tip_7: 'Per\u00edodos de Promo\u00e7\u00e3o Vari\u00e1veis: Cada per\u00edodo \u00e9 diferente, dependendo da habilidade do artista/label.',
@@ -379,6 +379,8 @@ const translations = {
         campaign_desc: 'Configura tu campa\u00f1a antes de lanzarla.',
         campaign_genre_label: 'G\u00e9nero',
         campaign_genre_hint: 'Confirma el g\u00e9nero detectado para tu track.',
+        campaign_genre_hint_manual: 'No se detectu00f3 ningu00fan gu00e9nero. Por favor, escribe tu gu00e9nero a continuaciu00f3n.',
+        campaign_genre_input_placeholder: 'Escribe tu gu00e9nero (ej: Afro House, Melodic Techno...)',
         campaign_confirm: 'Confirmar',
         campaign_confirmed: 'Confirmado',
         campaign_artists_label: 'Artistas similares',
@@ -392,8 +394,6 @@ const translations = {
         campaign_tips_title: 'Consejos / Requisitos',
         campaign_tip_1: 'Las tracks deben ser nuevas.',
         campaign_tip_2: 'El artista/sello debe tener presencia en la tienda.',
-        campaign_tip_3: 'La track no debe haber ca\u00eddo del chart oficial o del g\u00e9nero hype.',
-        campaign_tip_4: 'No debe estar en tendencia a la baja y no debe tener m\u00e1s de 10 d\u00edas.',
         campaign_tip_5: 'Beatport Hype: Sugerimos suscribirse a Beatport Hype y completar tu perfil de artista con foto y bio.',
         campaign_tip_6: 'Subida en Charts: Subir en los charts no es solo cuesti\u00f3n de n\u00fameros; tambi\u00e9n se trata de la calidad de la m\u00fasica.',
         campaign_tip_7: 'Per\u00edodos de Promoci\u00f3n Variables: Cada per\u00edodo es diferente, dependiendo de la habilidad del artista/sello.',
@@ -491,6 +491,8 @@ const translations = {
         campaign_desc: 'Konfiguriere deine Kampagne vor dem Start.',
         campaign_genre_label: 'Genre',
         campaign_genre_hint: 'Best\u00e4tige das erkannte Genre deines Tracks.',
+        campaign_genre_hint_manual: 'Kein Genre erkannt. Bitte gib dein Genre unten ein.',
+        campaign_genre_input_placeholder: 'Genre eingeben (z.B. Afro House, Melodic Techno...)',
         campaign_confirm: 'Best\u00e4tigen',
         campaign_confirmed: 'Best\u00e4tigt',
         campaign_artists_label: '\u00c4hnliche K\u00fcnstler',
@@ -504,8 +506,6 @@ const translations = {
         campaign_tips_title: 'Tipps / Anforderungen',
         campaign_tip_1: 'Tracks m\u00fcssen neu sein.',
         campaign_tip_2: 'Der K\u00fcnstler/das Label sollte eine Store-Pr\u00e4senz haben.',
-        campaign_tip_3: 'Der Track darf nicht aus dem offiziellen Chart oder Genre-Hype gefallen sein.',
-        campaign_tip_4: 'Er darf keinen Abw\u00e4rtstrend zeigen und nicht \u00e4lter als 10 Tage sein.',
         campaign_tip_5: 'Beatport Hype: Wir empfehlen, Beatport Hype zu abonnieren und dein Beatport-K\u00fcnstlerprofil mit Bild und Bio zu vervollst\u00e4ndigen.',
         campaign_tip_6: 'Chart-Aufstieg: Charts zu erklimmen ist nicht nur eine Frage der Zahlen, sondern auch der Qualit\u00e4t der Musik.',
         campaign_tip_7: 'Variable Promotionszeitr\u00e4ume: Jeder Zeitraum ist anders, abh\u00e4ngig vom K\u00f6nnen des K\u00fcnstlers/Labels.',
@@ -1163,8 +1163,23 @@ function showCampaignSetup(pack) {
 
     // Set genre from selected track
     const genreTag = document.getElementById('campaignGenreTag');
+    const genreInput = document.getElementById('campaignGenreInput');
+    const hasGenre = selectedTrack && selectedTrack.genre;
     if (genreTag) {
-        genreTag.textContent = selectedTrack && selectedTrack.genre ? selectedTrack.genre : '--';
+        genreTag.textContent = hasGenre ? selectedTrack.genre : '';
+        genreTag.style.display = hasGenre ? '' : 'none';
+    }
+    if (genreInput) {
+        genreInput.style.display = hasGenre ? 'none' : '';
+        genreInput.value = '';
+    }
+
+    // Update hint text based on genre detection
+    const genreHint = document.querySelector('[data-i18n="campaign_genre_hint"]');
+    if (genreHint) {
+        genreHint.textContent = hasGenre
+            ? (t.campaign_genre_hint || 'Confirm the genre detected for your track.')
+            : (t.campaign_genre_hint_manual || 'No genre detected. Please type your genre below.');
     }
 
     // Reset confirm button
@@ -1183,6 +1198,25 @@ function showCampaignSetup(pack) {
 
 // Genre confirm button
 document.getElementById('genreConfirmBtn').addEventListener('click', function() {
+    const genreInput = document.getElementById('campaignGenreInput');
+    const genreTag = document.getElementById('campaignGenreTag');
+
+    // If manual input is visible, validate and use its value
+    if (genreInput && genreInput.style.display !== 'none') {
+        const manualGenre = genreInput.value.trim();
+        if (!manualGenre) {
+            genreInput.classList.add('field-highlight');
+            setTimeout(() => genreInput.classList.remove('field-highlight'), 2000);
+            return;
+        }
+        // Set the genre tag with manual value
+        if (genreTag) {
+            genreTag.textContent = manualGenre;
+            genreTag.style.display = '';
+        }
+        genreInput.style.display = 'none';
+    }
+
     genreConfirmed = true;
     this.classList.add('confirmed');
     const lang = detectLanguage();
