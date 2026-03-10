@@ -1320,7 +1320,7 @@ function toggleFaq(btn) {
     }
 }
 
-/* Product card info tooltip — show on icon hover, hide on card leave */
+/* Product card info tooltip — hover on desktop, tap to toggle on mobile */
 document.querySelectorAll('.product-card-info').forEach(btn => {
     const card = btn.closest('.product-card');
 
@@ -1330,5 +1330,17 @@ document.querySelectorAll('.product-card-info').forEach(btn => {
 
     card.addEventListener('mouseleave', () => {
         card.classList.remove('tooltip-active');
+    });
+
+    /* Mobile: tap icon to open, tap anywhere on card to close */
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        card.classList.toggle('tooltip-active');
+    });
+
+    card.addEventListener('click', () => {
+        if (card.classList.contains('tooltip-active')) {
+            card.classList.remove('tooltip-active');
+        }
     });
 });
