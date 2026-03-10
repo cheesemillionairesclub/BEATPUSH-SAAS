@@ -934,6 +934,97 @@ body {
     box-shadow: 0 4px 20px var(--green-glow);
 }
 
+/* ===== Product Card Info Icon & Tooltip ===== */
+.product-card-info {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 3;
+    background: var(--white-10);
+    border: 1px solid var(--white-15);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--white-50);
+    transition: all var(--transition);
+    padding: 0;
+}
+
+.product-card-info:hover {
+    background: var(--green-primary);
+    color: var(--bg-primary);
+    border-color: var(--green-primary);
+}
+
+.product-card-tooltip {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: rgba(10, 10, 12, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: var(--radius-lg);
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    text-align: left;
+    overflow-y: auto;
+}
+
+.product-card.tooltip-active .product-card-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+.product-card.tooltip-active .product-card-info {
+    background: var(--green-primary);
+    color: var(--bg-primary);
+    border-color: var(--green-primary);
+}
+
+.product-card-tooltip-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--green-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.product-card-tooltip ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.product-card-tooltip li {
+    font-size: 0.75rem;
+    color: var(--white-70);
+    line-height: 1.5;
+    padding: 5px 0;
+    padding-left: 14px;
+    position: relative;
+}
+
+.product-card-tooltip li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--green-primary);
+}
+
 /* ===== Campaign Setup Section ===== */
 .campaign-setup-section {
     padding: 100px 0;

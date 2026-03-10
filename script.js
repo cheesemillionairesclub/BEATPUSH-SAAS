@@ -56,6 +56,7 @@ const translations = {
         campaign_preorder: 'Pre-Order',
         campaign_launch_btn: 'Run my campaign',
         campaign_tips_title: 'Tips / Requirements',
+        card_tooltip_title: 'Tips & Requirements',
         campaign_tip_1: 'Tracks must be new.',
         campaign_tip_2: 'The artist/label should have a store presence.',
         campaign_tip_5: 'Beatport Hype: We suggest subscribing to Beatport Hype and completing your Beatport Artist profile with a picture and bio.',
@@ -168,6 +169,7 @@ const translations = {
         campaign_preorder: 'Pr\u00e9-commande',
         campaign_launch_btn: 'Lancer ma campagne',
         campaign_tips_title: 'Conseils / Pr\u00e9requis',
+        card_tooltip_title: 'Conseils & Pr\u00e9requis',
         campaign_tip_1: 'Les tracks doivent \u00eatre r\u00e9centes.',
         campaign_tip_2: 'L\'artiste/label doit avoir une pr\u00e9sence en store.',
         campaign_tip_5: 'Beatport Hype : Nous sugg\u00e9rons de s\'abonner \u00e0 Beatport Hype et de compl\u00e9ter votre profil artiste Beatport avec une photo et une bio.',
@@ -280,6 +282,7 @@ const translations = {
         campaign_preorder: 'Pr\u00e9-venda',
         campaign_launch_btn: 'Lan\u00e7ar minha campanha',
         campaign_tips_title: 'Dicas / Requisitos',
+        card_tooltip_title: 'Dicas & Requisitos',
         campaign_tip_1: 'As tracks devem ser novas.',
         campaign_tip_2: 'O artista/label deve ter presen\u00e7a na loja.',
         campaign_tip_5: 'Beatport Hype: Sugerimos assinar o Beatport Hype e completar seu perfil de artista com foto e bio.',
@@ -392,6 +395,7 @@ const translations = {
         campaign_preorder: 'Preventa',
         campaign_launch_btn: 'Lanzar mi campa\u00f1a',
         campaign_tips_title: 'Consejos / Requisitos',
+        card_tooltip_title: 'Consejos & Requisitos',
         campaign_tip_1: 'Las tracks deben ser nuevas.',
         campaign_tip_2: 'El artista/sello debe tener presencia en la tienda.',
         campaign_tip_5: 'Beatport Hype: Sugerimos suscribirse a Beatport Hype y completar tu perfil de artista con foto y bio.',
@@ -504,6 +508,7 @@ const translations = {
         campaign_preorder: 'Vorbestellung',
         campaign_launch_btn: 'Meine Kampagne starten',
         campaign_tips_title: 'Tipps / Anforderungen',
+        card_tooltip_title: 'Tipps & Anforderungen',
         campaign_tip_1: 'Tracks m\u00fcssen neu sein.',
         campaign_tip_2: 'Der K\u00fcnstler/das Label sollte eine Store-Pr\u00e4senz haben.',
         campaign_tip_5: 'Beatport Hype: Wir empfehlen, Beatport Hype zu abonnieren und dein Beatport-K\u00fcnstlerprofil mit Bild und Bio zu vervollst\u00e4ndigen.',
@@ -1314,3 +1319,16 @@ function toggleFaq(btn) {
         item.classList.add('open');
     }
 }
+
+/* Product card info tooltip — show on icon hover, hide on card leave */
+document.querySelectorAll('.product-card-info').forEach(btn => {
+    const card = btn.closest('.product-card');
+
+    btn.addEventListener('mouseenter', () => {
+        card.classList.add('tooltip-active');
+    });
+
+    card.addEventListener('mouseleave', () => {
+        card.classList.remove('tooltip-active');
+    });
+});
