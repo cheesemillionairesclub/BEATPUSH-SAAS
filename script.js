@@ -156,6 +156,10 @@ const translations = {
         top10_tip_2: 'Not currently in a downward trend.',
         top10_tip_3: 'Current minimum position number 20.',
         top10_tip_4: 'Must be the track\'s first time appearing on the chart.',
+        top10_tip_footer_1: 'If your track does not yet meet these requirements, you can begin with our',
+        top10_tip_footer_daily_push: 'Daily Push Promotion',
+        top10_tip_footer_2: 'designed to help tracks gain momentum and climb the charts.',
+        top10_tip_footer_3: 'After reaching approximately position #20, you will be able to access and benefit from this exclusive promotion package.',
         campaign_validate_genre: 'Please confirm the genre of your track before launching.',
         campaign_validate_artists: 'Please enter at least 1 similar artist.',
         choose_validate_track: 'Please select a track first before choosing a campaign.',
@@ -283,6 +287,10 @@ const translations = {
         top10_tip_2: 'Pas actuellement en tendance baissière.',
         top10_tip_3: 'Position minimum actuelle numéro 20.',
         top10_tip_4: 'Doit être la première apparition du track dans le chart.',
+        top10_tip_footer_1: 'Si votre track ne remplit pas encore ces conditions, vous pouvez commencer avec notre',
+        top10_tip_footer_daily_push: 'Promotion Daily Push',
+        top10_tip_footer_2: 'conçue pour aider les tracks à gagner en visibilité et à grimper dans les charts.',
+        top10_tip_footer_3: 'Après avoir atteint environ la position #20, vous pourrez accéder à ce pack de promotion exclusif et en bénéficier.',
         campaign_validate_genre: 'Veuillez confirmer le genre de votre track avant de lancer.',
         campaign_validate_artists: 'Veuillez entrer au moins 1 artiste similaire.',
         choose_validate_track: 'Veuillez d\'abord s\u00e9lectionner une track avant de choisir un pack.',
@@ -410,6 +418,10 @@ const translations = {
         top10_tip_2: 'Não estar em tendência de queda.',
         top10_tip_3: 'Posição mínima atual número 20.',
         top10_tip_4: 'Deve ser a primeira vez que a track aparece no chart.',
+        top10_tip_footer_1: 'Se a sua track ainda não atende a esses requisitos, você pode começar com a nossa',
+        top10_tip_footer_daily_push: 'Promoção Daily Push',
+        top10_tip_footer_2: 'projetada para ajudar as tracks a ganhar impulso e subir nos charts.',
+        top10_tip_footer_3: 'Após atingir aproximadamente a posição #20, você poderá acessar e se beneficiar deste pacote de promoção exclusivo.',
         campaign_validate_genre: 'Por favor, confirme o gênero da sua track antes de lançar.',
         campaign_validate_artists: 'Por favor, insira pelo menos 1 artista similar.',
         choose_validate_track: 'Por favor, selecione uma track antes de escolher um pacote.',
@@ -537,6 +549,10 @@ const translations = {
         top10_tip_2: 'No estar actualmente en tendencia bajista.',
         top10_tip_3: 'Posición mínima actual número 20.',
         top10_tip_4: 'Debe ser la primera vez que la track aparece en el chart.',
+        top10_tip_footer_1: 'Si tu track aún no cumple con estos requisitos, puedes comenzar con nuestra',
+        top10_tip_footer_daily_push: 'Promoción Daily Push',
+        top10_tip_footer_2: 'diseñada para ayudar a las tracks a ganar impulso y subir en los charts.',
+        top10_tip_footer_3: 'Después de alcanzar aproximadamente la posición #20, podrás acceder y beneficiarte de este paquete de promoción exclusivo.',
         campaign_validate_genre: 'Por favor, confirma el género de tu track antes de lanzar.',
         campaign_validate_artists: 'Por favor, ingresa al menos 1 artista similar.',
         choose_validate_track: 'Por favor, selecciona una track antes de elegir un paquete.',
@@ -664,6 +680,10 @@ const translations = {
         top10_tip_2: 'Derzeit nicht im Abwärtstrend.',
         top10_tip_3: 'Aktuelle Mindestposition Nummer 20.',
         top10_tip_4: 'Muss das erste Mal sein, dass der Track im Chart erscheint.',
+        top10_tip_footer_1: 'Wenn dein Track diese Anforderungen noch nicht erfüllt, kannst du mit unserer',
+        top10_tip_footer_daily_push: 'Daily Push Promotion',
+        top10_tip_footer_2: 'beginnen, die entwickelt wurde, um Tracks an Dynamik gewinnen und in den Charts aufsteigen zu lassen.',
+        top10_tip_footer_3: 'Nach Erreichen von ungefähr Position #20 kannst du auf dieses exklusive Promotionspaket zugreifen und davon profitieren.',
         campaign_validate_genre: 'Bitte bestätige das Genre deines Tracks vor dem Start.',
         campaign_validate_artists: 'Bitte gib mindestens 1 \u00e4hnlichen K\u00fcnstler ein.',
         choose_validate_track: 'Bitte w\u00e4hle zuerst einen Track aus, bevor du ein Paket w\u00e4hlst.',
@@ -1362,6 +1382,7 @@ function showCampaignSetup(pack) {
                     <li data-i18n="top10_tip_3">${t.top10_tip_3 || 'Current minimum position number 20.'}</li>
                     <li data-i18n="top10_tip_4">${t.top10_tip_4 || 'Must be the track\'s first time appearing on the chart.'}</li>
                 </ul>
+                <p style="margin: 8px 0 0 0; color: #ccc; font-size: 0.9em;">${t.top10_tip_footer_1 || 'If your track does not yet meet these requirements, you can begin with our'} <span style="color: #4CAF50;">${t.top10_tip_footer_daily_push || 'Daily Push Promotion'}</span>, ${t.top10_tip_footer_2 || 'designed to help tracks gain momentum and climb the charts.'}<br>${t.top10_tip_footer_3 || 'After reaching approximately position #20, you will be able to access and benefit from this exclusive promotion package.'}</p>
             `;
         } else {
             tipsContent.innerHTML = `
