@@ -143,6 +143,7 @@ const translations = {
         campaign_tip_6: 'Chart Climbing: Climbing charts is not just about numbers; it\'s also about the quality of the music.',
         campaign_tip_7: 'Variable Promotion Periods: Every period is different, depending on the skill of the artist/label.',
         campaign_tip_8: 'Challenges at the Top: The closer you get to the top, the more challenging it becomes to move up.',
+        top10_tooltip_title: 'To qualify for this promotion, tracks must meet the following criteria:',
         top10_tip_1: 'Released within the last six days',
         top10_tip_2: 'Not currently in a downward trend',
         top10_tip_3: 'Current minimum position number 20',
@@ -261,6 +262,7 @@ const translations = {
         campaign_tip_6: 'Progression dans les charts : Grimper dans les charts n\'est pas seulement une question de chiffres, c\'est aussi la qualit\u00e9 de la musique.',
         campaign_tip_7: 'P\u00e9riodes de promotion variables : Chaque p\u00e9riode est diff\u00e9rente, selon le niveau de l\'artiste/label.',
         campaign_tip_8: 'D\u00e9fis au sommet : Plus vous vous approchez du top, plus il est difficile de progresser.',
+        top10_tooltip_title: 'Pour être éligible à cette promotion, les tracks doivent répondre aux critères suivants :',
         top10_tip_1: 'Sortie depuis moins de six jours',
         top10_tip_2: 'Pas actuellement en tendance baissière',
         top10_tip_3: 'Position minimum actuelle numéro 20',
@@ -379,6 +381,7 @@ const translations = {
         campaign_tip_6: 'Subida nos Charts: Subir nos charts n\u00e3o \u00e9 apenas sobre n\u00fameros; \u00e9 tamb\u00e9m sobre a qualidade da m\u00fasica.',
         campaign_tip_7: 'Per\u00edodos de Promo\u00e7\u00e3o Vari\u00e1veis: Cada per\u00edodo \u00e9 diferente, dependendo da habilidade do artista/label.',
         campaign_tip_8: 'Desafios no Topo: Quanto mais perto do topo, mais dif\u00edcil se torna subir.',
+        top10_tooltip_title: 'Para se qualificar para esta promoção, as tracks devem atender aos seguintes critérios:',
         top10_tip_1: 'Lançado nos últimos seis dias',
         top10_tip_2: 'Não estar em tendência de queda',
         top10_tip_3: 'Posição mínima atual número 20',
@@ -497,6 +500,7 @@ const translations = {
         campaign_tip_6: 'Subida en Charts: Subir en los charts no es solo cuesti\u00f3n de n\u00fameros; tambi\u00e9n se trata de la calidad de la m\u00fasica.',
         campaign_tip_7: 'Per\u00edodos de Promoci\u00f3n Variables: Cada per\u00edodo es diferente, dependiendo de la habilidad del artista/sello.',
         campaign_tip_8: 'Desaf\u00edos en la Cima: Cuanto m\u00e1s te acercas al top, m\u00e1s dif\u00edcil es subir.',
+        top10_tooltip_title: 'Para calificar para esta promoción, las tracks deben cumplir los siguientes criterios:',
         top10_tip_1: 'Lanzado en los últimos seis días',
         top10_tip_2: 'No estar actualmente en tendencia bajista',
         top10_tip_3: 'Posición mínima actual número 20',
@@ -615,6 +619,7 @@ const translations = {
         campaign_tip_6: 'Chart-Aufstieg: Charts zu erklimmen ist nicht nur eine Frage der Zahlen, sondern auch der Qualit\u00e4t der Musik.',
         campaign_tip_7: 'Variable Promotionszeitr\u00e4ume: Jeder Zeitraum ist anders, abh\u00e4ngig vom K\u00f6nnen des K\u00fcnstlers/Labels.',
         campaign_tip_8: 'Herausforderungen an der Spitze: Je n\u00e4her du dem Top kommst, desto schwieriger wird es aufzusteigen.',
+        top10_tooltip_title: 'Um für diese Promotion in Frage zu kommen, müssen die Tracks folgende Kriterien erfüllen:',
         top10_tip_1: 'Innerhalb der letzten sechs Tage veröffentlicht',
         top10_tip_2: 'Derzeit nicht im Abwärtstrend',
         top10_tip_3: 'Aktuelle Mindestposition Nummer 20',
@@ -1310,6 +1315,7 @@ function showCampaignSetup(pack) {
     if (tipsContent) {
         if (pack === 'exclusive-800') {
             tipsContent.innerHTML = `
+                <p style="margin: 0 0 8px 0; color: #ccc;">${t.top10_tooltip_title || 'To qualify for this promotion, tracks must meet the following criteria:'}</p>
                 <ul>
                     <li data-i18n="top10_tip_1">${t.top10_tip_1 || 'Released within the last six days'}</li>
                     <li data-i18n="top10_tip_2">${t.top10_tip_2 || 'Not currently in a downward trend'}</li>
