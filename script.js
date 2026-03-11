@@ -69,14 +69,23 @@ function getTop100Price(genre) {
 
 function updateTop100Price(genre) {
     const el = document.getElementById('top100-price');
+    const genreTag = document.getElementById('top100-genre');
     if (!el) return;
     const price = getTop100Price(genre);
     if (price !== null) {
         el.textContent = '€' + price.toLocaleString();
         el.classList.remove('genre-pending');
+        if (genreTag) {
+            genreTag.textContent = genre;
+            genreTag.style.display = '';
+        }
     } else {
         el.textContent = 'Depends on genre';
         el.classList.add('genre-pending');
+        if (genreTag) {
+            genreTag.textContent = '';
+            genreTag.style.display = 'none';
+        }
     }
 }
 
