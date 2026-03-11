@@ -9,6 +9,75 @@ const STRIPE_LINKS = {
     1000: 'https://buy.stripe.com/test_00wdRa6Ckh04aLq5fi2VG04'
 };
 
+// ===== Top 100 Genre-based Pricing (No Exclusive status, in €) =====
+const TOP100_GENRE_PRICES = {
+    '140 / deep dubstep / grime': 580,
+    'afro house': 980,
+    'amapiano': 580,
+    'ambient / experimental': 480,
+    'bass / club': 580,
+    'bass house': 770,
+    'brazilian funk': 580,
+    'breaks / breakbeat / uk bass': 580,
+    'dance / electro pop': 780,
+    'deep house': 770,
+    'dj tools': 580,
+    'downtempo': 544,
+    'drum & bass': 770,
+    'dubstep': 780,
+    'electro (classic / detroit / modern)': 430,
+    'electronica': 580,
+    'funky house': 444,
+    'hard dance / hardcore': 477,
+    'hard techno': 387,
+    'house': 1700,
+    'indie dance': 990,
+    'jackin house': 570,
+    'mainstage': 1070,
+    'melodic house & techno': 1310,
+    'minimal / deep tech': 830,
+    'nu disco / disco': 780,
+    'organic house / downtempo': 680,
+    'progressive house': 632,
+    'psy-trance': 780,
+    'tech house': 1870,
+    'techno (peak time / driving)': 1870,
+    'techno (raw / deep / hypnotic)': 2370,
+    'trance (main floor)': 1870,
+    'trance (raw / deep / hypnotic)': 1870,
+    'trap / wave': 880,
+    'uk garage / bassline': 880,
+    'new african': 430,
+    'new caribbean': 430,
+    'new hip-hop': 430,
+    'new latin': 430,
+    'new pop': 430,
+    'new r&b': 430,
+};
+
+function getTop100Price(genre) {
+    if (!genre) return null;
+    const g = genre.toLowerCase().trim();
+    // Exact match first
+    if (TOP100_GENRE_PRICES[g] !== undefined) return TOP100_GENRE_PRICES[g];
+    // Partial match: check if genre contains or is contained in a key
+    for (const key in TOP100_GENRE_PRICES) {
+        if (g.includes(key) || key.includes(g)) return TOP100_GENRE_PRICES[key];
+    }
+    return null;
+}
+
+function updateTop100Price(genre) {
+    const el = document.getElementById('top100-price');
+    if (!el) return;
+    const price = getTop100Price(genre);
+    if (price !== null) {
+        el.textContent = '€' + price.toLocaleString();
+    } else {
+        el.textContent = 'Depends on genre';
+    }
+}
+
 // ===== i18n - Full Translations =====
 const translations = {
     en: {
@@ -1056,6 +1125,9 @@ function escapeHtml(text) {
 function selectTrack(title, artist, artwork, id, genre) {
     selectedTrack = { title, artist, artwork, id, genre: genre || '' };
 
+    // Update Top 100 card price based on genre
+    updateTop100Price(genre);
+
     // Show pricing section
     const pricingSection = document.getElementById('pricing');
     if (pricingSection) {
@@ -1100,6 +1172,8 @@ function selectTrack(title, artist, artwork, id, genre) {
 function changeTrack() {
     selectedTrack = null;
     selectedPack = null;
+    // Reset Top 100 price
+    updateTop100Price(null);
     const pricingSection = document.getElementById('pricing');
     if (pricingSection) {
         pricingSection.style.display = 'none';
