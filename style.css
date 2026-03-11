@@ -2376,24 +2376,27 @@ body {
     }
 
     .product-card-tooltip {
-        position: fixed;
-        inset: auto 16px 16px 16px;
-        max-height: 70vh;
-        border-radius: var(--radius-lg);
-        padding: 24px 20px;
+        padding: 8px 8px;
         overflow-y: auto;
-        z-index: 1000;
-        box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.6);
+        justify-content: flex-start;
     }
 
     .product-card-tooltip-title {
-        font-size: 0.85rem;
+        font-size: 0.5rem;
+        margin-bottom: 4px;
     }
 
     .product-card-tooltip li {
-        font-size: 0.8rem;
-        line-height: 1.6;
-        padding: 5px 0;
+        font-size: 0.45rem;
+        line-height: 1.3;
+        padding: 1px 0;
+        padding-left: 10px;
+    }
+
+    .product-card-tooltip li::before {
+        top: 6px;
+        width: 3px;
+        height: 3px;
     }
 
 }
