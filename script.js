@@ -143,6 +143,9 @@ const translations = {
         campaign_tip_6: 'Chart Climbing: Climbing charts is not just about numbers; it\'s also about the quality of the music.',
         campaign_tip_7: 'Variable Promotion Periods: Every period is different, depending on the skill of the artist/label.',
         campaign_tip_8: 'Challenges at the Top: The closer you get to the top, the more challenging it becomes to move up.',
+        dailypush_tip_1: 'Once you get in the chart, to keep the position, to continue and climb, you can purchase a discounted DAILY PUSH.',
+        dailypush_tip_2: 'This consists in 10 daily purchases of your track, from DJ\'s all around the world and fitting with your genre.',
+        dailypush_tip_3: 'Challenges at the Top: The closer you get to the top, the more challenging it becomes to move up.',
         top100_tooltip_title: 'To ensure an effective promotion, the track(s) must meet the following criteria:',
         top100_tip_1: 'The track must be brand new (ideally in pre-order stage).',
         top100_tip_2: 'The release must be no older than 24 hours at the time the campaign begins.',
@@ -274,6 +277,9 @@ const translations = {
         campaign_tip_6: 'Progression dans les charts : Grimper dans les charts n\'est pas seulement une question de chiffres, c\'est aussi la qualit\u00e9 de la musique.',
         campaign_tip_7: 'P\u00e9riodes de promotion variables : Chaque p\u00e9riode est diff\u00e9rente, selon le niveau de l\'artiste/label.',
         campaign_tip_8: 'D\u00e9fis au sommet : Plus vous vous approchez du top, plus il est difficile de progresser.',
+        dailypush_tip_1: 'Une fois dans le chart, pour maintenir votre position, continuer et grimper, vous pouvez acheter un DAILY PUSH \u00e0 prix r\u00e9duit.',
+        dailypush_tip_2: 'Cela consiste en 10 achats quotidiens de votre track, par des DJ\'s du monde entier et correspondant \u00e0 votre genre.',
+        dailypush_tip_3: 'D\u00e9fis au sommet : Plus vous vous approchez du top, plus il est difficile de progresser.',
         top100_tooltip_title: 'Pour garantir une promotion efficace, le(s) track(s) doivent répondre aux critères suivants :',
         top100_tip_1: 'Le track doit être tout nouveau (idéalement en phase de pré-commande).',
         top100_tip_2: 'La sortie ne doit pas dater de plus de 24 heures au moment du lancement de la campagne.',
@@ -405,6 +411,9 @@ const translations = {
         campaign_tip_6: 'Subida nos Charts: Subir nos charts n\u00e3o \u00e9 apenas sobre n\u00fameros; \u00e9 tamb\u00e9m sobre a qualidade da m\u00fasica.',
         campaign_tip_7: 'Per\u00edodos de Promo\u00e7\u00e3o Vari\u00e1veis: Cada per\u00edodo \u00e9 diferente, dependendo da habilidade do artista/label.',
         campaign_tip_8: 'Desafios no Topo: Quanto mais perto do topo, mais dif\u00edcil se torna subir.',
+        dailypush_tip_1: 'Uma vez no chart, para manter a posi\u00e7\u00e3o, continuar e subir, voc\u00ea pode comprar um DAILY PUSH com desconto.',
+        dailypush_tip_2: 'Isso consiste em 10 compras di\u00e1rias da sua track, por DJ\'s de todo o mundo e que correspondem ao seu g\u00eanero.',
+        dailypush_tip_3: 'Desafios no Topo: Quanto mais perto do topo, mais dif\u00edcil se torna subir.',
         top100_tooltip_title: 'Para garantir uma promoção eficaz, a(s) track(s) devem atender aos seguintes critérios:',
         top100_tip_1: 'A track deve ser totalmente nova (idealmente em fase de pré-venda).',
         top100_tip_2: 'O lançamento não deve ter mais de 24 horas no momento do início da campanha.',
@@ -536,6 +545,9 @@ const translations = {
         campaign_tip_6: 'Subida en Charts: Subir en los charts no es solo cuesti\u00f3n de n\u00fameros; tambi\u00e9n se trata de la calidad de la m\u00fasica.',
         campaign_tip_7: 'Per\u00edodos de Promoci\u00f3n Variables: Cada per\u00edodo es diferente, dependiendo de la habilidad del artista/sello.',
         campaign_tip_8: 'Desaf\u00edos en la Cima: Cuanto m\u00e1s te acercas al top, m\u00e1s dif\u00edcil es subir.',
+        dailypush_tip_1: 'Una vez en el chart, para mantener la posici\u00f3n, continuar y subir, puedes comprar un DAILY PUSH con descuento.',
+        dailypush_tip_2: 'Esto consiste en 10 compras diarias de tu track, por DJ\'s de todo el mundo y que encajan con tu g\u00e9nero.',
+        dailypush_tip_3: 'Desaf\u00edos en la Cima: Cuanto m\u00e1s te acercas al top, m\u00e1s dif\u00edcil es subir.',
         top100_tooltip_title: 'Para garantizar una promoción eficaz, la(s) track(s) deben cumplir los siguientes criterios:',
         top100_tip_1: 'La track debe ser completamente nueva (idealmente en fase de pre-orden).',
         top100_tip_2: 'El lanzamiento no debe tener más de 24 horas al momento de iniciar la campaña.',
@@ -667,6 +679,9 @@ const translations = {
         campaign_tip_6: 'Chart-Aufstieg: Charts zu erklimmen ist nicht nur eine Frage der Zahlen, sondern auch der Qualit\u00e4t der Musik.',
         campaign_tip_7: 'Variable Promotionszeitr\u00e4ume: Jeder Zeitraum ist anders, abh\u00e4ngig vom K\u00f6nnen des K\u00fcnstlers/Labels.',
         campaign_tip_8: 'Herausforderungen an der Spitze: Je n\u00e4her du dem Top kommst, desto schwieriger wird es aufzusteigen.',
+        dailypush_tip_1: 'Sobald du im Chart bist, kannst du einen verg\u00fcnstigten DAILY PUSH kaufen, um deine Position zu halten, weiterzumachen und aufzusteigen.',
+        dailypush_tip_2: 'Dies besteht aus 10 t\u00e4glichen K\u00e4ufen deines Tracks von DJ\'s auf der ganzen Welt, die zu deinem Genre passen.',
+        dailypush_tip_3: 'Herausforderungen an der Spitze: Je n\u00e4her du dem Top kommst, desto schwieriger wird es aufzusteigen.',
         top100_tooltip_title: 'Um eine effektive Promotion zu gewährleisten, müssen die Track(s) folgende Kriterien erfüllen:',
         top100_tip_1: 'Der Track muss brandneu sein (idealerweise in der Vorbestellungsphase).',
         top100_tip_2: 'Die Veröffentlichung darf zum Zeitpunkt des Kampagnenstarts nicht älter als 24 Stunden sein.',
@@ -1383,6 +1398,14 @@ function showCampaignSetup(pack) {
                     <li data-i18n="top10_tip_4">${t.top10_tip_4 || 'Must be the track\'s first time appearing on the chart.'}</li>
                 </ul>
                 <p style="margin: 8px 0 0 0; color: #ccc;">${t.top10_tip_footer_1 || 'If your track does not yet meet these requirements, you can begin with our'} <span style="color: #4CAF50;">${t.top10_tip_footer_daily_push || 'Daily Push Promotion'}</span>, ${t.top10_tip_footer_2 || 'designed to help tracks gain momentum and climb the charts.'}<br>${t.top10_tip_footer_3 || 'After reaching approximately position #20, you will be able to access and benefit from this exclusive promotion package.'}</p>
+            `;
+        } else if (pack === 'daily-push') {
+            tipsContent.innerHTML = `
+                <ul>
+                    <li data-i18n="dailypush_tip_1">${t.dailypush_tip_1 || 'Once you get in the chart, to keep the position, to continue and climb, you can purchase a discounted DAILY PUSH.'}</li>
+                    <li data-i18n="dailypush_tip_2">${t.dailypush_tip_2 || 'This consists in 10 daily purchases of your track, from DJ\'s all around the world and fitting with your genre.'}</li>
+                    <li data-i18n="dailypush_tip_3">${t.dailypush_tip_3 || 'Challenges at the Top: The closer you get to the top, the more challenging it becomes to move up.'}</li>
+                </ul>
             `;
         } else {
             tipsContent.innerHTML = `
