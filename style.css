@@ -919,7 +919,7 @@ body {
 }
 
 #top100-price.genre-pending {
-    font-size: 0.85rem;
+    font-size: 1.1rem;
     letter-spacing: 0;
     white-space: nowrap;
 }
@@ -929,6 +929,7 @@ body {
     align-items: center;
     justify-content: center;
     width: 100%;
+    margin-top: auto;
     padding: 14px;
     background: var(--white-05);
     color: var(--white);
