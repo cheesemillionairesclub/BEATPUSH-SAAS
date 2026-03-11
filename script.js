@@ -1349,7 +1349,7 @@ function showCampaignSetup(pack) {
                     </div>
                     <div class="campaign-summary-row">
                         <span class="campaign-summary-label">${t.campaign_summary_pack || 'Package'}:</span>
-                        <span class="campaign-summary-value">${pack} ${t.campaign_summary_copies || 'copies'}</span>
+                        <span class="campaign-summary-value">${pack === 'exclusive-800' ? 'Top 10 by genre' : pack === 'promo-430' ? 'Top 100 by genre' : pack === 'daily-push' ? 'Daily push - 10 copies / day' : pack}</span>
                     </div>
                 </div>
             </div>
