@@ -909,6 +909,12 @@ body {
     letter-spacing: -1px;
 }
 
+#top100-price.genre-pending {
+    font-size: 0.85rem;
+    letter-spacing: 0;
+    white-space: nowrap;
+}
+
 .product-card-btn {
     display: inline-flex;
     align-items: center;

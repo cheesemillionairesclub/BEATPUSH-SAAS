@@ -73,8 +73,10 @@ function updateTop100Price(genre) {
     const price = getTop100Price(genre);
     if (price !== null) {
         el.textContent = '€' + price.toLocaleString();
+        el.classList.remove('genre-pending');
     } else {
         el.textContent = 'Depends on genre';
+        el.classList.add('genre-pending');
     }
 }
 
