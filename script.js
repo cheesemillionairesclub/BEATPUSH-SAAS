@@ -143,6 +143,10 @@ const translations = {
         campaign_tip_6: 'Chart Climbing: Climbing charts is not just about numbers; it\'s also about the quality of the music.',
         campaign_tip_7: 'Variable Promotion Periods: Every period is different, depending on the skill of the artist/label.',
         campaign_tip_8: 'Challenges at the Top: The closer you get to the top, the more challenging it becomes to move up.',
+        top10_tip_1: 'Released within the last six days',
+        top10_tip_2: 'Not currently in a downward trend',
+        top10_tip_3: 'Current minimum position number 20',
+        top10_tip_4: 'Must be the track\'s first time appearing on the chart',
         campaign_validate_genre: 'Please confirm the genre of your track before launching.',
         campaign_validate_artists: 'Please enter at least 1 similar artist.',
         choose_validate_track: 'Please select a track first before choosing a campaign.',
@@ -257,6 +261,10 @@ const translations = {
         campaign_tip_6: 'Progression dans les charts : Grimper dans les charts n\'est pas seulement une question de chiffres, c\'est aussi la qualit\u00e9 de la musique.',
         campaign_tip_7: 'P\u00e9riodes de promotion variables : Chaque p\u00e9riode est diff\u00e9rente, selon le niveau de l\'artiste/label.',
         campaign_tip_8: 'D\u00e9fis au sommet : Plus vous vous approchez du top, plus il est difficile de progresser.',
+        top10_tip_1: 'Sortie depuis moins de six jours',
+        top10_tip_2: 'Pas actuellement en tendance baissière',
+        top10_tip_3: 'Position minimum actuelle numéro 20',
+        top10_tip_4: 'Doit être la première apparition du track dans le chart',
         campaign_validate_genre: 'Veuillez confirmer le genre de votre track avant de lancer.',
         campaign_validate_artists: 'Veuillez entrer au moins 1 artiste similaire.',
         choose_validate_track: 'Veuillez d\'abord s\u00e9lectionner une track avant de choisir un pack.',
@@ -371,7 +379,11 @@ const translations = {
         campaign_tip_6: 'Subida nos Charts: Subir nos charts n\u00e3o \u00e9 apenas sobre n\u00fameros; \u00e9 tamb\u00e9m sobre a qualidade da m\u00fasica.',
         campaign_tip_7: 'Per\u00edodos de Promo\u00e7\u00e3o Vari\u00e1veis: Cada per\u00edodo \u00e9 diferente, dependendo da habilidade do artista/label.',
         campaign_tip_8: 'Desafios no Topo: Quanto mais perto do topo, mais dif\u00edcil se torna subir.',
-        campaign_validate_genre: 'Por favor, confirme o g\u00eanero da sua track antes de lan\u00e7ar.',
+        top10_tip_1: 'Lançado nos últimos seis dias',
+        top10_tip_2: 'Não estar em tendência de queda',
+        top10_tip_3: 'Posição mínima atual número 20',
+        top10_tip_4: 'Deve ser a primeira vez que a track aparece no chart',
+        campaign_validate_genre: 'Por favor, confirme o gênero da sua track antes de lançar.',
         campaign_validate_artists: 'Por favor, insira pelo menos 1 artista similar.',
         choose_validate_track: 'Por favor, selecione uma track antes de escolher um pacote.',
         campaign_summary_track: 'Track',
@@ -485,7 +497,11 @@ const translations = {
         campaign_tip_6: 'Subida en Charts: Subir en los charts no es solo cuesti\u00f3n de n\u00fameros; tambi\u00e9n se trata de la calidad de la m\u00fasica.',
         campaign_tip_7: 'Per\u00edodos de Promoci\u00f3n Variables: Cada per\u00edodo es diferente, dependiendo de la habilidad del artista/sello.',
         campaign_tip_8: 'Desaf\u00edos en la Cima: Cuanto m\u00e1s te acercas al top, m\u00e1s dif\u00edcil es subir.',
-        campaign_validate_genre: 'Por favor, confirma el g\u00e9nero de tu track antes de lanzar.',
+        top10_tip_1: 'Lanzado en los últimos seis días',
+        top10_tip_2: 'No estar actualmente en tendencia bajista',
+        top10_tip_3: 'Posición mínima actual número 20',
+        top10_tip_4: 'Debe ser la primera vez que la track aparece en el chart',
+        campaign_validate_genre: 'Por favor, confirma el género de tu track antes de lanzar.',
         campaign_validate_artists: 'Por favor, ingresa al menos 1 artista similar.',
         choose_validate_track: 'Por favor, selecciona una track antes de elegir un paquete.',
         campaign_summary_track: 'Track',
@@ -599,7 +615,11 @@ const translations = {
         campaign_tip_6: 'Chart-Aufstieg: Charts zu erklimmen ist nicht nur eine Frage der Zahlen, sondern auch der Qualit\u00e4t der Musik.',
         campaign_tip_7: 'Variable Promotionszeitr\u00e4ume: Jeder Zeitraum ist anders, abh\u00e4ngig vom K\u00f6nnen des K\u00fcnstlers/Labels.',
         campaign_tip_8: 'Herausforderungen an der Spitze: Je n\u00e4her du dem Top kommst, desto schwieriger wird es aufzusteigen.',
-        campaign_validate_genre: 'Bitte best\u00e4tige das Genre deines Tracks vor dem Start.',
+        top10_tip_1: 'Innerhalb der letzten sechs Tage veröffentlicht',
+        top10_tip_2: 'Derzeit nicht im Abwärtstrend',
+        top10_tip_3: 'Aktuelle Mindestposition Nummer 20',
+        top10_tip_4: 'Muss das erste Mal sein, dass der Track im Chart erscheint',
+        campaign_validate_genre: 'Bitte bestätige das Genre deines Tracks vor dem Start.',
         campaign_validate_artists: 'Bitte gib mindestens 1 \u00e4hnlichen K\u00fcnstler ein.',
         choose_validate_track: 'Bitte w\u00e4hle zuerst einen Track aus, bevor du ein Paket w\u00e4hlst.',
         campaign_summary_track: 'Track',
@@ -1283,6 +1303,32 @@ function showCampaignSetup(pack) {
         confirmBtn.textContent = t.campaign_confirm || 'Confirm';
         confirmBtn.classList.remove('confirmed');
         confirmBtn.disabled = false;
+    }
+
+    // Update tips based on pack
+    const tipsContent = document.getElementById('tipsContent');
+    if (tipsContent) {
+        if (pack === 'exclusive-800') {
+            tipsContent.innerHTML = `
+                <ul>
+                    <li data-i18n="top10_tip_1">${t.top10_tip_1 || 'Released within the last six days'}</li>
+                    <li data-i18n="top10_tip_2">${t.top10_tip_2 || 'Not currently in a downward trend'}</li>
+                    <li data-i18n="top10_tip_3">${t.top10_tip_3 || 'Current minimum position number 20'}</li>
+                    <li data-i18n="top10_tip_4">${t.top10_tip_4 || 'Must be the track\'s first time appearing on the chart'}</li>
+                </ul>
+            `;
+        } else {
+            tipsContent.innerHTML = `
+                <ul>
+                    <li data-i18n="campaign_tip_1">${t.campaign_tip_1 || 'Tracks must be new, to perform well.'}</li>
+                    <li data-i18n="campaign_tip_2">${t.campaign_tip_2 || 'The artist/label should have a store presence, to perform well.'}</li>
+                    <li data-i18n="campaign_tip_5">${t.campaign_tip_5 || 'Beatport Hype: We suggest subscribing to Beatport Hype and completing your Beatport Artist profile with a picture and bio.'}</li>
+                    <li data-i18n="campaign_tip_6">${t.campaign_tip_6 || 'Chart Climbing: Climbing charts is not just about numbers; it\'s also about the quality of the music.'}</li>
+                    <li data-i18n="campaign_tip_7">${t.campaign_tip_7 || 'Variable Promotion Periods: Every period is different, depending on the skill of the artist/label.'}</li>
+                    <li data-i18n="campaign_tip_8">${t.campaign_tip_8 || 'Challenges at the Top: The closer you get to the top, the more challenging it becomes to move up.'}</li>
+                </ul>
+            `;
+        }
     }
 
     // Scroll to campaign setup
