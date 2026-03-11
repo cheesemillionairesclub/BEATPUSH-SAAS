@@ -152,10 +152,10 @@ const translations = {
         top100_tip_6: 'The track must appear in Beatport Hype Picks for the genre.',
         top100_tip_7: 'Campaigns cannot start on Sundays or Mondays.',
         top10_tooltip_title: 'To qualify for this promotion, tracks must meet the following criteria:',
-        top10_tip_1: 'Released within the last six days',
-        top10_tip_2: 'Not currently in a downward trend',
-        top10_tip_3: 'Current minimum position number 20',
-        top10_tip_4: 'Must be the track\'s first time appearing on the chart',
+        top10_tip_1: 'Released within the last six days.',
+        top10_tip_2: 'Not currently in a downward trend.',
+        top10_tip_3: 'Current minimum position number 20.',
+        top10_tip_4: 'Must be the track\'s first time appearing on the chart.',
         campaign_validate_genre: 'Please confirm the genre of your track before launching.',
         campaign_validate_artists: 'Please enter at least 1 similar artist.',
         choose_validate_track: 'Please select a track first before choosing a campaign.',
@@ -279,10 +279,10 @@ const translations = {
         top100_tip_6: 'Le track doit apparaître dans les Beatport Hype Picks du genre.',
         top100_tip_7: 'Les campagnes ne peuvent pas commencer le dimanche ou le lundi.',
         top10_tooltip_title: 'Pour être éligible à cette promotion, les tracks doivent répondre aux critères suivants :',
-        top10_tip_1: 'Sortie depuis moins de six jours',
-        top10_tip_2: 'Pas actuellement en tendance baissière',
-        top10_tip_3: 'Position minimum actuelle numéro 20',
-        top10_tip_4: 'Doit être la première apparition du track dans le chart',
+        top10_tip_1: 'Sortie depuis moins de six jours.',
+        top10_tip_2: 'Pas actuellement en tendance baissière.',
+        top10_tip_3: 'Position minimum actuelle numéro 20.',
+        top10_tip_4: 'Doit être la première apparition du track dans le chart.',
         campaign_validate_genre: 'Veuillez confirmer le genre de votre track avant de lancer.',
         campaign_validate_artists: 'Veuillez entrer au moins 1 artiste similaire.',
         choose_validate_track: 'Veuillez d\'abord s\u00e9lectionner une track avant de choisir un pack.',
@@ -406,10 +406,10 @@ const translations = {
         top100_tip_6: 'A track deve aparecer nos Beatport Hype Picks do gênero.',
         top100_tip_7: 'As campanhas não podem começar aos domingos ou segundas-feiras.',
         top10_tooltip_title: 'Para se qualificar para esta promoção, as tracks devem atender aos seguintes critérios:',
-        top10_tip_1: 'Lançado nos últimos seis dias',
-        top10_tip_2: 'Não estar em tendência de queda',
-        top10_tip_3: 'Posição mínima atual número 20',
-        top10_tip_4: 'Deve ser a primeira vez que a track aparece no chart',
+        top10_tip_1: 'Lançado nos últimos seis dias.',
+        top10_tip_2: 'Não estar em tendência de queda.',
+        top10_tip_3: 'Posição mínima atual número 20.',
+        top10_tip_4: 'Deve ser a primeira vez que a track aparece no chart.',
         campaign_validate_genre: 'Por favor, confirme o gênero da sua track antes de lançar.',
         campaign_validate_artists: 'Por favor, insira pelo menos 1 artista similar.',
         choose_validate_track: 'Por favor, selecione uma track antes de escolher um pacote.',
@@ -533,10 +533,10 @@ const translations = {
         top100_tip_6: 'La track debe aparecer en los Beatport Hype Picks del género.',
         top100_tip_7: 'Las campañas no pueden comenzar los domingos ni los lunes.',
         top10_tooltip_title: 'Para calificar para esta promoción, las tracks deben cumplir los siguientes criterios:',
-        top10_tip_1: 'Lanzado en los últimos seis días',
-        top10_tip_2: 'No estar actualmente en tendencia bajista',
-        top10_tip_3: 'Posición mínima actual número 20',
-        top10_tip_4: 'Debe ser la primera vez que la track aparece en el chart',
+        top10_tip_1: 'Lanzado en los últimos seis días.',
+        top10_tip_2: 'No estar actualmente en tendencia bajista.',
+        top10_tip_3: 'Posición mínima actual número 20.',
+        top10_tip_4: 'Debe ser la primera vez que la track aparece en el chart.',
         campaign_validate_genre: 'Por favor, confirma el género de tu track antes de lanzar.',
         campaign_validate_artists: 'Por favor, ingresa al menos 1 artista similar.',
         choose_validate_track: 'Por favor, selecciona una track antes de elegir un paquete.',
@@ -660,10 +660,10 @@ const translations = {
         top100_tip_6: 'Der Track muss in den Beatport Hype Picks des Genres erscheinen.',
         top100_tip_7: 'Kampagnen können nicht an Sonntagen oder Montagen gestartet werden.',
         top10_tooltip_title: 'Um für diese Promotion in Frage zu kommen, müssen die Tracks folgende Kriterien erfüllen:',
-        top10_tip_1: 'Innerhalb der letzten sechs Tage veröffentlicht',
-        top10_tip_2: 'Derzeit nicht im Abwärtstrend',
-        top10_tip_3: 'Aktuelle Mindestposition Nummer 20',
-        top10_tip_4: 'Muss das erste Mal sein, dass der Track im Chart erscheint',
+        top10_tip_1: 'Innerhalb der letzten sechs Tage veröffentlicht.',
+        top10_tip_2: 'Derzeit nicht im Abwärtstrend.',
+        top10_tip_3: 'Aktuelle Mindestposition Nummer 20.',
+        top10_tip_4: 'Muss das erste Mal sein, dass der Track im Chart erscheint.',
         campaign_validate_genre: 'Bitte bestätige das Genre deines Tracks vor dem Start.',
         campaign_validate_artists: 'Bitte gib mindestens 1 \u00e4hnlichen K\u00fcnstler ein.',
         choose_validate_track: 'Bitte w\u00e4hle zuerst einen Track aus, bevor du ein Paket w\u00e4hlst.',
@@ -1357,10 +1357,10 @@ function showCampaignSetup(pack) {
             tipsContent.innerHTML = `
                 <p style="margin: 0 0 8px 0; color: #ccc;">${t.top10_tooltip_title || 'To qualify for this promotion, tracks must meet the following criteria:'}</p>
                 <ul>
-                    <li data-i18n="top10_tip_1">${t.top10_tip_1 || 'Released within the last six days'}</li>
-                    <li data-i18n="top10_tip_2">${t.top10_tip_2 || 'Not currently in a downward trend'}</li>
-                    <li data-i18n="top10_tip_3">${t.top10_tip_3 || 'Current minimum position number 20'}</li>
-                    <li data-i18n="top10_tip_4">${t.top10_tip_4 || 'Must be the track\'s first time appearing on the chart'}</li>
+                    <li data-i18n="top10_tip_1">${t.top10_tip_1 || 'Released within the last six days.'}</li>
+                    <li data-i18n="top10_tip_2">${t.top10_tip_2 || 'Not currently in a downward trend.'}</li>
+                    <li data-i18n="top10_tip_3">${t.top10_tip_3 || 'Current minimum position number 20.'}</li>
+                    <li data-i18n="top10_tip_4">${t.top10_tip_4 || 'Must be the track\'s first time appearing on the chart.'}</li>
                 </ul>
             `;
         } else {
