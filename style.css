@@ -1606,9 +1606,9 @@ body {
 .campaign-tips-content li {
     position: relative;
     padding-left: 16px;
-    font-size: 0.48rem;
+    font-size: 0.75rem;
     color: var(--white-50);
-    line-height: 1.3;
+    line-height: 1.5;
 }
 
 .campaign-tips-content li::before {
