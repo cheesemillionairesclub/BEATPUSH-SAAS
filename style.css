@@ -2300,25 +2300,38 @@ body {
 
     .pricing-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        gap: 10px;
     }
 
     .product-card {
-        padding: 20px 12px;
+        padding: 0 0 16px 0;
     }
 
     .product-card-image {
-        width: 60px;
-        height: 60px;
+        width: 100%;
+        height: auto;
+        margin: 0 0 12px 0;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     }
 
     .product-card-price {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
+        margin-bottom: 12px;
     }
 
     .product-card-btn {
         padding: 10px 16px;
         font-size: 0.8rem;
+        margin: 0 12px;
+        width: calc(100% - 24px);
+    }
+
+    .product-card-info {
+        top: 8px;
+        right: 8px;
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
     }
 
     .footer-inner {
