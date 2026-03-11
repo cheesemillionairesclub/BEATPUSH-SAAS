@@ -143,6 +143,14 @@ const translations = {
         campaign_tip_6: 'Chart Climbing: Climbing charts is not just about numbers; it\'s also about the quality of the music.',
         campaign_tip_7: 'Variable Promotion Periods: Every period is different, depending on the skill of the artist/label.',
         campaign_tip_8: 'Challenges at the Top: The closer you get to the top, the more challenging it becomes to move up.',
+        top100_tooltip_title: 'To ensure an effective promotion, the track(s) must meet the following criteria:',
+        top100_tip_1: 'The track must be brand new (ideally in pre-order stage).',
+        top100_tip_2: 'The release must be no older than 24 hours at the time the campaign begins.',
+        top100_tip_3: 'The track must never have been charted before.',
+        top100_tip_4: 'The artist or label should have at least 7 previous releases on Beatport.',
+        top100_tip_5: 'The artist or label must have reached the Top 100 of the selected genre at least twice within the last 6 months.',
+        top100_tip_6: 'The track must appear in Beatport Hype Picks for the genre.',
+        top100_tip_7: 'Campaigns cannot start on Sundays or Mondays.',
         top10_tooltip_title: 'To qualify for this promotion, tracks must meet the following criteria:',
         top10_tip_1: 'Released within the last six days',
         top10_tip_2: 'Not currently in a downward trend',
@@ -262,6 +270,14 @@ const translations = {
         campaign_tip_6: 'Progression dans les charts : Grimper dans les charts n\'est pas seulement une question de chiffres, c\'est aussi la qualit\u00e9 de la musique.',
         campaign_tip_7: 'P\u00e9riodes de promotion variables : Chaque p\u00e9riode est diff\u00e9rente, selon le niveau de l\'artiste/label.',
         campaign_tip_8: 'D\u00e9fis au sommet : Plus vous vous approchez du top, plus il est difficile de progresser.',
+        top100_tooltip_title: 'Pour garantir une promotion efficace, le(s) track(s) doivent répondre aux critères suivants :',
+        top100_tip_1: 'Le track doit être tout nouveau (idéalement en phase de pré-commande).',
+        top100_tip_2: 'La sortie ne doit pas dater de plus de 24 heures au moment du lancement de la campagne.',
+        top100_tip_3: 'Le track ne doit jamais avoir été classé auparavant.',
+        top100_tip_4: 'L\'artiste ou le label doit avoir au moins 7 sorties précédentes sur Beatport.',
+        top100_tip_5: 'L\'artiste ou le label doit avoir atteint le Top 100 du genre sélectionné au moins deux fois au cours des 6 derniers mois.',
+        top100_tip_6: 'Le track doit apparaître dans les Beatport Hype Picks du genre.',
+        top100_tip_7: 'Les campagnes ne peuvent pas commencer le dimanche ou le lundi.',
         top10_tooltip_title: 'Pour être éligible à cette promotion, les tracks doivent répondre aux critères suivants :',
         top10_tip_1: 'Sortie depuis moins de six jours',
         top10_tip_2: 'Pas actuellement en tendance baissière',
@@ -381,6 +397,14 @@ const translations = {
         campaign_tip_6: 'Subida nos Charts: Subir nos charts n\u00e3o \u00e9 apenas sobre n\u00fameros; \u00e9 tamb\u00e9m sobre a qualidade da m\u00fasica.',
         campaign_tip_7: 'Per\u00edodos de Promo\u00e7\u00e3o Vari\u00e1veis: Cada per\u00edodo \u00e9 diferente, dependendo da habilidade do artista/label.',
         campaign_tip_8: 'Desafios no Topo: Quanto mais perto do topo, mais dif\u00edcil se torna subir.',
+        top100_tooltip_title: 'Para garantir uma promoção eficaz, a(s) track(s) devem atender aos seguintes critérios:',
+        top100_tip_1: 'A track deve ser totalmente nova (idealmente em fase de pré-venda).',
+        top100_tip_2: 'O lançamento não deve ter mais de 24 horas no momento do início da campanha.',
+        top100_tip_3: 'A track nunca deve ter sido classificada anteriormente.',
+        top100_tip_4: 'O artista ou label deve ter pelo menos 7 lançamentos anteriores no Beatport.',
+        top100_tip_5: 'O artista ou label deve ter alcançado o Top 100 do gênero selecionado pelo menos duas vezes nos últimos 6 meses.',
+        top100_tip_6: 'A track deve aparecer nos Beatport Hype Picks do gênero.',
+        top100_tip_7: 'As campanhas não podem começar aos domingos ou segundas-feiras.',
         top10_tooltip_title: 'Para se qualificar para esta promoção, as tracks devem atender aos seguintes critérios:',
         top10_tip_1: 'Lançado nos últimos seis dias',
         top10_tip_2: 'Não estar em tendência de queda',
@@ -500,6 +524,14 @@ const translations = {
         campaign_tip_6: 'Subida en Charts: Subir en los charts no es solo cuesti\u00f3n de n\u00fameros; tambi\u00e9n se trata de la calidad de la m\u00fasica.',
         campaign_tip_7: 'Per\u00edodos de Promoci\u00f3n Variables: Cada per\u00edodo es diferente, dependiendo de la habilidad del artista/sello.',
         campaign_tip_8: 'Desaf\u00edos en la Cima: Cuanto m\u00e1s te acercas al top, m\u00e1s dif\u00edcil es subir.',
+        top100_tooltip_title: 'Para garantizar una promoción eficaz, la(s) track(s) deben cumplir los siguientes criterios:',
+        top100_tip_1: 'La track debe ser completamente nueva (idealmente en fase de pre-orden).',
+        top100_tip_2: 'El lanzamiento no debe tener más de 24 horas al momento de iniciar la campaña.',
+        top100_tip_3: 'La track nunca debe haber estado en un chart anteriormente.',
+        top100_tip_4: 'El artista o sello debe tener al menos 7 lanzamientos previos en Beatport.',
+        top100_tip_5: 'El artista o sello debe haber alcanzado el Top 100 del género seleccionado al menos dos veces en los últimos 6 meses.',
+        top100_tip_6: 'La track debe aparecer en los Beatport Hype Picks del género.',
+        top100_tip_7: 'Las campañas no pueden comenzar los domingos ni los lunes.',
         top10_tooltip_title: 'Para calificar para esta promoción, las tracks deben cumplir los siguientes criterios:',
         top10_tip_1: 'Lanzado en los últimos seis días',
         top10_tip_2: 'No estar actualmente en tendencia bajista',
@@ -619,6 +651,14 @@ const translations = {
         campaign_tip_6: 'Chart-Aufstieg: Charts zu erklimmen ist nicht nur eine Frage der Zahlen, sondern auch der Qualit\u00e4t der Musik.',
         campaign_tip_7: 'Variable Promotionszeitr\u00e4ume: Jeder Zeitraum ist anders, abh\u00e4ngig vom K\u00f6nnen des K\u00fcnstlers/Labels.',
         campaign_tip_8: 'Herausforderungen an der Spitze: Je n\u00e4her du dem Top kommst, desto schwieriger wird es aufzusteigen.',
+        top100_tooltip_title: 'Um eine effektive Promotion zu gewährleisten, müssen die Track(s) folgende Kriterien erfüllen:',
+        top100_tip_1: 'Der Track muss brandneu sein (idealerweise in der Vorbestellungsphase).',
+        top100_tip_2: 'Die Veröffentlichung darf zum Zeitpunkt des Kampagnenstarts nicht älter als 24 Stunden sein.',
+        top100_tip_3: 'Der Track darf noch nie in einem Chart gewesen sein.',
+        top100_tip_4: 'Der Künstler oder das Label sollte mindestens 7 frühere Veröffentlichungen auf Beatport haben.',
+        top100_tip_5: 'Der Künstler oder das Label muss den Top 100 des ausgewählten Genres in den letzten 6 Monaten mindestens zweimal erreicht haben.',
+        top100_tip_6: 'Der Track muss in den Beatport Hype Picks des Genres erscheinen.',
+        top100_tip_7: 'Kampagnen können nicht an Sonntagen oder Montagen gestartet werden.',
         top10_tooltip_title: 'Um für diese Promotion in Frage zu kommen, müssen die Tracks folgende Kriterien erfüllen:',
         top10_tip_1: 'Innerhalb der letzten sechs Tage veröffentlicht',
         top10_tip_2: 'Derzeit nicht im Abwärtstrend',
@@ -1325,13 +1365,15 @@ function showCampaignSetup(pack) {
             `;
         } else {
             tipsContent.innerHTML = `
+                <p style="margin: 0 0 8px 0; color: #ccc;">${t.top100_tooltip_title || 'To ensure an effective promotion, the track(s) must meet the following criteria:'}</p>
                 <ul>
-                    <li data-i18n="campaign_tip_1">${t.campaign_tip_1 || 'Tracks must be new, to perform well.'}</li>
-                    <li data-i18n="campaign_tip_2">${t.campaign_tip_2 || 'The artist/label should have a store presence, to perform well.'}</li>
-                    <li data-i18n="campaign_tip_5">${t.campaign_tip_5 || 'Beatport Hype: We suggest subscribing to Beatport Hype and completing your Beatport Artist profile with a picture and bio.'}</li>
-                    <li data-i18n="campaign_tip_6">${t.campaign_tip_6 || 'Chart Climbing: Climbing charts is not just about numbers; it\'s also about the quality of the music.'}</li>
-                    <li data-i18n="campaign_tip_7">${t.campaign_tip_7 || 'Variable Promotion Periods: Every period is different, depending on the skill of the artist/label.'}</li>
-                    <li data-i18n="campaign_tip_8">${t.campaign_tip_8 || 'Challenges at the Top: The closer you get to the top, the more challenging it becomes to move up.'}</li>
+                    <li data-i18n="top100_tip_1">${t.top100_tip_1 || 'The track must be brand new (ideally in pre-order stage).'}</li>
+                    <li data-i18n="top100_tip_2">${t.top100_tip_2 || 'The release must be no older than 24 hours at the time the campaign begins.'}</li>
+                    <li data-i18n="top100_tip_3">${t.top100_tip_3 || 'The track must never have been charted before.'}</li>
+                    <li data-i18n="top100_tip_4">${t.top100_tip_4 || 'The artist or label should have at least 7 previous releases on Beatport.'}</li>
+                    <li data-i18n="top100_tip_5">${t.top100_tip_5 || 'The artist or label must have reached the Top 100 of the selected genre at least twice within the last 6 months.'}</li>
+                    <li data-i18n="top100_tip_6">${t.top100_tip_6 || 'The track must appear in Beatport Hype Picks for the genre.'}</li>
+                    <li data-i18n="top100_tip_7">${t.top100_tip_7 || 'Campaigns cannot start on Sundays or Mondays.'}</li>
                 </ul>
             `;
         }
