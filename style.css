@@ -2352,7 +2352,7 @@ body {
     .product-card-btn {
         padding: 10px 16px;
         font-size: 0.8rem;
-        margin: 0 12px;
+        margin: auto 12px 0;
         width: calc(100% - 24px);
     }
 
