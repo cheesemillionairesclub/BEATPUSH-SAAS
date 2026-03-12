@@ -1532,7 +1532,17 @@ document.getElementById('launchCampaignBtn').addEventListener('click', function(
 
     // Top 10 & Top 100: redirect to WhatsApp
     if (selectedPack === 'exclusive-800') {
-        window.open('https://api.whatsapp.com/send/?phone=13046603890&text=Hello,%20I%27d%20like%20to%20finalize%20my%20Beaport%20Top%2010%20Campaign!&type=phone_number&app_absent=0', '_blank');
+        const track = selectedTrack || {};
+        const genre = document.getElementById('campaignGenreTag')?.textContent?.trim() || track.genre || '';
+        const artists = selectedArtists.map(a => a.name).join(', ');
+        const beatportUrl = track.id || '';
+        let msg = `Hello, I'd like to finalize my Beatport Top 10 Campaign!\n\n`;
+        msg += `Track: ${track.title || ''} - ${track.artist || ''}\n`;
+        msg += `Beatport URL: ${beatportUrl}\n`;
+        msg += `Genre: ${genre}\n`;
+        msg += `Similar Artists: ${artists}`;
+        const encoded = encodeURIComponent(msg);
+        window.open(`https://api.whatsapp.com/send/?phone=13046603890&text=${encoded}&type=phone_number&app_absent=0`, '_blank');
         return;
     }
     if (selectedPack === 'promo-430') {
