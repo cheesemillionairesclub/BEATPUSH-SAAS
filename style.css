@@ -905,7 +905,7 @@ body {
     font-size: 1.45rem;
     font-weight: 800;
     color: var(--green-primary);
-    margin-bottom: 24px;
+    margin-bottom: 14px;
     letter-spacing: -1px;
 }
 
@@ -931,7 +931,7 @@ body {
     color: var(--white-40);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin: 2px 0 0 0;
+    margin: 10px 0 10px 0;
 }
 
 .product-card-btn {
