@@ -1433,7 +1433,7 @@ function showCampaignSetup(pack) {
             200: '$840',
             500: '$1,680',
             1000: '$3,360',
-            'exclusive-800': '$880',
+            'exclusive-800': 'Depends on genre',
             'daily-push': '$50 / Day'
         };
         const priceLabel = t.campaign_total || 'Total';
