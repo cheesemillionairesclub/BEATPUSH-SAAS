@@ -2,11 +2,12 @@
 const SEARCH_API_BASE = 'http://185.209.228.153:8080/search';
 const SEARCH_API_PROXY = '/api/search';
 const STRIPE_LINKS = {
-    50: 'https://buy.stripe.com/test_fZu3cw2m4aBG8Di9vy2VG00',
-    100: 'https://buy.stripe.com/test_dRm9AU2m4aBG2eU2362VG01',
-    200: 'https://buy.stripe.com/test_8x2eVe3q8dNS7zegY02VG02',
-    500: 'https://buy.stripe.com/test_eVq6oIe4Mh04g5K4be2VG03',
-    1000: 'https://buy.stripe.com/test_00wdRa6Ckh04aLq5fi2VG04'
+    50: 'https://buy.stripe.com/dRm9AU2m4aBG2eU2362VG01',
+    100: 'https://buy.stripe.com/8x2eVe3q8dNS7zegY02VG02',
+    200: 'https://buy.stripe.com/eVq6oIe4Mh04g5K4be2VG03',
+    500: 'https://buy.stripe.com/00wdRa6Ckh04aLq5fi2VG04',
+    1000: 'https://buy.stripe.com/7sY00k0dWh041aQdLO2VG05',
+    'daily-push': 'https://buy.stripe.com/9B66oIbWEcJOdXC9vy2VG07'
 };
 
 // ===== Top 100 Genre-based Pricing (No Exclusive status, in €) =====
