@@ -1451,13 +1451,13 @@ function showCampaignSetup(pack) {
     const priceSummary = document.getElementById('campaignPriceSummary');
     if (priceSummary) {
         const PACK_PRICES = {
-            50: '$210',
-            100: '$420',
-            200: '$840',
-            500: '$1,680',
-            1000: '$3,360',
+            50: '$240',
+            100: '$480',
+            200: '$960',
+            500: '$1,900',
+            1000: '$3,850',
             'exclusive-800': '€920',
-            'daily-push': '$50 / Day'
+            'daily-push': '$55 / Day'
         };
         const priceLabel = t.campaign_total || 'Total';
         if (pack === 'promo-430') {
