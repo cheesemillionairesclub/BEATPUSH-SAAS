@@ -1606,17 +1606,33 @@ document.getElementById('launchCampaignBtn').addEventListener('click', function(
     }
 
     // Other packs: create Stripe Checkout Session with metadata
-    if (!selectedPack) return;
-    console.log('Launching checkout for pack:', selectedPack);
+    // Use pack from button data attribute as primary source of truth
+    const packToSend = this.dataset.selectedPack || selectedPack;
+    if (!packToSend) return;
+
+    console.log('[BeatPush] selectedPack variable:', selectedPack);
+    console.log('[BeatPush] button data-selected-pack:', this.dataset.selectedPack);
+    console.log('[BeatPush] pack being sent to API:', packToSend);
 
     const track = selectedTrack || {};
     const genre = document.getElementById('campaignGenreTag')?.textContent?.trim() || track.genre || '';
     const artists = selectedArtists.map(a => a.name).join(', ');
     const releaseStatus = document.querySelector('input[name="releaseStatus"]:checked')?.value || '';
 
+    const requestBody = {
+        pack: packToSend,
+        track_title: track.title || '',
+        track_artist: track.artist || '',
+        track_url: track.id || '',
+        genre: genre,
+        similar_artists: artists,
+        release_status: releaseStatus,
+    };
+    console.log('[BeatPush] Request body:', JSON.stringify(requestBody));
+
     // Save rich campaign data for confirmation popup on return
     localStorage.setItem('beatpush_pending_campaign', JSON.stringify({
-        pack: selectedPack,
+        pack: packToSend,
         track_title: track.title || '',
         track_artist: track.artist || '',
         track_artwork: track.artwork ? track.artwork.replace('200x200', '500x500') : '',
@@ -1634,28 +1650,24 @@ document.getElementById('launchCampaignBtn').addEventListener('click', function(
     fetch('/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            pack: selectedPack,
-            track_title: track.title || '',
-            track_artist: track.artist || '',
-            track_url: track.id || '',
-            genre: genre,
-            similar_artists: artists,
-            release_status: releaseStatus,
-        }),
+        body: JSON.stringify(requestBody),
     })
-    .then(r => r.json())
+    .then(r => {
+        console.log('[BeatPush] API response status:', r.status);
+        return r.json();
+    })
     .then(data => {
+        console.log('[BeatPush] API response:', JSON.stringify(data));
         if (data.url) {
             window.location.href = data.url;
         } else {
-            // Fallback to Payment Link
-            window.open(STRIPE_LINKS[selectedPack], '_blank');
+            console.warn('[BeatPush] No URL in response, using fallback Payment Link');
+            window.open(STRIPE_LINKS[packToSend], '_blank');
         }
     })
-    .catch(() => {
-        // Fallback to Payment Link if API fails
-        window.open(STRIPE_LINKS[selectedPack], '_blank');
+    .catch((err) => {
+        console.error('[BeatPush] Fetch error:', err);
+        window.open(STRIPE_LINKS[packToSend], '_blank');
     })
     .finally(() => {
         if (launchBtn) {
