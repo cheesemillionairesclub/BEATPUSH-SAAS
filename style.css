@@ -2018,6 +2018,7 @@ body {
 .footer-inner {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
     gap: 60px;
     padding-bottom: 40px;
     border-bottom: 1px solid var(--white-05);
@@ -2033,20 +2034,21 @@ body {
     color: var(--green-primary);
     letter-spacing: 2px;
     display: block;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .footer-logo-img {
-    height: 80px;
+    height: 40px;
     width: auto;
     border-radius: 6px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .footer-desc {
     font-size: 0.85rem;
     color: var(--white-50);
     line-height: 1.6;
+    margin-bottom: 12px;
 }
 
 .footer-links {
