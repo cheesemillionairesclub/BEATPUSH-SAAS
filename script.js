@@ -1423,6 +1423,26 @@ function showCampaignSetup(pack) {
         }
     }
 
+    // Display price summary above launch button
+    const priceSummary = document.getElementById('campaignPriceSummary');
+    if (priceSummary) {
+        const PACK_PRICES = {
+            50: '$210',
+            100: '$420',
+            200: '$840',
+            500: '$1,680',
+            1000: '$3,360',
+            'exclusive-800': '$880',
+            'daily-push': '$50 / Day'
+        };
+        const priceLabel = t.campaign_total || 'Total';
+        if (pack === 'promo-430') {
+            priceSummary.textContent = `${priceLabel}: ${t.campaign_price_genre || 'Depends on genre'}`;
+        } else {
+            priceSummary.textContent = `${priceLabel}: ${PACK_PRICES[pack] || ''}`;
+        }
+    }
+
     // Scroll to campaign setup
     setTimeout(() => {
         campaignSetup.scrollIntoView({ behavior: 'smooth', block: 'start' });

@@ -1614,6 +1614,16 @@ body {
     opacity: 0.6;
 }
 
+.campaign-price-summary {
+    text-align: center;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--green-primary);
+    margin-top: 18px;
+    padding: 12px 0;
+    letter-spacing: -0.5px;
+}
+
 .campaign-launch-btn {
     margin-top: 16px;
     width: 100%;
