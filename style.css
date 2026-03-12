@@ -902,7 +902,7 @@ body {
 }
 
 .product-card-price {
-    font-size: 2.2rem;
+    font-size: 1.45rem;
     font-weight: 800;
     color: var(--green-primary);
     margin-bottom: 24px;
@@ -2345,7 +2345,7 @@ body {
     }
 
     .product-card-price {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         margin-bottom: 12px;
     }
 
