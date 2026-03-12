@@ -1587,46 +1587,9 @@ document.getElementById('launchCampaignBtn').addEventListener('click', function(
         return;
     }
 
-    // Other packs: create Stripe Checkout Session with metadata
+    // Other packs: redirect to Stripe
     if (!selectedPack || !STRIPE_LINKS[selectedPack]) return;
-
-    const track = selectedTrack || {};
-    const genre = document.getElementById('campaignGenreTag')?.textContent?.trim() || track.genre || '';
-    const artists = selectedArtists.map(a => a.name).join(', ');
-    const releaseStatus = document.querySelector('input[name="releaseStatus"]:checked')?.value || '';
-
-    const launchBtn = document.getElementById('launchCampaignBtn');
-    if (launchBtn) launchBtn.disabled = true;
-
-    fetch('/api/create-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            pack: selectedPack,
-            track_title: track.title || '',
-            track_artist: track.artist || '',
-            track_url: track.id || '',
-            genre: genre,
-            similar_artists: artists,
-            release_status: releaseStatus,
-        }),
-    })
-    .then(r => r.json())
-    .then(data => {
-        if (data.url) {
-            window.open(data.url, '_blank');
-        } else {
-            // Fallback to Payment Link
-            window.open(STRIPE_LINKS[selectedPack], '_blank');
-        }
-    })
-    .catch(() => {
-        // Fallback to Payment Link if API fails
-        window.open(STRIPE_LINKS[selectedPack], '_blank');
-    })
-    .finally(() => {
-        if (launchBtn) launchBtn.disabled = false;
-    });
+    window.open(STRIPE_LINKS[selectedPack], '_blank');
 });
 
 // ===== Field Highlight =====
