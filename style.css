@@ -921,8 +921,17 @@ body {
     transform: translateY(-1.2em);
 }
 
-#top100-price.genre-pending {
+#top100-price.genre-pending,
+#top10-price.genre-pending {
     white-space: nowrap;
+}
+
+.product-card-criteria {
+    font-size: 0.55rem;
+    color: var(--white-40);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 2px 0 0 0;
 }
 
 .product-card-btn {

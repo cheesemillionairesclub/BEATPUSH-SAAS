@@ -70,14 +70,23 @@ function getTop100Price(genre) {
 
 function updateTop10Price(genre) {
     const el = document.getElementById('top10-price');
+    const genreTag = document.getElementById('top10-genre');
     if (!el) return;
     const price = getTop100Price(genre);
     if (price !== null) {
         el.textContent = '$' + price.toLocaleString('en-US');
         el.classList.remove('genre-pending');
+        if (genreTag) {
+            genreTag.textContent = genre;
+            genreTag.style.display = '';
+        }
     } else {
         el.textContent = 'Depends on genre';
         el.classList.add('genre-pending');
+        if (genreTag) {
+            genreTag.textContent = '';
+            genreTag.style.display = 'none';
+        }
     }
 }
 
@@ -1413,7 +1422,7 @@ function showCampaignSetup(pack) {
                     <li data-i18n="top10_tip_3">${t.top10_tip_3 || 'Current minimum position number 20.'}</li>
                     <li data-i18n="top10_tip_4">${t.top10_tip_4 || 'Must be the track\'s first time appearing on the chart.'}</li>
                 </ul>
-                <p style="margin: 8px 0 0 0; color: #ccc;">${t.top10_tip_footer_1 || 'If your track does not yet meet these requirements, you can begin with our'} <span style="color: #4CAF50;">${t.top10_tip_footer_daily_push || 'Daily Push Promotion'}</span>, ${t.top10_tip_footer_2 || 'designed to help tracks gain momentum and climb the charts.'}<br>${t.top10_tip_footer_3 || 'After reaching approximately position #20, you will be able to access and benefit from this exclusive promotion package.'}</p>
+                <p style="margin: 8px 0 0 0; color: #999; font-size: 0.75rem; line-height: 1.4;">${t.top10_tip_footer_1 || 'If your track does not yet meet these requirements, you can begin with our'} <span style="color: #4CAF50;">${t.top10_tip_footer_daily_push || 'Daily Push Promotion'}</span>, ${t.top10_tip_footer_2 || 'designed to help tracks gain momentum and climb the charts.'}<br>${t.top10_tip_footer_3 || 'After reaching approximately position #20, you will be able to access and benefit from this exclusive promotion package.'}</p>
             `;
         } else if (pack === 'daily-push') {
             tipsContent.innerHTML = `
