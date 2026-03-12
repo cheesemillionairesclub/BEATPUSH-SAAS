@@ -1483,9 +1483,10 @@ function showCampaignSetup(pack) {
         }
     }
 
-    // Update launch button text for Top 10 / Top 100
+    // Update launch button text and store pack on the button itself
     const launchBtn = document.getElementById('launchCampaignBtn');
     if (launchBtn) {
+        launchBtn.dataset.selectedPack = pack;
         if (pack === 'exclusive-800' || pack === 'promo-430') {
             launchBtn.textContent = t.campaign_whatsapp_btn || 'Contact us on Whatsapp to finalize';
         } else {
@@ -1548,6 +1549,13 @@ document.getElementById('tipsToggle').addEventListener('click', function() {
 document.getElementById('launchCampaignBtn').addEventListener('click', function() {
     const lang = detectLanguage();
     const t = translations[lang] || translations.en;
+
+    // Use pack stored on button as source of truth (set in showCampaignSetup)
+    const activePack = this.dataset.selectedPack || selectedPack;
+    if (activePack && activePack !== selectedPack) {
+        console.warn('Pack mismatch! button:', activePack, 'variable:', selectedPack);
+        selectedPack = activePack;
+    }
 
     // Validate genre confirmed
     if (!genreConfirmed) {
