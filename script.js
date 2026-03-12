@@ -72,21 +72,14 @@ function updateTop10Price(genre) {
     const el = document.getElementById('top10-price');
     const genreTag = document.getElementById('top10-genre');
     if (!el) return;
-    const price = getTop100Price(genre);
-    if (price !== null) {
-        el.textContent = '$' + price.toLocaleString('en-US');
-        el.classList.remove('genre-pending');
-        if (genreTag) {
-            genreTag.textContent = genre;
-            genreTag.style.display = '';
-        }
-    } else {
-        el.textContent = 'Depends on genre';
-        el.classList.add('genre-pending');
-        if (genreTag) {
-            genreTag.textContent = '';
-            genreTag.style.display = 'none';
-        }
+    el.textContent = '€920';
+    el.classList.remove('genre-pending');
+    if (genreTag && genre) {
+        genreTag.textContent = genre;
+        genreTag.style.display = '';
+    } else if (genreTag) {
+        genreTag.textContent = '';
+        genreTag.style.display = 'none';
     }
 }
 
@@ -1457,11 +1450,11 @@ function showCampaignSetup(pack) {
             200: '$840',
             500: '$1,680',
             1000: '$3,360',
-            'exclusive-800': 'Depends on genre',
+            'exclusive-800': '€920',
             'daily-push': '$50 / Day'
         };
         const priceLabel = t.campaign_total || 'Total';
-        if (pack === 'exclusive-800' || pack === 'promo-430') {
+        if (pack === 'promo-430') {
             const genre = selectedTrack && selectedTrack.genre ? selectedTrack.genre : null;
             const genrePrice = genre ? getTop100Price(genre) : null;
             if (genrePrice) {
@@ -1518,8 +1511,8 @@ document.getElementById('genreConfirmBtn').addEventListener('click', function() 
     this.textContent = t.campaign_confirmed || 'Confirmed';
     this.disabled = true;
 
-    // Update price summary for Top 10 / Top 100 based on confirmed genre
-    if (selectedPack === 'exclusive-800' || selectedPack === 'promo-430') {
+    // Update price summary for Top 100 based on confirmed genre
+    if (selectedPack === 'promo-430') {
         const confirmedGenre = genreTag ? genreTag.textContent.trim() : null;
         const genrePrice = confirmedGenre ? getTop100Price(confirmedGenre) : null;
         const priceSummary = document.getElementById('campaignPriceSummary');
@@ -1561,12 +1554,11 @@ document.getElementById('launchCampaignBtn').addEventListener('click', function(
         const genre = document.getElementById('campaignGenreTag')?.textContent?.trim() || track.genre || '';
         const artists = selectedArtists.map(a => a.name).join(', ');
         const beatportUrl = track.id || '';
-        const genrePrice = getTop100Price(genre);
         let msg = `Hello, I'd like to finalize my Beatport Top 10 Campaign!\n\n`;
         msg += `Track: ${track.title || ''} - ${track.artist || ''}\n`;
         msg += `Beatport URL: ${beatportUrl}\n`;
         msg += `Genre: ${genre}\n`;
-        if (genrePrice) msg += `Price: $${genrePrice.toLocaleString('en-US')}\n`;
+        msg += `Price: €920\n`;
         msg += `Similar Artists: ${artists}`;
         const encoded = encodeURIComponent(msg);
         window.open(`https://api.whatsapp.com/send/?phone=13046603890&text=${encoded}&type=phone_number&app_absent=0`, '_blank');
