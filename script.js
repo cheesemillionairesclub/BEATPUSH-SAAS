@@ -157,7 +157,8 @@ const translations = {
         campaign_released: 'Already Released',
         campaign_preorder: 'Pre-Order',
         campaign_launch_btn: 'Run my campaign',
-        payment_success: 'Payment confirmed! Your campaign is being set up.',
+        payment_success: 'Payment confirmed!',
+        payment_success_sub: 'Your campaign is being set up. You will receive a confirmation email shortly.',
         campaign_tips_title: 'Tips / Requirements',
         card_tooltip_title: 'Tips & Requirements',
         campaign_tip_1: 'Tracks must be new, to perform well.',
@@ -292,7 +293,8 @@ const translations = {
         campaign_released: 'D\u00e9j\u00e0 sortie',
         campaign_preorder: 'Pr\u00e9-commande',
         campaign_launch_btn: 'Lancer ma campagne',
-        payment_success: 'Paiement confirmé ! Votre campagne est en cours de mise en place.',
+        payment_success: 'Paiement confirm\u00e9 !',
+        payment_success_sub: 'Votre campagne est en cours de mise en place. Vous recevrez un email de confirmation sous peu.',
         campaign_tips_title: 'Conseils / Pr\u00e9requis',
         card_tooltip_title: 'Conseils & Pr\u00e9requis',
         campaign_tip_1: 'Les tracks doivent \u00eatre r\u00e9centes.',
@@ -427,7 +429,8 @@ const translations = {
         campaign_released: 'J\u00e1 lan\u00e7ada',
         campaign_preorder: 'Pr\u00e9-venda',
         campaign_launch_btn: 'Lan\u00e7ar minha campanha',
-        payment_success: 'Pagamento confirmado! Sua campanha est\u00e1 sendo configurada.',
+        payment_success: 'Pagamento confirmado!',
+        payment_success_sub: 'Sua campanha est\u00e1 sendo configurada. Voc\u00ea receber\u00e1 um email de confirma\u00e7\u00e3o em breve.',
         campaign_tips_title: 'Dicas / Requisitos',
         card_tooltip_title: 'Dicas & Requisitos',
         campaign_tip_1: 'As tracks devem ser novas.',
@@ -562,7 +565,8 @@ const translations = {
         campaign_released: 'Ya lanzada',
         campaign_preorder: 'Preventa',
         campaign_launch_btn: 'Lanzar mi campa\u00f1a',
-        payment_success: '\u00a1Pago confirmado! Tu campa\u00f1a se est\u00e1 configurando.',
+        payment_success: '\u00a1Pago confirmado!',
+        payment_success_sub: 'Tu campa\u00f1a se est\u00e1 configurando. Recibir\u00e1s un email de confirmaci\u00f3n en breve.',
         campaign_tips_title: 'Consejos / Requisitos',
         card_tooltip_title: 'Consejos & Requisitos',
         campaign_tip_1: 'Las tracks deben ser nuevas.',
@@ -697,7 +701,8 @@ const translations = {
         campaign_released: 'Bereits ver\u00f6ffentlicht',
         campaign_preorder: 'Vorbestellung',
         campaign_launch_btn: 'Meine Kampagne starten',
-        payment_success: 'Zahlung best\u00e4tigt! Ihre Kampagne wird eingerichtet.',
+        payment_success: 'Zahlung best\u00e4tigt!',
+        payment_success_sub: 'Ihre Kampagne wird eingerichtet. Sie erhalten in K\u00fcrze eine Best\u00e4tigungs-E-Mail.',
         campaign_tips_title: 'Tipps / Anforderungen',
         card_tooltip_title: 'Tipps & Anforderungen',
         campaign_tip_1: 'Tracks m\u00fcssen neu sein.',
@@ -1600,6 +1605,17 @@ document.getElementById('launchCampaignBtn').addEventListener('click', function(
     const artists = selectedArtists.map(a => a.name).join(', ');
     const releaseStatus = document.querySelector('input[name="releaseStatus"]:checked')?.value || '';
 
+    // Save rich campaign data for confirmation popup on return
+    localStorage.setItem('beatpush_pending_campaign', JSON.stringify({
+        pack: selectedPack,
+        track_title: track.title || '',
+        track_artist: track.artist || '',
+        track_artwork: track.artwork ? track.artwork.replace('200x200', '500x500') : '',
+        genre: genre,
+        similar_artists: selectedArtists.map(a => ({ name: a.name, img: a.img || '' })),
+        release_status: releaseStatus,
+    }));
+
     const launchBtn = document.getElementById('launchCampaignBtn');
     if (launchBtn) {
         launchBtn.disabled = true;
@@ -1688,6 +1704,91 @@ function showToast(message, scrollToSearch) {
 }
 
 // ===== Checkout Success Detection =====
+function showPaymentConfirmation(campaign, paymentData) {
+    const lang = detectLanguage();
+    const t = translations[lang] || translations.en;
+    const packLabel = campaign.pack === 'daily-push' ? 'Daily Push - 10 copies/day' : `${campaign.pack} copies`;
+
+    // Build artist chips HTML
+    const artistsHtml = (campaign.similar_artists || []).map(a => {
+        const name = typeof a === 'string' ? a : a.name;
+        const img = typeof a === 'string' ? '' : (a.img || '');
+        return `<div class="confirm-artist">
+            ${img ? `<img src="${escapeHtml(img)}" alt="" class="confirm-artist-img" onerror="this.outerHTML='<div class=\\'confirm-artist-placeholder\\'><svg width=\\'14\\' height=\\'14\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1.5\\'><path d=\\'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\\'/><circle cx=\\'12\\' cy=\\'7\\' r=\\'4\\'/></svg></div>'">` : `<div class="confirm-artist-placeholder"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>`}
+            <span class="confirm-artist-name">${escapeHtml(name)}</span>
+        </div>`;
+    }).join('');
+
+    // Fallback if similar_artists is a string
+    let artistsFallback = '';
+    if (!Array.isArray(campaign.similar_artists) && paymentData?.metadata?.similar_artists) {
+        artistsFallback = paymentData.metadata.similar_artists.split(',').map(name =>
+            `<div class="confirm-artist"><div class="confirm-artist-placeholder"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="confirm-artist-name">${escapeHtml(name.trim())}</span></div>`
+        ).join('');
+    }
+
+    const overlay = document.createElement('div');
+    overlay.className = 'toast-overlay';
+    overlay.innerHTML = `
+        <div class="confirm-box">
+            <div class="confirm-check">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--green-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <h2 class="confirm-title">${t.payment_success || 'Payment confirmed!'}</h2>
+            <p class="confirm-subtitle">${t.payment_success_sub || 'Your campaign is being set up. You will receive a confirmation email shortly.'}</p>
+
+            <div class="confirm-divider"></div>
+
+            ${campaign.track_artwork ? `
+            <div class="confirm-track">
+                <img src="${escapeHtml(campaign.track_artwork)}" alt="" class="confirm-track-art" onerror="this.style.display='none'">
+                <div class="confirm-track-info">
+                    <div class="confirm-track-title">${escapeHtml(campaign.track_title)}</div>
+                    <div class="confirm-track-artist">${escapeHtml(campaign.track_artist)}</div>
+                </div>
+            </div>
+            ` : campaign.track_title ? `
+            <div class="confirm-track">
+                <div class="confirm-track-info">
+                    <div class="confirm-track-title">${escapeHtml(campaign.track_title)}</div>
+                    <div class="confirm-track-artist">${escapeHtml(campaign.track_artist)}</div>
+                </div>
+            </div>
+            ` : ''}
+
+            <div class="confirm-details">
+                <div class="confirm-row">
+                    <span class="confirm-label">${t.campaign_summary_pack || 'Package'}</span>
+                    <span class="confirm-value">${escapeHtml(packLabel)}</span>
+                </div>
+                ${campaign.genre ? `
+                <div class="confirm-row">
+                    <span class="confirm-label">Genre</span>
+                    <span class="confirm-value">${escapeHtml(campaign.genre)}</span>
+                </div>` : ''}
+            </div>
+
+            ${(artistsHtml || artistsFallback) ? `
+            <div class="confirm-artists-section">
+                <span class="confirm-label">${t.campaign_artists_label || 'Similar Artists'}</span>
+                <div class="confirm-artists">${artistsHtml || artistsFallback}</div>
+            </div>` : ''}
+
+            <button class="confirm-btn">OK</button>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => overlay.classList.add('visible'));
+
+    const close = () => {
+        overlay.classList.remove('visible');
+        setTimeout(() => overlay.remove(), 300);
+    };
+    overlay.querySelector('.confirm-btn').addEventListener('click', close);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+}
+
 (function() {
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get('session_id');
@@ -1696,26 +1797,31 @@ function showToast(message, scrollToSearch) {
     // Clean URL
     window.history.replaceState({}, '', window.location.pathname);
 
+    // Retrieve saved campaign data
+    let campaign = {};
+    try {
+        campaign = JSON.parse(localStorage.getItem('beatpush_pending_campaign') || '{}');
+        localStorage.removeItem('beatpush_pending_campaign');
+    } catch (e) {}
+
     fetch(`/api/checkout-success?session_id=${encodeURIComponent(sessionId)}`)
         .then(r => r.json())
         .then(data => {
             if (data.status === 'paid') {
-                const m = data.metadata || {};
-                const lang = detectLanguage();
-                const t = translations[lang] || translations.en;
-                const packLabel = m.pack === 'daily-push' ? 'Daily Push' : `${m.pack} copies`;
-                let msg = `${t.payment_success || 'Payment confirmed!'}\n\n`;
-                msg += `${t.campaign_summary_pack || 'Package'}: ${packLabel}\n`;
-                if (m.track_title) msg += `${t.campaign_summary_track || 'Track'}: ${m.track_title} - ${m.track_artist}\n`;
-                if (m.genre) msg += `Genre: ${m.genre}\n`;
-                if (m.similar_artists) msg += `${t.campaign_artists_label || 'Similar Artists'}: ${m.similar_artists}`;
-                showToast(msg.trim());
+                // Merge API metadata with local campaign data
+                if (!campaign.track_title && data.metadata) {
+                    campaign.track_title = data.metadata.track_title || '';
+                    campaign.track_artist = data.metadata.track_artist || '';
+                    campaign.pack = data.metadata.pack || '';
+                    campaign.genre = data.metadata.genre || '';
+                }
+                showPaymentConfirmation(campaign, data);
             } else {
-                showToast('Payment is being processed...');
+                showPaymentConfirmation(campaign, data);
             }
         })
         .catch(() => {
-            showToast('Payment received! We will process your campaign shortly.');
+            showPaymentConfirmation(campaign, null);
         });
 })();
 

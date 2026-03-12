@@ -2180,6 +2180,201 @@ body {
     box-shadow: 0 4px 20px var(--green-glow);
 }
 
+/* ===== Payment Confirmation Popup ===== */
+.confirm-box {
+    background: #111;
+    border: 1px solid var(--white-15);
+    border-radius: var(--radius-lg);
+    padding: 40px 36px 32px;
+    text-align: center;
+    max-width: 480px;
+    width: 92%;
+    transform: scale(0.95) translateY(10px);
+    transition: transform 0.3s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.toast-overlay.visible .confirm-box {
+    transform: scale(1) translateY(0);
+}
+
+.confirm-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(30, 215, 96, 0.1);
+    border: 2px solid var(--green-primary);
+    margin-bottom: 20px;
+}
+
+.confirm-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 8px;
+}
+
+.confirm-subtitle {
+    font-size: 0.85rem;
+    color: var(--white-50);
+    margin: 0 0 24px;
+    line-height: 1.5;
+}
+
+.confirm-divider {
+    height: 1px;
+    background: var(--white-10);
+    margin: 0 0 24px;
+}
+
+.confirm-track {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--white-10);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.confirm-track-art {
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.confirm-track-info {
+    min-width: 0;
+}
+
+.confirm-track-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.confirm-track-artist {
+    font-size: 0.82rem;
+    color: var(--white-50);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.confirm-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.confirm-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--white-10);
+    border-radius: 10px;
+}
+
+.confirm-label {
+    font-size: 0.8rem;
+    color: var(--white-50);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.confirm-value {
+    font-size: 0.9rem;
+    color: #fff;
+    font-weight: 600;
+}
+
+.confirm-artists-section {
+    text-align: left;
+    margin-bottom: 24px;
+}
+
+.confirm-artists-section .confirm-label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.confirm-artists {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.confirm-artist {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--white-10);
+    border-radius: 50px;
+    padding: 6px 14px 6px 6px;
+}
+
+.confirm-artist-img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.confirm-artist-placeholder {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--white-10);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--white-50);
+}
+
+.confirm-artist-name {
+    font-size: 0.82rem;
+    color: var(--white-70);
+    font-weight: 500;
+}
+
+.confirm-btn {
+    padding: 12px 40px;
+    background: var(--green-primary);
+    color: var(--bg-primary);
+    border: none;
+    border-radius: 50px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.confirm-btn:hover {
+    background: var(--green-light);
+    box-shadow: 0 4px 20px var(--green-glow);
+}
+
 /* ===== Animations ===== */
 .fade-in {
     opacity: 0;
