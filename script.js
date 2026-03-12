@@ -72,14 +72,20 @@ function updateTop10Price(genre) {
     const el = document.getElementById('top10-price');
     const genreTag = document.getElementById('top10-genre');
     if (!el) return;
-    el.textContent = '€920';
-    el.classList.remove('genre-pending');
-    if (genreTag && genre) {
-        genreTag.textContent = genre;
-        genreTag.style.display = '';
-    } else if (genreTag) {
-        genreTag.textContent = '';
-        genreTag.style.display = 'none';
+    if (genre) {
+        el.textContent = '€920';
+        el.classList.remove('genre-pending');
+        if (genreTag) {
+            genreTag.textContent = genre;
+            genreTag.style.display = '';
+        }
+    } else {
+        el.textContent = 'Depends on genre';
+        el.classList.add('genre-pending');
+        if (genreTag) {
+            genreTag.textContent = '';
+            genreTag.style.display = 'none';
+        }
     }
 }
 
