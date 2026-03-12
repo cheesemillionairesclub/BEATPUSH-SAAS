@@ -1437,7 +1437,13 @@ function showCampaignSetup(pack) {
         };
         const priceLabel = t.campaign_total || 'Total';
         if (pack === 'promo-430') {
-            priceSummary.textContent = `${priceLabel}: ${t.campaign_price_genre || 'Depends on genre'}`;
+            const genre = selectedTrack && selectedTrack.genre ? selectedTrack.genre : null;
+            const genrePrice = genre ? getTop100Price(genre) : null;
+            if (genrePrice) {
+                priceSummary.textContent = `${priceLabel}: $${genrePrice.toLocaleString('en-US')}`;
+            } else {
+                priceSummary.textContent = `${priceLabel}: ${t.campaign_price_genre || 'Depends on genre'}`;
+            }
         } else {
             priceSummary.textContent = `${priceLabel}: ${PACK_PRICES[pack] || ''}`;
         }
@@ -1476,6 +1482,17 @@ document.getElementById('genreConfirmBtn').addEventListener('click', function() 
     const t = translations[lang] || translations.en;
     this.textContent = t.campaign_confirmed || 'Confirmed';
     this.disabled = true;
+
+    // Update price summary for promo-430 based on confirmed genre
+    if (selectedPack === 'promo-430') {
+        const confirmedGenre = genreTag ? genreTag.textContent.trim() : null;
+        const genrePrice = confirmedGenre ? getTop100Price(confirmedGenre) : null;
+        const priceSummary = document.getElementById('campaignPriceSummary');
+        if (priceSummary && genrePrice) {
+            const priceLabel = t.campaign_total || 'Total';
+            priceSummary.textContent = `${priceLabel}: $${genrePrice.toLocaleString('en-US')}`;
+        }
+    }
 });
 
 // Tips toggle
