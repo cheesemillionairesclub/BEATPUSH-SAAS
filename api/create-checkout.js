@@ -1,5 +1,7 @@
 import Stripe from 'stripe';
 
+const PRODUCT_DESCRIPTION = 'All purchases comply with Beatport\'s platform mechanics and are made through legitimate customer accounts. 24/48H delivery. You will receive a detailed receipt once your order is complete.';
+
 const PACK_CONFIG = {
     '50':   { amount: 24000,  currency: 'usd', name: 'Beatport Campaign - 50 Copies',      mode: 'payment' },
     '100':  { amount: 48000,  currency: 'usd', name: 'Beatport Campaign - 100 Copies',     mode: 'payment' },
@@ -43,7 +45,7 @@ export default async function handler(req, res) {
                 line_items: [{
                     price_data: {
                         currency: config.currency,
-                        product_data: { name: config.name },
+                        product_data: { name: config.name, description: PRODUCT_DESCRIPTION },
                         unit_amount: config.amount,
                         recurring: { interval: config.interval },
                     },
@@ -61,7 +63,7 @@ export default async function handler(req, res) {
                 line_items: [{
                     price_data: {
                         currency: config.currency,
-                        product_data: { name: config.name },
+                        product_data: { name: config.name, description: PRODUCT_DESCRIPTION },
                         unit_amount: config.amount,
                     },
                     quantity: 1,
