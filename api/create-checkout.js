@@ -22,7 +22,7 @@ export default async function handler(req, res) {
 
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
     const config = PACK_CONFIG[pack];
-    const origin = req.headers.origin || 'https://beatpush.com';
+    const origin = req.headers.origin || 'https://beatpush.app';
 
     const metadata = {
         pack,
