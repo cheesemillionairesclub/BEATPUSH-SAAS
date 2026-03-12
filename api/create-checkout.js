@@ -18,12 +18,15 @@ export default async function handler(req, res) {
 
     const { pack, track_title, track_artist, track_url, genre, similar_artists, release_status } = req.body || {};
 
-    if (!pack || !PACK_CONFIG[pack]) {
-        return res.status(400).json({ error: `Invalid pack: ${pack}` });
+    const packKey = String(pack || '');
+    if (!packKey || !PACK_CONFIG[packKey]) {
+        return res.status(400).json({ error: `Invalid pack: ${packKey}` });
     }
 
+    console.log(`Creating checkout for pack: ${packKey}, amount: ${PACK_CONFIG[packKey].amount}, mode: ${PACK_CONFIG[packKey].mode}`);
+
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-    const config = PACK_CONFIG[pack];
+    const config = PACK_CONFIG[packKey];
     const origin = req.headers.origin || 'https://beatpush.app';
 
     const metadata = {

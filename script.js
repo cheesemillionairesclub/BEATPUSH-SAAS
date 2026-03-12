@@ -1598,7 +1598,8 @@ document.getElementById('launchCampaignBtn').addEventListener('click', function(
     }
 
     // Other packs: create Stripe Checkout Session with metadata
-    if (!selectedPack || !STRIPE_LINKS[selectedPack]) return;
+    if (!selectedPack) return;
+    console.log('Launching checkout for pack:', selectedPack);
 
     const track = selectedTrack || {};
     const genre = document.getElementById('campaignGenreTag')?.textContent?.trim() || track.genre || '';
