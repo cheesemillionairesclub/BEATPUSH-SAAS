@@ -158,7 +158,7 @@ const translations = {
         campaign_preorder: 'Pre-Order',
         campaign_launch_btn: 'Run my campaign',
         payment_success: 'Payment confirmed!',
-        payment_success_sub: 'Your campaign is being set up. You will receive a confirmation email shortly.',
+        payment_success_sub: 'Your campaign is being set up. You will receive a confirmation email shortly.\nYou will also receive a detailed receipt of all purchases made within 24/48 Hours.',
         campaign_tips_title: 'Tips / Requirements',
         card_tooltip_title: 'Tips & Requirements',
         campaign_tip_1: 'Tracks must be new, to perform well.',
@@ -294,7 +294,7 @@ const translations = {
         campaign_preorder: 'Pr\u00e9-commande',
         campaign_launch_btn: 'Lancer ma campagne',
         payment_success: 'Paiement confirm\u00e9 !',
-        payment_success_sub: 'Votre campagne est en cours de mise en place. Vous recevrez un email de confirmation sous peu.',
+        payment_success_sub: 'Votre campagne est en cours de mise en place. Vous recevrez un email de confirmation sous peu.\nVous recevrez \u00e9galement un re\u00e7u d\u00e9taill\u00e9 de tous les achats effectu\u00e9s sous 24/48H.',
         campaign_tips_title: 'Conseils / Pr\u00e9requis',
         card_tooltip_title: 'Conseils & Pr\u00e9requis',
         campaign_tip_1: 'Les tracks doivent \u00eatre r\u00e9centes.',
@@ -430,7 +430,7 @@ const translations = {
         campaign_preorder: 'Pr\u00e9-venda',
         campaign_launch_btn: 'Lan\u00e7ar minha campanha',
         payment_success: 'Pagamento confirmado!',
-        payment_success_sub: 'Sua campanha est\u00e1 sendo configurada. Voc\u00ea receber\u00e1 um email de confirma\u00e7\u00e3o em breve.',
+        payment_success_sub: 'Sua campanha est\u00e1 sendo configurada. Voc\u00ea receber\u00e1 um email de confirma\u00e7\u00e3o em breve.\nVoc\u00ea tamb\u00e9m receber\u00e1 um recibo detalhado de todas as compras realizadas em 24/48H.',
         campaign_tips_title: 'Dicas / Requisitos',
         card_tooltip_title: 'Dicas & Requisitos',
         campaign_tip_1: 'As tracks devem ser novas.',
@@ -566,7 +566,7 @@ const translations = {
         campaign_preorder: 'Preventa',
         campaign_launch_btn: 'Lanzar mi campa\u00f1a',
         payment_success: '\u00a1Pago confirmado!',
-        payment_success_sub: 'Tu campa\u00f1a se est\u00e1 configurando. Recibir\u00e1s un email de confirmaci\u00f3n en breve.',
+        payment_success_sub: 'Tu campa\u00f1a se est\u00e1 configurando. Recibir\u00e1s un email de confirmaci\u00f3n en breve.\nTambi\u00e9n recibir\u00e1s un recibo detallado de todas las compras realizadas en 24/48H.',
         campaign_tips_title: 'Consejos / Requisitos',
         card_tooltip_title: 'Consejos & Requisitos',
         campaign_tip_1: 'Las tracks deben ser nuevas.',
@@ -702,7 +702,7 @@ const translations = {
         campaign_preorder: 'Vorbestellung',
         campaign_launch_btn: 'Meine Kampagne starten',
         payment_success: 'Zahlung best\u00e4tigt!',
-        payment_success_sub: 'Ihre Kampagne wird eingerichtet. Sie erhalten in K\u00fcrze eine Best\u00e4tigungs-E-Mail.',
+        payment_success_sub: 'Ihre Kampagne wird eingerichtet. Sie erhalten in K\u00fcrze eine Best\u00e4tigungs-E-Mail.\nSie erhalten au\u00dferdem eine detaillierte Quittung aller K\u00e4ufe innerhalb von 24/48 Stunden.',
         campaign_tips_title: 'Tipps / Anforderungen',
         card_tooltip_title: 'Tipps & Anforderungen',
         campaign_tip_1: 'Tracks m\u00fcssen neu sein.',
@@ -1753,7 +1753,7 @@ function showPaymentConfirmation(campaign, paymentData) {
     overlay.innerHTML = `
         <div class="confirm-box">
             <div class="confirm-check">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--green-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                <img src="https://i.ibb.co/FLyL2c8K/icon.png" alt="BeatPush" class="confirm-logo">
             </div>
             <h2 class="confirm-title">${t.payment_success || 'Payment confirmed!'}</h2>
             <p class="confirm-subtitle">${t.payment_success_sub || 'Your campaign is being set up. You will receive a confirmation email shortly.'}</p>

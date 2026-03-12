@@ -2203,12 +2203,14 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 20px;
+}
+
+.confirm-logo {
     width: 64px;
     height: 64px;
+    object-fit: contain;
     border-radius: 50%;
-    background: rgba(30, 215, 96, 0.1);
-    border: 2px solid var(--green-primary);
-    margin-bottom: 20px;
 }
 
 .confirm-title {
@@ -2223,6 +2225,7 @@ body {
     color: var(--white-50);
     margin: 0 0 24px;
     line-height: 1.5;
+    white-space: pre-line;
 }
 
 .confirm-divider {
