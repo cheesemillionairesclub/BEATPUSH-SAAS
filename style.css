@@ -919,16 +919,7 @@ body {
 }
 
 #top100-price.genre-pending {
-    font-size: 1.45rem;
-    letter-spacing: 0;
     white-space: nowrap;
-    padding-top: 10px;
-}
-
-@media (max-width: 768px) {
-    #top100-price.genre-pending {
-        font-size: 1.1rem;
-    }
 }
 
 .product-card-btn {
