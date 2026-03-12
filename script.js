@@ -157,6 +157,7 @@ const translations = {
         campaign_released: 'Already Released',
         campaign_preorder: 'Pre-Order',
         campaign_launch_btn: 'Run my campaign',
+        payment_success: 'Payment confirmed! Your campaign is being set up.',
         campaign_tips_title: 'Tips / Requirements',
         card_tooltip_title: 'Tips & Requirements',
         campaign_tip_1: 'Tracks must be new, to perform well.',
@@ -291,6 +292,7 @@ const translations = {
         campaign_released: 'D\u00e9j\u00e0 sortie',
         campaign_preorder: 'Pr\u00e9-commande',
         campaign_launch_btn: 'Lancer ma campagne',
+        payment_success: 'Paiement confirmé ! Votre campagne est en cours de mise en place.',
         campaign_tips_title: 'Conseils / Pr\u00e9requis',
         card_tooltip_title: 'Conseils & Pr\u00e9requis',
         campaign_tip_1: 'Les tracks doivent \u00eatre r\u00e9centes.',
@@ -425,6 +427,7 @@ const translations = {
         campaign_released: 'J\u00e1 lan\u00e7ada',
         campaign_preorder: 'Pr\u00e9-venda',
         campaign_launch_btn: 'Lan\u00e7ar minha campanha',
+        payment_success: 'Pagamento confirmado! Sua campanha est\u00e1 sendo configurada.',
         campaign_tips_title: 'Dicas / Requisitos',
         card_tooltip_title: 'Dicas & Requisitos',
         campaign_tip_1: 'As tracks devem ser novas.',
@@ -559,6 +562,7 @@ const translations = {
         campaign_released: 'Ya lanzada',
         campaign_preorder: 'Preventa',
         campaign_launch_btn: 'Lanzar mi campa\u00f1a',
+        payment_success: '\u00a1Pago confirmado! Tu campa\u00f1a se est\u00e1 configurando.',
         campaign_tips_title: 'Consejos / Requisitos',
         card_tooltip_title: 'Consejos & Requisitos',
         campaign_tip_1: 'Las tracks deben ser nuevas.',
@@ -693,6 +697,7 @@ const translations = {
         campaign_released: 'Bereits ver\u00f6ffentlicht',
         campaign_preorder: 'Vorbestellung',
         campaign_launch_btn: 'Meine Kampagne starten',
+        payment_success: 'Zahlung best\u00e4tigt! Ihre Kampagne wird eingerichtet.',
         campaign_tips_title: 'Tipps / Anforderungen',
         card_tooltip_title: 'Tipps & Anforderungen',
         campaign_tip_1: 'Tracks m\u00fcssen neu sein.',
@@ -1587,9 +1592,52 @@ document.getElementById('launchCampaignBtn').addEventListener('click', function(
         return;
     }
 
-    // Other packs: redirect to Stripe
+    // Other packs: create Stripe Checkout Session with metadata
     if (!selectedPack || !STRIPE_LINKS[selectedPack]) return;
-    window.open(STRIPE_LINKS[selectedPack], '_blank');
+
+    const track = selectedTrack || {};
+    const genre = document.getElementById('campaignGenreTag')?.textContent?.trim() || track.genre || '';
+    const artists = selectedArtists.map(a => a.name).join(', ');
+    const releaseStatus = document.querySelector('input[name="releaseStatus"]:checked')?.value || '';
+
+    const launchBtn = document.getElementById('launchCampaignBtn');
+    if (launchBtn) {
+        launchBtn.disabled = true;
+        launchBtn.style.opacity = '0.6';
+    }
+
+    fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            pack: selectedPack,
+            track_title: track.title || '',
+            track_artist: track.artist || '',
+            track_url: track.id || '',
+            genre: genre,
+            similar_artists: artists,
+            release_status: releaseStatus,
+        }),
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.url) {
+            window.location.href = data.url;
+        } else {
+            // Fallback to Payment Link
+            window.open(STRIPE_LINKS[selectedPack], '_blank');
+        }
+    })
+    .catch(() => {
+        // Fallback to Payment Link if API fails
+        window.open(STRIPE_LINKS[selectedPack], '_blank');
+    })
+    .finally(() => {
+        if (launchBtn) {
+            launchBtn.disabled = false;
+            launchBtn.style.opacity = '';
+        }
+    });
 });
 
 // ===== Field Highlight =====
@@ -1638,6 +1686,38 @@ function showToast(message, scrollToSearch) {
         if (e.target === overlay) close();
     });
 }
+
+// ===== Checkout Success Detection =====
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    if (!sessionId) return;
+
+    // Clean URL
+    window.history.replaceState({}, '', window.location.pathname);
+
+    fetch(`/api/checkout-success?session_id=${encodeURIComponent(sessionId)}`)
+        .then(r => r.json())
+        .then(data => {
+            if (data.status === 'paid') {
+                const m = data.metadata || {};
+                const lang = detectLanguage();
+                const t = translations[lang] || translations.en;
+                const packLabel = m.pack === 'daily-push' ? 'Daily Push' : `${m.pack} copies`;
+                let msg = `${t.payment_success || 'Payment confirmed!'}\n\n`;
+                msg += `${t.campaign_summary_pack || 'Package'}: ${packLabel}\n`;
+                if (m.track_title) msg += `${t.campaign_summary_track || 'Track'}: ${m.track_title} - ${m.track_artist}\n`;
+                if (m.genre) msg += `Genre: ${m.genre}\n`;
+                if (m.similar_artists) msg += `${t.campaign_artists_label || 'Similar Artists'}: ${m.similar_artists}`;
+                showToast(msg.trim());
+            } else {
+                showToast('Payment is being processed...');
+            }
+        })
+        .catch(() => {
+            showToast('Payment received! We will process your campaign shortly.');
+        });
+})();
 
 // ===== FAQ Toggle =====
 function toggleFaq(btn) {
