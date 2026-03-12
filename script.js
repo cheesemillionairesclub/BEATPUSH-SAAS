@@ -1449,6 +1449,16 @@ function showCampaignSetup(pack) {
         }
     }
 
+    // Update launch button text for Top 10 / Top 100
+    const launchBtn = document.getElementById('launchCampaignBtn');
+    if (launchBtn) {
+        if (pack === 'exclusive-800' || pack === 'promo-430') {
+            launchBtn.textContent = t.campaign_whatsapp_btn || 'Contact us on Whatsapp to finalize';
+        } else {
+            launchBtn.textContent = t.campaign_launch_btn || 'Run my campaign';
+        }
+    }
+
     // Scroll to campaign setup
     setTimeout(() => {
         campaignSetup.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1502,8 +1512,6 @@ document.getElementById('tipsToggle').addEventListener('click', function() {
 
 // Launch campaign button
 document.getElementById('launchCampaignBtn').addEventListener('click', function() {
-    if (!selectedPack || !STRIPE_LINKS[selectedPack]) return;
-
     const lang = detectLanguage();
     const t = translations[lang] || translations.en;
 
@@ -1522,7 +1530,18 @@ document.getElementById('launchCampaignBtn').addEventListener('click', function(
         return;
     }
 
-    // Redirect to Stripe
+    // Top 10 & Top 100: redirect to WhatsApp
+    if (selectedPack === 'exclusive-800') {
+        window.open('https://api.whatsapp.com/send/?phone=13046603890&text=Hello,%20I%27d%20like%20to%20finalize%20my%20Beaport%20Top%2010%20Campaign!&type=phone_number&app_absent=0', '_blank');
+        return;
+    }
+    if (selectedPack === 'promo-430') {
+        window.open('https://api.whatsapp.com/send/?phone=13046603890&text=Hello,%20I%27d%20like%20to%20finalize%20my%20Beaport%20Top%20100%20Campaign!&type=phone_number&app_absent=0', '_blank');
+        return;
+    }
+
+    // Other packs: redirect to Stripe
+    if (!selectedPack || !STRIPE_LINKS[selectedPack]) return;
     window.open(STRIPE_LINKS[selectedPack], '_blank');
 });
 
