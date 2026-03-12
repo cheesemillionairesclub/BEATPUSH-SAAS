@@ -34,10 +34,11 @@ export default async function handler(req, res) {
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object;
         const metadata = session.metadata || {};
+        const customerEmail = session.customer_details?.email;
 
         console.log('=== PAYMENT SUCCESS ===');
         console.log('Session ID:', session.id);
-        console.log('Customer Email:', session.customer_details?.email);
+        console.log('Customer Email:', customerEmail);
         console.log('Amount:', session.amount_total, session.currency);
         console.log('Pack:', metadata.pack);
         console.log('Track:', metadata.track_title, '-', metadata.track_artist);
@@ -46,6 +47,18 @@ export default async function handler(req, res) {
         console.log('Similar Artists:', metadata.similar_artists);
         console.log('Release Status:', metadata.release_status);
         console.log('=======================');
+
+        // Set receipt_email on the PaymentIntent so Stripe sends the receipt
+        if (customerEmail && session.payment_intent) {
+            try {
+                await stripe.paymentIntents.update(session.payment_intent, {
+                    receipt_email: customerEmail,
+                });
+                console.log('Receipt will be sent to:', customerEmail);
+            } catch (err) {
+                console.error('Failed to set receipt_email:', err.message);
+            }
+        }
     }
 
     res.status(200).json({ received: true });

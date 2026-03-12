@@ -67,7 +67,11 @@ export default async function handler(req, res) {
                     quantity: 1,
                 }],
                 mode: 'payment',
-                payment_intent_data: { metadata },
+                payment_intent_data: {
+                    metadata,
+                    receipt_email: null, // Will be set from Checkout email
+                },
+                invoice_creation: { enabled: true },
                 metadata,
                 success_url: `${origin}/?session_id={CHECKOUT_SESSION_ID}`,
                 cancel_url: `${origin}/`,
