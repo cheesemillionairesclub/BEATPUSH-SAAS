@@ -915,7 +915,10 @@ body {
     color: var(--white-70);
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    margin-bottom: 4px;
+    margin-bottom: 0;
+    height: 0;
+    overflow: visible;
+    transform: translateY(-1.2em);
 }
 
 #top100-price.genre-pending {
