@@ -2059,6 +2059,13 @@ body {
     color: var(--white-30);
 }
 
+.footer-disclaimer {
+    margin-top: 8px;
+    font-size: 0.65rem !important;
+    color: var(--white-30);
+    opacity: 0.5;
+}
+
 /* ===== Field Highlight ===== */
 .field-highlight {
     animation: fieldPulse 0.6s ease-out;

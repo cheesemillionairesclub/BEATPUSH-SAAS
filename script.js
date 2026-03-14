@@ -250,6 +250,7 @@ const translations = {
         footer_boost: 'Boost my track',
         footer_how: 'How it works',
         footer_copy: '&copy; 2026 BeatPush. All rights reserved.',
+        footer_disclaimer: 'Beatpush is an independent promotional service. Beatpush is not affiliated with Beatport.',
     },
     fr: {
         page_title: 'Beatpush - Promotion Beatport pour DJs, producteurs et labels',
@@ -388,6 +389,7 @@ const translations = {
         footer_boost: 'Booster ma track',
         footer_how: 'Comment \u00e7a marche',
         footer_copy: '&copy; 2026 BeatPush. Tous droits r\u00e9serv\u00e9s.',
+        footer_disclaimer: 'Beatpush est un service promotionnel indépendant. Beatpush n\'est pas affilié à Beatport.',
     },
     pt: {
         page_title: 'Beatpush - Promoção Beatport para DJs, produtores e gravadoras',
@@ -526,6 +528,7 @@ const translations = {
         footer_boost: 'Impulsionar minha track',
         footer_how: 'Como funciona',
         footer_copy: '&copy; 2026 BeatPush. Todos os direitos reservados.',
+        footer_disclaimer: 'Beatpush é um serviço promocional independente. Beatpush não é afiliado ao Beatport.',
     },
     es: {
         page_title: 'Beatpush - Promoción Beatport para DJs, productores y sellos',
@@ -664,6 +667,7 @@ const translations = {
         footer_boost: 'Impulsar mi track',
         footer_how: 'C\u00f3mo funciona',
         footer_copy: '&copy; 2026 BeatPush. Todos los derechos reservados.',
+        footer_disclaimer: 'Beatpush es un servicio promocional independiente. Beatpush no está afiliado a Beatport.',
     },
     de: {
         page_title: 'Beatpush - Beatport Promotion für DJs, Produzenten und Labels',
@@ -802,6 +806,7 @@ const translations = {
         footer_boost: 'Meinen Track boosten',
         footer_how: 'Wie es funktioniert',
         footer_copy: '&copy; 2026 BeatPush. Alle Rechte vorbehalten.',
+        footer_disclaimer: 'Beatpush ist ein unabhängiger Promotionservice. Beatpush ist nicht mit Beatport verbunden.',
     }
 };
 
