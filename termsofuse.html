@@ -20,7 +20,21 @@
                 <img src="https://i.ibb.co/nMjbdTkQ/White-and-Black-Modern-Initial-B-Logo-5000-x-5000-px-1.png" alt="BeatPush" class="logo-img">
             </a>
             <div class="nav-actions">
-                <a href="index.html" class="terms-back-btn">← Back to site</a>
+                <div class="lang-selector" id="langSelector">
+                    <button class="lang-btn" id="langBtn" aria-label="Language">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        <span id="currentLang">EN</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <button class="lang-option" data-lang="fr">FR</button>
+                        <button class="lang-option" data-lang="en">EN</button>
+                        <button class="lang-option" data-lang="pt">PT</button>
+                        <button class="lang-option" data-lang="es">ES</button>
+                        <button class="lang-option" data-lang="de">DE</button>
+                    </div>
+                </div>
+                <a href="index.html" class="terms-back-btn" id="backBtn">← Back to site</a>
             </div>
         </div>
     </nav>
@@ -28,127 +42,7 @@
     <!-- Terms Content -->
     <section class="terms-page">
         <div class="container">
-            <div class="terms-content">
-
-                <h1 class="terms-main-title">Terms of Use</h1>
-                <p class="terms-updated">Last updated: March 14, 2026</p>
-                <p class="terms-intro">By accessing the Beatpush website and purchasing any promotional service, you agree to the following Terms of Use.</p>
-
-                <div class="terms-section">
-                    <h2>1. Services</h2>
-                    <p>Beatpush provides promotional services designed to increase the visibility and exposure of music releases on digital platforms such as Beatport.</p>
-                    <p>Our services consist of promotional campaigns that leverage a professional network of DJs and industry contacts in order to generate legitimate market exposure for music releases.</p>
-                    <p>The objective of these campaigns is to support artists and labels in gaining traction and improving the performance of their releases within digital music stores.</p>
-                </div>
-
-                <div class="terms-section">
-                    <h2>2. Campaign Objectives</h2>
-                    <p>Each promotional campaign purchased on Beatpush is associated with a specific objective depending on the package selected.</p>
-                    <p>Objectives may include:</p>
-                    <ul>
-                        <li>A targeted number of track purchases</li>
-                        <li>Entry into the Beatport Top 100 chart of a specific genre</li>
-                        <li>Entry into the Beatport Top 10 chart of a specific genre</li>
-                    </ul>
-                    <p>The expected objective is clearly indicated on the product page at the time of purchase.</p>
-                </div>
-
-                <div class="terms-section">
-                    <h2>3. Performance Commitment</h2>
-                    <p>Beatpush commits to delivering the objective associated with the purchased campaign.</p>
-                    <p>If the campaign does not reach the expected objective (including the targeted number of purchases or the specified chart position such as Top 100 or Top 10), the client may be eligible for a refund.</p>
-                    <p>Refund eligibility is determined after the campaign period has concluded and results have been evaluated.</p>
-                    <p>Refunds may be issued in full or partially depending on the results achieved and the campaign conditions.</p>
-                </div>
-
-                <div class="terms-section">
-                    <h2>4. Refund Policy</h2>
-                    <p>Refunds are available under the following condition:</p>
-                    <ul>
-                        <li>The promotional objective defined in the purchased package has not been achieved.</li>
-                    </ul>
-                    <p>Refund requests must be submitted to our support team after the campaign period has ended.</p>
-                    <p>Refunds will not be granted in the following cases:</p>
-                    <ul>
-                        <li>The client provides incorrect release information</li>
-                        <li>The track is removed from Beatport during the campaign</li>
-                        <li>The client interferes with the campaign process</li>
-                    </ul>
-                    <p>Beatpush reserves the right to verify campaign results before issuing any refund.</p>
-                </div>
-
-                <div class="terms-section">
-                    <h2>5. Campaign Process</h2>
-                    <p>After a successful purchase, the campaign preparation process begins.</p>
-                    <p>The client may be contacted to confirm release details, track links, or additional information required for the campaign.</p>
-                    <p>Campaign timelines may vary depending on operational factors and release schedules.</p>
-                    <p>While Beatpush aims to launch campaigns quickly, exact start times may vary.</p>
-                </div>
-
-                <div class="terms-section">
-                    <h2>6. Client Responsibilities</h2>
-                    <p>Clients must ensure that:</p>
-                    <ul>
-                        <li>They own the rights to the submitted music or have permission from the rights holders</li>
-                        <li>The provided track links and release information are accurate</li>
-                        <li>The release remains available on Beatport during the campaign period</li>
-                    </ul>
-                    <p>Beatpush cannot be held responsible for incorrect information submitted by the client.</p>
-                </div>
-
-                <div class="terms-section">
-                    <h2>7. Anti-Fraud Policy</h2>
-                    <p>Beatpush maintains a strict anti-fraud policy.</p>
-                    <p>Any attempt to abuse the platform or manipulate the service may result in:</p>
-                    <ul>
-                        <li>Immediate cancellation of the campaign</li>
-                        <li>Suspension of access to Beatpush services</li>
-                        <li>Refusal of future services</li>
-                    </ul>
-                    <p>Examples of abuse include but are not limited to:</p>
-                    <ul>
-                        <li>Fraudulent chargebacks</li>
-                        <li>Submission of misleading or false information</li>
-                        <li>Attempts to exploit or resell the service</li>
-                    </ul>
-                    <p>Beatpush reserves the right to dispute fraudulent chargebacks with payment providers.</p>
-                </div>
-
-                <div class="terms-section">
-                    <h2>8. Platform Disclaimer</h2>
-                    <p>Beatpush is an independent promotional service.</p>
-                    <p>Beatpush is not affiliated with, endorsed by, or officially connected to Beatport or any other digital music platform.</p>
-                    <p>All chart rankings, positions, and editorial decisions are determined solely by the respective platform.</p>
-                    <p>Beatpush does not control the algorithms or ranking systems used by third-party platforms.</p>
-                    <p>Our services are intended solely as promotional marketing support to increase exposure and audience engagement.</p>
-                </div>
-
-                <div class="terms-section">
-                    <h2>9. Limitation of Liability</h2>
-                    <p>Beatpush shall not be held responsible for any indirect, incidental, or consequential damages arising from the use of the services.</p>
-                    <p>Platform algorithm changes, editorial decisions, or external market factors may influence campaign results.</p>
-                </div>
-
-                <div class="terms-section">
-                    <h2>10. Modifications</h2>
-                    <p>Beatpush reserves the right to update or modify these Terms of Use at any time.</p>
-                    <p>Continued use of the website constitutes acceptance of the updated terms.</p>
-                </div>
-
-                <div class="terms-section">
-                    <h2>11. Subscription Cancellation</h2>
-                    <p>Clients who subscribe to a recurring service may request the cancellation of their subscription at any time.</p>
-                    <p>By subscribing to a recurring service, the client agrees to automatic recurring billing until cancellation is requested.</p>
-                    <p>The only accepted method to cancel a subscription is by sending a request via email to:</p>
-                    <p class="terms-email"><a href="mailto:contact@beatpush.app">contact@beatpush.app</a></p>
-                    <p>The cancellation request must be sent from the email address associated with the original purchase or subscription.</p>
-                    <p>Once the cancellation request has been received, the subscription will be terminated within 24 hours.</p>
-                    <p>Any cancellation request received after a billing cycle has already started will apply to the next billing period.</p>
-                    <p>Beatpush is not responsible for cancellation requests sent through other channels, including but not limited to messaging platforms, social media, or third-party services.</p>
-                    <p>Only cancellation requests sent to <a href="mailto:contact@beatpush.app">contact@beatpush.app</a> will be considered valid.</p>
-                </div>
-
-            </div>
+            <div class="terms-content" id="termsContent"></div>
         </div>
     </section>
 
@@ -162,25 +56,530 @@
                     <span class="footer-address-line">La Jolla, CA 92037</span>
                 </div>
                 <div class="footer-col">
-                    <h4>Navigation</h4>
-                    <a href="index.html">Home</a>
-                    <a href="index.html#pricing">Pricing</a>
-                    <a href="index.html#how-it-works">How it works</a>
+                    <h4 id="footerNav">Navigation</h4>
+                    <a href="index.html" id="footerHome">Home</a>
+                    <a href="index.html#pricing" id="footerPricing">Pricing</a>
+                    <a href="index.html#how-it-works" id="footerHow">How it works</a>
                 </div>
                 <div class="footer-col">
                     <h4>Support</h4>
                     <a href="index.html#faq">FAQ</a>
                     <a href="mailto:contact@beatpush.app">contact@beatpush.app</a>
                     <a href="https://api.whatsapp.com/send/?phone=13046603890&text=Hello!&type=phone_number&app_absent=0" target="_blank" rel="noopener">Customer Care (WhatsApp): +1 (304) 660‑3890</a>
+                    <a href="termsofuse.html" id="footerTerms">Terms of Use</a>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 BeatPush. All rights reserved.</p>
-                <p class="footer-disclaimer">Beatpush is an independent promotional service. Beatpush is not affiliated with Beatport.</p>
-                <a href="termsofuse.html" class="footer-terms-link">Terms of Use</a>
+                <p id="footerCopy">&copy; 2026 BeatPush. All rights reserved.</p>
+                <p class="footer-disclaimer" id="footerDisclaimer">Beatpush is an independent promotional service. Beatpush is not affiliated with Beatport.</p>
             </div>
         </div>
     </footer>
+
+<script>
+const termsTranslations = {
+    en: {
+        page_title: 'Terms of Use - Beatpush',
+        back_btn: '← Back to site',
+        title: 'Terms of Use',
+        updated: 'Last updated: March 14, 2026',
+        intro: 'By accessing the Beatpush website and purchasing any promotional service, you agree to the following Terms of Use.',
+        s1_title: '1. Services',
+        s1_p1: 'Beatpush provides promotional services designed to increase the visibility and exposure of music releases on digital platforms such as Beatport.',
+        s1_p2: 'Our services consist of promotional campaigns that leverage a professional network of DJs and industry contacts in order to generate legitimate market exposure for music releases.',
+        s1_p3: 'The objective of these campaigns is to support artists and labels in gaining traction and improving the performance of their releases within digital music stores.',
+        s2_title: '2. Campaign Objectives',
+        s2_p1: 'Each promotional campaign purchased on Beatpush is associated with a specific objective depending on the package selected.',
+        s2_p2: 'Objectives may include:',
+        s2_li1: 'A targeted number of track purchases',
+        s2_li2: 'Entry into the Beatport Top 100 chart of a specific genre',
+        s2_li3: 'Entry into the Beatport Top 10 chart of a specific genre',
+        s2_p3: 'The expected objective is clearly indicated on the product page at the time of purchase.',
+        s3_title: '3. Performance Commitment',
+        s3_p1: 'Beatpush commits to delivering the objective associated with the purchased campaign.',
+        s3_p2: 'If the campaign does not reach the expected objective (including the targeted number of purchases or the specified chart position such as Top 100 or Top 10), the client may be eligible for a refund.',
+        s3_p3: 'Refund eligibility is determined after the campaign period has concluded and results have been evaluated.',
+        s3_p4: 'Refunds may be issued in full or partially depending on the results achieved and the campaign conditions.',
+        s4_title: '4. Refund Policy',
+        s4_p1: 'Refunds are available under the following condition:',
+        s4_li1: 'The promotional objective defined in the purchased package has not been achieved.',
+        s4_p2: 'Refund requests must be submitted to our support team after the campaign period has ended.',
+        s4_p3: 'Refunds will not be granted in the following cases:',
+        s4_li2: 'The client provides incorrect release information',
+        s4_li3: 'The track is removed from Beatport during the campaign',
+        s4_li4: 'The client interferes with the campaign process',
+        s4_p4: 'Beatpush reserves the right to verify campaign results before issuing any refund.',
+        s5_title: '5. Campaign Process',
+        s5_p1: 'After a successful purchase, the campaign preparation process begins.',
+        s5_p2: 'The client may be contacted to confirm release details, track links, or additional information required for the campaign.',
+        s5_p3: 'Campaign timelines may vary depending on operational factors and release schedules.',
+        s5_p4: 'While Beatpush aims to launch campaigns quickly, exact start times may vary.',
+        s6_title: '6. Client Responsibilities',
+        s6_p1: 'Clients must ensure that:',
+        s6_li1: 'They own the rights to the submitted music or have permission from the rights holders',
+        s6_li2: 'The provided track links and release information are accurate',
+        s6_li3: 'The release remains available on Beatport during the campaign period',
+        s6_p2: 'Beatpush cannot be held responsible for incorrect information submitted by the client.',
+        s7_title: '7. Anti-Fraud Policy',
+        s7_p1: 'Beatpush maintains a strict anti-fraud policy.',
+        s7_p2: 'Any attempt to abuse the platform or manipulate the service may result in:',
+        s7_li1: 'Immediate cancellation of the campaign',
+        s7_li2: 'Suspension of access to Beatpush services',
+        s7_li3: 'Refusal of future services',
+        s7_p3: 'Examples of abuse include but are not limited to:',
+        s7_li4: 'Fraudulent chargebacks',
+        s7_li5: 'Submission of misleading or false information',
+        s7_li6: 'Attempts to exploit or resell the service',
+        s7_p4: 'Beatpush reserves the right to dispute fraudulent chargebacks with payment providers.',
+        s8_title: '8. Platform Disclaimer',
+        s8_p1: 'Beatpush is an independent promotional service.',
+        s8_p2: 'Beatpush is not affiliated with, endorsed by, or officially connected to Beatport or any other digital music platform.',
+        s8_p3: 'All chart rankings, positions, and editorial decisions are determined solely by the respective platform.',
+        s8_p4: 'Beatpush does not control the algorithms or ranking systems used by third-party platforms.',
+        s8_p5: 'Our services are intended solely as promotional marketing support to increase exposure and audience engagement.',
+        s9_title: '9. Limitation of Liability',
+        s9_p1: 'Beatpush shall not be held responsible for any indirect, incidental, or consequential damages arising from the use of the services.',
+        s9_p2: 'Platform algorithm changes, editorial decisions, or external market factors may influence campaign results.',
+        s10_title: '10. Modifications',
+        s10_p1: 'Beatpush reserves the right to update or modify these Terms of Use at any time.',
+        s10_p2: 'Continued use of the website constitutes acceptance of the updated terms.',
+        s11_title: '11. Subscription Cancellation',
+        s11_p1: 'Clients who subscribe to a recurring service may request the cancellation of their subscription at any time.',
+        s11_p2: 'By subscribing to a recurring service, the client agrees to automatic recurring billing until cancellation is requested.',
+        s11_p3: 'The only accepted method to cancel a subscription is by sending a request via email to:',
+        s11_p4: 'The cancellation request must be sent from the email address associated with the original purchase or subscription.',
+        s11_p5: 'Once the cancellation request has been received, the subscription will be terminated within 24 hours.',
+        s11_p6: 'Any cancellation request received after a billing cycle has already started will apply to the next billing period.',
+        s11_p7: 'Beatpush is not responsible for cancellation requests sent through other channels, including but not limited to messaging platforms, social media, or third-party services.',
+        s11_p8: 'Only cancellation requests sent to <a href="mailto:contact@beatpush.app">contact@beatpush.app</a> will be considered valid.',
+        footer_nav: 'Navigation',
+        footer_home: 'Home',
+        footer_pricing: 'Pricing',
+        footer_how: 'How it works',
+        footer_terms: 'Terms of Use',
+        footer_copy: '&copy; 2026 BeatPush. All rights reserved.',
+        footer_disclaimer: 'Beatpush is an independent promotional service. Beatpush is not affiliated with Beatport.',
+    },
+    fr: {
+        page_title: 'Conditions d\'utilisation - Beatpush',
+        back_btn: '← Retour au site',
+        title: 'Conditions d\'utilisation',
+        updated: 'Dernière mise à jour : 14 mars 2026',
+        intro: 'En accédant au site Beatpush et en achetant tout service promotionnel, vous acceptez les présentes Conditions d\'utilisation.',
+        s1_title: '1. Services',
+        s1_p1: 'Beatpush fournit des services promotionnels conçus pour augmenter la visibilité et l\'exposition des sorties musicales sur les plateformes numériques telles que Beatport.',
+        s1_p2: 'Nos services consistent en des campagnes promotionnelles qui s\'appuient sur un réseau professionnel de DJs et de contacts de l\'industrie afin de générer une exposition légitime sur le marché pour les sorties musicales.',
+        s1_p3: 'L\'objectif de ces campagnes est de soutenir les artistes et les labels pour gagner en traction et améliorer la performance de leurs sorties dans les magasins de musique numériques.',
+        s2_title: '2. Objectifs de campagne',
+        s2_p1: 'Chaque campagne promotionnelle achetée sur Beatpush est associée à un objectif spécifique en fonction du pack sélectionné.',
+        s2_p2: 'Les objectifs peuvent inclure :',
+        s2_li1: 'Un nombre ciblé d\'achats de morceaux',
+        s2_li2: 'L\'entrée dans le Top 100 Beatport d\'un genre spécifique',
+        s2_li3: 'L\'entrée dans le Top 10 Beatport d\'un genre spécifique',
+        s2_p3: 'L\'objectif attendu est clairement indiqué sur la page du produit au moment de l\'achat.',
+        s3_title: '3. Engagement de performance',
+        s3_p1: 'Beatpush s\'engage à atteindre l\'objectif associé à la campagne achetée.',
+        s3_p2: 'Si la campagne n\'atteint pas l\'objectif attendu (incluant le nombre ciblé d\'achats ou la position dans le classement tel que Top 100 ou Top 10), le client peut être éligible à un remboursement.',
+        s3_p3: 'L\'éligibilité au remboursement est déterminée après la fin de la période de campagne et l\'évaluation des résultats.',
+        s3_p4: 'Les remboursements peuvent être émis en totalité ou partiellement en fonction des résultats obtenus et des conditions de la campagne.',
+        s4_title: '4. Politique de remboursement',
+        s4_p1: 'Les remboursements sont disponibles sous la condition suivante :',
+        s4_li1: 'L\'objectif promotionnel défini dans le pack acheté n\'a pas été atteint.',
+        s4_p2: 'Les demandes de remboursement doivent être soumises à notre équipe support après la fin de la période de campagne.',
+        s4_p3: 'Les remboursements ne seront pas accordés dans les cas suivants :',
+        s4_li2: 'Le client fournit des informations de sortie incorrectes',
+        s4_li3: 'Le morceau est retiré de Beatport pendant la campagne',
+        s4_li4: 'Le client interfère avec le processus de campagne',
+        s4_p4: 'Beatpush se réserve le droit de vérifier les résultats de la campagne avant d\'émettre tout remboursement.',
+        s5_title: '5. Processus de campagne',
+        s5_p1: 'Après un achat réussi, le processus de préparation de la campagne commence.',
+        s5_p2: 'Le client peut être contacté pour confirmer les détails de la sortie, les liens du morceau ou des informations supplémentaires nécessaires à la campagne.',
+        s5_p3: 'Les délais de campagne peuvent varier en fonction de facteurs opérationnels et des calendriers de sortie.',
+        s5_p4: 'Bien que Beatpush vise à lancer les campagnes rapidement, les heures de début exactes peuvent varier.',
+        s6_title: '6. Responsabilités du client',
+        s6_p1: 'Les clients doivent s\'assurer que :',
+        s6_li1: 'Ils détiennent les droits sur la musique soumise ou ont l\'autorisation des détenteurs des droits',
+        s6_li2: 'Les liens de morceaux et les informations de sortie fournis sont exacts',
+        s6_li3: 'La sortie reste disponible sur Beatport pendant la période de campagne',
+        s6_p2: 'Beatpush ne peut être tenu responsable des informations incorrectes soumises par le client.',
+        s7_title: '7. Politique anti-fraude',
+        s7_p1: 'Beatpush maintient une politique anti-fraude stricte.',
+        s7_p2: 'Toute tentative d\'abus de la plateforme ou de manipulation du service peut entraîner :',
+        s7_li1: 'L\'annulation immédiate de la campagne',
+        s7_li2: 'La suspension de l\'accès aux services Beatpush',
+        s7_li3: 'Le refus de services futurs',
+        s7_p3: 'Les exemples d\'abus incluent mais ne se limitent pas à :',
+        s7_li4: 'Les rétrofacturations frauduleuses',
+        s7_li5: 'La soumission d\'informations trompeuses ou fausses',
+        s7_li6: 'Les tentatives d\'exploiter ou de revendre le service',
+        s7_p4: 'Beatpush se réserve le droit de contester les rétrofacturations frauduleuses auprès des prestataires de paiement.',
+        s8_title: '8. Avertissement concernant la plateforme',
+        s8_p1: 'Beatpush est un service promotionnel indépendant.',
+        s8_p2: 'Beatpush n\'est pas affilié, approuvé ou officiellement lié à Beatport ou à toute autre plateforme de musique numérique.',
+        s8_p3: 'Tous les classements, positions et décisions éditoriales sont déterminés uniquement par la plateforme respective.',
+        s8_p4: 'Beatpush ne contrôle pas les algorithmes ou les systèmes de classement utilisés par les plateformes tierces.',
+        s8_p5: 'Nos services sont destinés uniquement à un soutien marketing promotionnel pour augmenter l\'exposition et l\'engagement du public.',
+        s9_title: '9. Limitation de responsabilité',
+        s9_p1: 'Beatpush ne peut être tenu responsable de tout dommage indirect, accessoire ou consécutif découlant de l\'utilisation des services.',
+        s9_p2: 'Les changements d\'algorithme des plateformes, les décisions éditoriales ou les facteurs externes du marché peuvent influencer les résultats des campagnes.',
+        s10_title: '10. Modifications',
+        s10_p1: 'Beatpush se réserve le droit de mettre à jour ou de modifier ces Conditions d\'utilisation à tout moment.',
+        s10_p2: 'L\'utilisation continue du site web constitue l\'acceptation des conditions mises à jour.',
+        s11_title: '11. Annulation d\'abonnement',
+        s11_p1: 'Les clients qui souscrivent à un service récurrent peuvent demander l\'annulation de leur abonnement à tout moment.',
+        s11_p2: 'En souscrivant à un service récurrent, le client accepte la facturation récurrente automatique jusqu\'à ce qu\'une annulation soit demandée.',
+        s11_p3: 'La seule méthode acceptée pour annuler un abonnement est d\'envoyer une demande par email à :',
+        s11_p4: 'La demande d\'annulation doit être envoyée depuis l\'adresse email associée à l\'achat ou à l\'abonnement original.',
+        s11_p5: 'Une fois la demande d\'annulation reçue, l\'abonnement sera résilié dans les 24 heures.',
+        s11_p6: 'Toute demande d\'annulation reçue après le début d\'un cycle de facturation s\'appliquera au prochain cycle de facturation.',
+        s11_p7: 'Beatpush n\'est pas responsable des demandes d\'annulation envoyées par d\'autres canaux, y compris mais sans s\'y limiter les plateformes de messagerie, les réseaux sociaux ou les services tiers.',
+        s11_p8: 'Seules les demandes d\'annulation envoyées à <a href="mailto:contact@beatpush.app">contact@beatpush.app</a> seront considérées comme valides.',
+        footer_nav: 'Navigation',
+        footer_home: 'Accueil',
+        footer_pricing: 'Tarifs',
+        footer_how: 'Comment ça marche',
+        footer_terms: 'Conditions d\'utilisation',
+        footer_copy: '&copy; 2026 BeatPush. Tous droits réservés.',
+        footer_disclaimer: 'Beatpush est un service promotionnel indépendant. Beatpush n\'est pas affilié à Beatport.',
+    },
+    pt: {
+        page_title: 'Termos de Uso - Beatpush',
+        back_btn: '← Voltar ao site',
+        title: 'Termos de Uso',
+        updated: 'Última atualização: 14 de março de 2026',
+        intro: 'Ao acessar o site Beatpush e adquirir qualquer serviço promocional, você concorda com os seguintes Termos de Uso.',
+        s1_title: '1. Serviços',
+        s1_p1: 'Beatpush fornece serviços promocionais projetados para aumentar a visibilidade e exposição de lançamentos musicais em plataformas digitais como o Beatport.',
+        s1_p2: 'Nossos serviços consistem em campanhas promocionais que utilizam uma rede profissional de DJs e contatos da indústria para gerar exposição legítima de mercado para lançamentos musicais.',
+        s1_p3: 'O objetivo dessas campanhas é apoiar artistas e gravadoras a ganhar tração e melhorar o desempenho de seus lançamentos em lojas de música digital.',
+        s2_title: '2. Objetivos da campanha',
+        s2_p1: 'Cada campanha promocional adquirida no Beatpush está associada a um objetivo específico dependendo do pacote selecionado.',
+        s2_p2: 'Os objetivos podem incluir:',
+        s2_li1: 'Um número direcionado de compras de faixas',
+        s2_li2: 'Entrada no Top 100 Beatport de um gênero específico',
+        s2_li3: 'Entrada no Top 10 Beatport de um gênero específico',
+        s2_p3: 'O objetivo esperado é claramente indicado na página do produto no momento da compra.',
+        s3_title: '3. Compromisso de desempenho',
+        s3_p1: 'Beatpush se compromete a entregar o objetivo associado à campanha adquirida.',
+        s3_p2: 'Se a campanha não atingir o objetivo esperado (incluindo o número direcionado de compras ou a posição no ranking como Top 100 ou Top 10), o cliente pode ser elegível a um reembolso.',
+        s3_p3: 'A elegibilidade ao reembolso é determinada após o término do período da campanha e avaliação dos resultados.',
+        s3_p4: 'Os reembolsos podem ser emitidos total ou parcialmente dependendo dos resultados alcançados e das condições da campanha.',
+        s4_title: '4. Política de reembolso',
+        s4_p1: 'Os reembolsos estão disponíveis sob a seguinte condição:',
+        s4_li1: 'O objetivo promocional definido no pacote adquirido não foi alcançado.',
+        s4_p2: 'As solicitações de reembolso devem ser enviadas à nossa equipe de suporte após o término do período da campanha.',
+        s4_p3: 'Os reembolsos não serão concedidos nos seguintes casos:',
+        s4_li2: 'O cliente fornece informações incorretas sobre o lançamento',
+        s4_li3: 'A faixa é removida do Beatport durante a campanha',
+        s4_li4: 'O cliente interfere no processo da campanha',
+        s4_p4: 'Beatpush reserva-se o direito de verificar os resultados da campanha antes de emitir qualquer reembolso.',
+        s5_title: '5. Processo da campanha',
+        s5_p1: 'Após uma compra bem-sucedida, o processo de preparação da campanha começa.',
+        s5_p2: 'O cliente pode ser contatado para confirmar detalhes do lançamento, links de faixas ou informações adicionais necessárias para a campanha.',
+        s5_p3: 'Os prazos da campanha podem variar dependendo de fatores operacionais e cronogramas de lançamento.',
+        s5_p4: 'Embora o Beatpush vise lançar campanhas rapidamente, os horários exatos de início podem variar.',
+        s6_title: '6. Responsabilidades do cliente',
+        s6_p1: 'Os clientes devem garantir que:',
+        s6_li1: 'Possuem os direitos sobre a música enviada ou têm permissão dos detentores dos direitos',
+        s6_li2: 'Os links de faixas e informações de lançamento fornecidos são precisos',
+        s6_li3: 'O lançamento permanece disponível no Beatport durante o período da campanha',
+        s6_p2: 'Beatpush não pode ser responsabilizado por informações incorretas enviadas pelo cliente.',
+        s7_title: '7. Política antifraude',
+        s7_p1: 'Beatpush mantém uma política antifraude rigorosa.',
+        s7_p2: 'Qualquer tentativa de abuso da plataforma ou manipulação do serviço pode resultar em:',
+        s7_li1: 'Cancelamento imediato da campanha',
+        s7_li2: 'Suspensão do acesso aos serviços Beatpush',
+        s7_li3: 'Recusa de serviços futuros',
+        s7_p3: 'Exemplos de abuso incluem, mas não se limitam a:',
+        s7_li4: 'Estornos fraudulentos',
+        s7_li5: 'Envio de informações enganosas ou falsas',
+        s7_li6: 'Tentativas de explorar ou revender o serviço',
+        s7_p4: 'Beatpush reserva-se o direito de contestar estornos fraudulentos junto aos provedores de pagamento.',
+        s8_title: '8. Aviso sobre a plataforma',
+        s8_p1: 'Beatpush é um serviço promocional independente.',
+        s8_p2: 'Beatpush não é afiliado, endossado ou oficialmente conectado ao Beatport ou a qualquer outra plataforma de música digital.',
+        s8_p3: 'Todos os rankings, posições e decisões editoriais são determinados exclusivamente pela respectiva plataforma.',
+        s8_p4: 'Beatpush não controla os algoritmos ou sistemas de ranking utilizados por plataformas terceiras.',
+        s8_p5: 'Nossos serviços são destinados exclusivamente como suporte de marketing promocional para aumentar a exposição e o engajamento do público.',
+        s9_title: '9. Limitação de responsabilidade',
+        s9_p1: 'Beatpush não será responsável por quaisquer danos indiretos, incidentais ou consequenciais decorrentes do uso dos serviços.',
+        s9_p2: 'Mudanças nos algoritmos das plataformas, decisões editoriais ou fatores externos do mercado podem influenciar os resultados das campanhas.',
+        s10_title: '10. Modificações',
+        s10_p1: 'Beatpush reserva-se o direito de atualizar ou modificar estes Termos de Uso a qualquer momento.',
+        s10_p2: 'O uso contínuo do site constitui aceitação dos termos atualizados.',
+        s11_title: '11. Cancelamento de assinatura',
+        s11_p1: 'Clientes que assinam um serviço recorrente podem solicitar o cancelamento de sua assinatura a qualquer momento.',
+        s11_p2: 'Ao assinar um serviço recorrente, o cliente concorda com a cobrança recorrente automática até que o cancelamento seja solicitado.',
+        s11_p3: 'O único método aceito para cancelar uma assinatura é enviar uma solicitação por email para:',
+        s11_p4: 'A solicitação de cancelamento deve ser enviada do endereço de email associado à compra ou assinatura original.',
+        s11_p5: 'Uma vez recebida a solicitação de cancelamento, a assinatura será encerrada em 24 horas.',
+        s11_p6: 'Qualquer solicitação de cancelamento recebida após o início de um ciclo de cobrança será aplicada ao próximo período de cobrança.',
+        s11_p7: 'Beatpush não é responsável por solicitações de cancelamento enviadas por outros canais, incluindo mas não se limitando a plataformas de mensagens, redes sociais ou serviços terceiros.',
+        s11_p8: 'Apenas solicitações de cancelamento enviadas para <a href="mailto:contact@beatpush.app">contact@beatpush.app</a> serão consideradas válidas.',
+        footer_nav: 'Navegação',
+        footer_home: 'Início',
+        footer_pricing: 'Preços',
+        footer_how: 'Como funciona',
+        footer_terms: 'Termos de Uso',
+        footer_copy: '&copy; 2026 BeatPush. Todos os direitos reservados.',
+        footer_disclaimer: 'Beatpush é um serviço promocional independente. Beatpush não é afiliado ao Beatport.',
+    },
+    es: {
+        page_title: 'Términos de Uso - Beatpush',
+        back_btn: '← Volver al sitio',
+        title: 'Términos de Uso',
+        updated: 'Última actualización: 14 de marzo de 2026',
+        intro: 'Al acceder al sitio web de Beatpush y adquirir cualquier servicio promocional, usted acepta los siguientes Términos de Uso.',
+        s1_title: '1. Servicios',
+        s1_p1: 'Beatpush proporciona servicios promocionales diseñados para aumentar la visibilidad y exposición de los lanzamientos musicales en plataformas digitales como Beatport.',
+        s1_p2: 'Nuestros servicios consisten en campañas promocionales que aprovechan una red profesional de DJs y contactos de la industria para generar una exposición legítima en el mercado para los lanzamientos musicales.',
+        s1_p3: 'El objetivo de estas campañas es apoyar a los artistas y sellos discográficos para ganar tracción y mejorar el rendimiento de sus lanzamientos en las tiendas de música digital.',
+        s2_title: '2. Objetivos de la campaña',
+        s2_p1: 'Cada campaña promocional adquirida en Beatpush está asociada a un objetivo específico dependiendo del paquete seleccionado.',
+        s2_p2: 'Los objetivos pueden incluir:',
+        s2_li1: 'Un número objetivo de compras de pistas',
+        s2_li2: 'Entrada en el Top 100 de Beatport de un género específico',
+        s2_li3: 'Entrada en el Top 10 de Beatport de un género específico',
+        s2_p3: 'El objetivo esperado se indica claramente en la página del producto en el momento de la compra.',
+        s3_title: '3. Compromiso de rendimiento',
+        s3_p1: 'Beatpush se compromete a entregar el objetivo asociado con la campaña adquirida.',
+        s3_p2: 'Si la campaña no alcanza el objetivo esperado (incluido el número objetivo de compras o la posición específica en el ranking como Top 100 o Top 10), el cliente puede ser elegible para un reembolso.',
+        s3_p3: 'La elegibilidad para el reembolso se determina después de que el período de la campaña haya concluido y los resultados hayan sido evaluados.',
+        s3_p4: 'Los reembolsos pueden emitirse total o parcialmente dependiendo de los resultados alcanzados y las condiciones de la campaña.',
+        s4_title: '4. Política de reembolso',
+        s4_p1: 'Los reembolsos están disponibles bajo la siguiente condición:',
+        s4_li1: 'El objetivo promocional definido en el paquete adquirido no se ha alcanzado.',
+        s4_p2: 'Las solicitudes de reembolso deben enviarse a nuestro equipo de soporte después de que el período de la campaña haya terminado.',
+        s4_p3: 'No se concederán reembolsos en los siguientes casos:',
+        s4_li2: 'El cliente proporciona información de lanzamiento incorrecta',
+        s4_li3: 'La pista se retira de Beatport durante la campaña',
+        s4_li4: 'El cliente interfiere con el proceso de la campaña',
+        s4_p4: 'Beatpush se reserva el derecho de verificar los resultados de la campaña antes de emitir cualquier reembolso.',
+        s5_title: '5. Proceso de la campaña',
+        s5_p1: 'Después de una compra exitosa, comienza el proceso de preparación de la campaña.',
+        s5_p2: 'Se puede contactar al cliente para confirmar los detalles del lanzamiento, los enlaces de las pistas o información adicional requerida para la campaña.',
+        s5_p3: 'Los plazos de la campaña pueden variar dependiendo de factores operativos y los calendarios de lanzamiento.',
+        s5_p4: 'Aunque Beatpush busca lanzar las campañas rápidamente, los tiempos exactos de inicio pueden variar.',
+        s6_title: '6. Responsabilidades del cliente',
+        s6_p1: 'Los clientes deben asegurarse de que:',
+        s6_li1: 'Son propietarios de los derechos de la música enviada o tienen permiso de los titulares de los derechos',
+        s6_li2: 'Los enlaces de pistas y la información de lanzamiento proporcionados son precisos',
+        s6_li3: 'El lanzamiento permanece disponible en Beatport durante el período de la campaña',
+        s6_p2: 'Beatpush no puede ser responsabilizado por información incorrecta enviada por el cliente.',
+        s7_title: '7. Política antifraude',
+        s7_p1: 'Beatpush mantiene una estricta política antifraude.',
+        s7_p2: 'Cualquier intento de abuso de la plataforma o manipulación del servicio puede resultar en:',
+        s7_li1: 'Cancelación inmediata de la campaña',
+        s7_li2: 'Suspensión del acceso a los servicios de Beatpush',
+        s7_li3: 'Denegación de servicios futuros',
+        s7_p3: 'Los ejemplos de abuso incluyen, pero no se limitan a:',
+        s7_li4: 'Contracargos fraudulentos',
+        s7_li5: 'Envío de información engañosa o falsa',
+        s7_li6: 'Intentos de explotar o revender el servicio',
+        s7_p4: 'Beatpush se reserva el derecho de disputar contracargos fraudulentos con los proveedores de pago.',
+        s8_title: '8. Descargo de responsabilidad de la plataforma',
+        s8_p1: 'Beatpush es un servicio promocional independiente.',
+        s8_p2: 'Beatpush no está afiliado, respaldado ni oficialmente conectado a Beatport ni a ninguna otra plataforma de música digital.',
+        s8_p3: 'Todos los rankings, posiciones y decisiones editoriales son determinados únicamente por la plataforma respectiva.',
+        s8_p4: 'Beatpush no controla los algoritmos ni los sistemas de ranking utilizados por plataformas de terceros.',
+        s8_p5: 'Nuestros servicios están destinados únicamente como soporte de marketing promocional para aumentar la exposición y el engagement del público.',
+        s9_title: '9. Limitación de responsabilidad',
+        s9_p1: 'Beatpush no será responsable de ningún daño indirecto, incidental o consecuente derivado del uso de los servicios.',
+        s9_p2: 'Los cambios en los algoritmos de las plataformas, las decisiones editoriales o los factores externos del mercado pueden influir en los resultados de las campañas.',
+        s10_title: '10. Modificaciones',
+        s10_p1: 'Beatpush se reserva el derecho de actualizar o modificar estos Términos de Uso en cualquier momento.',
+        s10_p2: 'El uso continuado del sitio web constituye la aceptación de los términos actualizados.',
+        s11_title: '11. Cancelación de suscripción',
+        s11_p1: 'Los clientes que se suscriban a un servicio recurrente pueden solicitar la cancelación de su suscripción en cualquier momento.',
+        s11_p2: 'Al suscribirse a un servicio recurrente, el cliente acepta la facturación recurrente automática hasta que se solicite la cancelación.',
+        s11_p3: 'El único método aceptado para cancelar una suscripción es enviar una solicitud por correo electrónico a:',
+        s11_p4: 'La solicitud de cancelación debe enviarse desde la dirección de correo electrónico asociada a la compra o suscripción original.',
+        s11_p5: 'Una vez recibida la solicitud de cancelación, la suscripción se terminará en un plazo de 24 horas.',
+        s11_p6: 'Cualquier solicitud de cancelación recibida después de que un ciclo de facturación ya haya comenzado se aplicará al siguiente período de facturación.',
+        s11_p7: 'Beatpush no es responsable de las solicitudes de cancelación enviadas a través de otros canales, incluyendo pero no limitado a plataformas de mensajería, redes sociales o servicios de terceros.',
+        s11_p8: 'Solo las solicitudes de cancelación enviadas a <a href="mailto:contact@beatpush.app">contact@beatpush.app</a> se considerarán válidas.',
+        footer_nav: 'Navegación',
+        footer_home: 'Inicio',
+        footer_pricing: 'Precios',
+        footer_how: 'Cómo funciona',
+        footer_terms: 'Términos de Uso',
+        footer_copy: '&copy; 2026 BeatPush. Todos los derechos reservados.',
+        footer_disclaimer: 'Beatpush es un servicio promocional independiente. Beatpush no está afiliado a Beatport.',
+    },
+    de: {
+        page_title: 'Nutzungsbedingungen - Beatpush',
+        back_btn: '← Zurück zur Seite',
+        title: 'Nutzungsbedingungen',
+        updated: 'Letzte Aktualisierung: 14. März 2026',
+        intro: 'Durch den Zugriff auf die Beatpush-Website und den Kauf eines Promotionsdienstes stimmen Sie den folgenden Nutzungsbedingungen zu.',
+        s1_title: '1. Dienstleistungen',
+        s1_p1: 'Beatpush bietet Promotionsdienste an, die darauf ausgelegt sind, die Sichtbarkeit und Präsenz von Musikveröffentlichungen auf digitalen Plattformen wie Beatport zu erhöhen.',
+        s1_p2: 'Unsere Dienste bestehen aus Promotionskampagnen, die ein professionelles Netzwerk von DJs und Branchenkontakten nutzen, um eine legitime Marktpräsenz für Musikveröffentlichungen zu generieren.',
+        s1_p3: 'Das Ziel dieser Kampagnen ist es, Künstler und Labels dabei zu unterstützen, Traktion zu gewinnen und die Leistung ihrer Veröffentlichungen in digitalen Musikshops zu verbessern.',
+        s2_title: '2. Kampagnenziele',
+        s2_p1: 'Jede auf Beatpush erworbene Promotionskampagne ist mit einem bestimmten Ziel verbunden, das vom gewählten Paket abhängt.',
+        s2_p2: 'Ziele können beinhalten:',
+        s2_li1: 'Eine gezielte Anzahl von Track-Käufen',
+        s2_li2: 'Einstieg in die Beatport Top 100 eines bestimmten Genres',
+        s2_li3: 'Einstieg in die Beatport Top 10 eines bestimmten Genres',
+        s2_p3: 'Das erwartete Ziel ist zum Zeitpunkt des Kaufs auf der Produktseite deutlich angegeben.',
+        s3_title: '3. Leistungszusage',
+        s3_p1: 'Beatpush verpflichtet sich, das mit der erworbenen Kampagne verbundene Ziel zu erreichen.',
+        s3_p2: 'Wenn die Kampagne das erwartete Ziel nicht erreicht (einschließlich der gezielten Anzahl von Käufen oder der angegebenen Chart-Position wie Top 100 oder Top 10), kann der Kunde Anspruch auf eine Rückerstattung haben.',
+        s3_p3: 'Die Erstattungsberechtigung wird nach Ablauf des Kampagnenzeitraums und Auswertung der Ergebnisse festgestellt.',
+        s3_p4: 'Rückerstattungen können je nach erzielten Ergebnissen und Kampagnenbedingungen ganz oder teilweise gewährt werden.',
+        s4_title: '4. Rückerstattungsrichtlinie',
+        s4_p1: 'Rückerstattungen sind unter folgender Bedingung verfügbar:',
+        s4_li1: 'Das im erworbenen Paket definierte Promotionsziel wurde nicht erreicht.',
+        s4_p2: 'Rückerstattungsanträge müssen nach Ende des Kampagnenzeitraums bei unserem Support-Team eingereicht werden.',
+        s4_p3: 'Rückerstattungen werden in den folgenden Fällen nicht gewährt:',
+        s4_li2: 'Der Kunde gibt falsche Veröffentlichungsinformationen an',
+        s4_li3: 'Der Track wird während der Kampagne von Beatport entfernt',
+        s4_li4: 'Der Kunde stört den Kampagnenprozess',
+        s4_p4: 'Beatpush behält sich das Recht vor, Kampagnenergebnisse vor der Gewährung einer Rückerstattung zu überprüfen.',
+        s5_title: '5. Kampagnenprozess',
+        s5_p1: 'Nach einem erfolgreichen Kauf beginnt der Kampagnenvorbereitungsprozess.',
+        s5_p2: 'Der Kunde kann kontaktiert werden, um Veröffentlichungsdetails, Track-Links oder zusätzliche für die Kampagne erforderliche Informationen zu bestätigen.',
+        s5_p3: 'Die Kampagnenzeiträume können je nach betrieblichen Faktoren und Veröffentlichungsplänen variieren.',
+        s5_p4: 'Obwohl Beatpush darauf abzielt, Kampagnen schnell zu starten, können die genauen Startzeiten variieren.',
+        s6_title: '6. Pflichten des Kunden',
+        s6_p1: 'Kunden müssen sicherstellen, dass:',
+        s6_li1: 'Sie die Rechte an der eingereichten Musik besitzen oder die Erlaubnis der Rechteinhaber haben',
+        s6_li2: 'Die bereitgestellten Track-Links und Veröffentlichungsinformationen korrekt sind',
+        s6_li3: 'Die Veröffentlichung während des Kampagnenzeitraums auf Beatport verfügbar bleibt',
+        s6_p2: 'Beatpush kann nicht für falsche vom Kunden übermittelte Informationen verantwortlich gemacht werden.',
+        s7_title: '7. Anti-Betrugs-Richtlinie',
+        s7_p1: 'Beatpush pflegt eine strenge Anti-Betrugs-Richtlinie.',
+        s7_p2: 'Jeder Versuch, die Plattform zu missbrauchen oder den Dienst zu manipulieren, kann zu Folgendem führen:',
+        s7_li1: 'Sofortige Stornierung der Kampagne',
+        s7_li2: 'Sperrung des Zugangs zu Beatpush-Diensten',
+        s7_li3: 'Verweigerung zukünftiger Dienste',
+        s7_p3: 'Beispiele für Missbrauch umfassen, sind aber nicht beschränkt auf:',
+        s7_li4: 'Betrügerische Rückbuchungen',
+        s7_li5: 'Übermittlung irreführender oder falscher Informationen',
+        s7_li6: 'Versuche, den Dienst auszunutzen oder weiterzuverkaufen',
+        s7_p4: 'Beatpush behält sich das Recht vor, betrügerische Rückbuchungen bei Zahlungsanbietern anzufechten.',
+        s8_title: '8. Plattform-Haftungsausschluss',
+        s8_p1: 'Beatpush ist ein unabhängiger Promotionsdienst.',
+        s8_p2: 'Beatpush ist nicht mit Beatport oder einer anderen digitalen Musikplattform verbunden, wird nicht von diesen unterstützt und steht in keiner offiziellen Verbindung zu diesen.',
+        s8_p3: 'Alle Chart-Rankings, Positionen und redaktionellen Entscheidungen werden ausschließlich von der jeweiligen Plattform bestimmt.',
+        s8_p4: 'Beatpush kontrolliert nicht die Algorithmen oder Ranking-Systeme, die von Drittplattformen verwendet werden.',
+        s8_p5: 'Unsere Dienste sind ausschließlich als Promotions-Marketing-Unterstützung gedacht, um die Reichweite und das Publikumsengagement zu erhöhen.',
+        s9_title: '9. Haftungsbeschränkung',
+        s9_p1: 'Beatpush haftet nicht für indirekte, zufällige oder Folgeschäden, die aus der Nutzung der Dienste entstehen.',
+        s9_p2: 'Änderungen der Plattformalgorithmen, redaktionelle Entscheidungen oder externe Marktfaktoren können die Kampagnenergebnisse beeinflussen.',
+        s10_title: '10. Änderungen',
+        s10_p1: 'Beatpush behält sich das Recht vor, diese Nutzungsbedingungen jederzeit zu aktualisieren oder zu ändern.',
+        s10_p2: 'Die weitere Nutzung der Website gilt als Akzeptanz der aktualisierten Bedingungen.',
+        s11_title: '11. Abo-Kündigung',
+        s11_p1: 'Kunden, die einen wiederkehrenden Dienst abonnieren, können jederzeit die Kündigung ihres Abonnements beantragen.',
+        s11_p2: 'Mit dem Abschluss eines wiederkehrenden Dienstes stimmt der Kunde der automatischen wiederkehrenden Abrechnung zu, bis eine Kündigung beantragt wird.',
+        s11_p3: 'Die einzige akzeptierte Methode zur Kündigung eines Abonnements ist die Zusendung einer Anfrage per E-Mail an:',
+        s11_p4: 'Der Kündigungsantrag muss von der E-Mail-Adresse gesendet werden, die mit dem ursprünglichen Kauf oder Abonnement verknüpft ist.',
+        s11_p5: 'Sobald der Kündigungsantrag eingegangen ist, wird das Abonnement innerhalb von 24 Stunden beendet.',
+        s11_p6: 'Jeder Kündigungsantrag, der nach Beginn eines Abrechnungszyklus eingeht, gilt für den nächsten Abrechnungszeitraum.',
+        s11_p7: 'Beatpush ist nicht verantwortlich für Kündigungsanträge, die über andere Kanäle gesendet werden, einschließlich, aber nicht beschränkt auf Messaging-Plattformen, soziale Medien oder Drittanbieterdienste.',
+        s11_p8: 'Nur Kündigungsanträge, die an <a href="mailto:contact@beatpush.app">contact@beatpush.app</a> gesendet werden, gelten als gültig.',
+        footer_nav: 'Navigation',
+        footer_home: 'Startseite',
+        footer_pricing: 'Preise',
+        footer_how: 'So funktioniert es',
+        footer_terms: 'Nutzungsbedingungen',
+        footer_copy: '&copy; 2026 BeatPush. Alle Rechte vorbehalten.',
+        footer_disclaimer: 'Beatpush ist ein unabhängiger Promotionservice. Beatpush ist nicht mit Beatport verbunden.',
+    }
+};
+
+function renderTerms(lang) {
+    const t = termsTranslations[lang] || termsTranslations.en;
+
+    document.title = t.page_title;
+    document.getElementById('currentLang').textContent = lang.toUpperCase();
+    document.getElementById('backBtn').textContent = t.back_btn;
+
+    // Footer
+    document.getElementById('footerNav').textContent = t.footer_nav;
+    document.getElementById('footerHome').textContent = t.footer_home;
+    document.getElementById('footerPricing').textContent = t.footer_pricing;
+    document.getElementById('footerHow').textContent = t.footer_how;
+    document.getElementById('footerTerms').textContent = t.footer_terms;
+    document.getElementById('footerCopy').innerHTML = t.footer_copy;
+    document.getElementById('footerDisclaimer').textContent = t.footer_disclaimer;
+
+    // Terms content
+    const sections = [1,2,3,4,5,6,7,8,9,10,11];
+    let html = `
+        <h1 class="terms-main-title">${t.title}</h1>
+        <p class="terms-updated">${t.updated}</p>
+        <p class="terms-intro">${t.intro}</p>
+    `;
+
+    // Section 1
+    html += `<div class="terms-section"><h2>${t.s1_title}</h2><p>${t.s1_p1}</p><p>${t.s1_p2}</p><p>${t.s1_p3}</p></div>`;
+
+    // Section 2
+    html += `<div class="terms-section"><h2>${t.s2_title}</h2><p>${t.s2_p1}</p><p>${t.s2_p2}</p><ul><li>${t.s2_li1}</li><li>${t.s2_li2}</li><li>${t.s2_li3}</li></ul><p>${t.s2_p3}</p></div>`;
+
+    // Section 3
+    html += `<div class="terms-section"><h2>${t.s3_title}</h2><p>${t.s3_p1}</p><p>${t.s3_p2}</p><p>${t.s3_p3}</p><p>${t.s3_p4}</p></div>`;
+
+    // Section 4
+    html += `<div class="terms-section"><h2>${t.s4_title}</h2><p>${t.s4_p1}</p><ul><li>${t.s4_li1}</li></ul><p>${t.s4_p2}</p><p>${t.s4_p3}</p><ul><li>${t.s4_li2}</li><li>${t.s4_li3}</li><li>${t.s4_li4}</li></ul><p>${t.s4_p4}</p></div>`;
+
+    // Section 5
+    html += `<div class="terms-section"><h2>${t.s5_title}</h2><p>${t.s5_p1}</p><p>${t.s5_p2}</p><p>${t.s5_p3}</p><p>${t.s5_p4}</p></div>`;
+
+    // Section 6
+    html += `<div class="terms-section"><h2>${t.s6_title}</h2><p>${t.s6_p1}</p><ul><li>${t.s6_li1}</li><li>${t.s6_li2}</li><li>${t.s6_li3}</li></ul><p>${t.s6_p2}</p></div>`;
+
+    // Section 7
+    html += `<div class="terms-section"><h2>${t.s7_title}</h2><p>${t.s7_p1}</p><p>${t.s7_p2}</p><ul><li>${t.s7_li1}</li><li>${t.s7_li2}</li><li>${t.s7_li3}</li></ul><p>${t.s7_p3}</p><ul><li>${t.s7_li4}</li><li>${t.s7_li5}</li><li>${t.s7_li6}</li></ul><p>${t.s7_p4}</p></div>`;
+
+    // Section 8
+    html += `<div class="terms-section"><h2>${t.s8_title}</h2><p>${t.s8_p1}</p><p>${t.s8_p2}</p><p>${t.s8_p3}</p><p>${t.s8_p4}</p><p>${t.s8_p5}</p></div>`;
+
+    // Section 9
+    html += `<div class="terms-section"><h2>${t.s9_title}</h2><p>${t.s9_p1}</p><p>${t.s9_p2}</p></div>`;
+
+    // Section 10
+    html += `<div class="terms-section"><h2>${t.s10_title}</h2><p>${t.s10_p1}</p><p>${t.s10_p2}</p></div>`;
+
+    // Section 11
+    html += `<div class="terms-section"><h2>${t.s11_title}</h2><p>${t.s11_p1}</p><p>${t.s11_p2}</p><p>${t.s11_p3}</p><p class="terms-email"><a href="mailto:contact@beatpush.app">contact@beatpush.app</a></p><p>${t.s11_p4}</p><p>${t.s11_p5}</p><p>${t.s11_p6}</p><p>${t.s11_p7}</p><p>${t.s11_p8}</p></div>`;
+
+    document.getElementById('termsContent').innerHTML = html;
+}
+
+// Init
+(function() {
+    const saved = localStorage.getItem('beatpush_lang');
+    const lang = saved || 'en';
+    renderTerms(lang);
+
+    // Language selector
+    const langBtn = document.getElementById('langBtn');
+    const langDropdown = document.getElementById('langDropdown');
+
+    langBtn.addEventListener('click', () => {
+        langDropdown.classList.toggle('open');
+    });
+
+    document.querySelectorAll('.lang-option').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const newLang = btn.getAttribute('data-lang');
+            localStorage.setItem('beatpush_lang', newLang);
+            renderTerms(newLang);
+            langDropdown.classList.remove('open');
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.lang-selector')) {
+            langDropdown.classList.remove('open');
+        }
+    });
+})();
+</script>
 
 </body>
 </html>
