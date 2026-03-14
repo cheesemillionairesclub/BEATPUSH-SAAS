@@ -2329,6 +2329,42 @@ body {
     font-weight: 500;
 }
 
+.confirm-whatsapp-section {
+    margin-top: 16px;
+    text-align: center;
+}
+
+.confirm-whatsapp-text {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.confirm-whatsapp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: #25D366;
+    color: #fff;
+    border-radius: 50px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--transition);
+}
+
+.confirm-whatsapp-btn:hover {
+    background: #1ebe57;
+    box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3);
+}
+
+.confirm-whatsapp-btn svg {
+    flex-shrink: 0;
+}
+
 .confirm-btn {
     padding: 12px 40px;
     background: var(--green-primary);

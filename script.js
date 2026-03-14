@@ -159,6 +159,8 @@ const translations = {
         campaign_launch_btn: 'Run my campaign',
         payment_success: 'Payment confirmed!',
         payment_success_sub: 'Your campaign is being set up. You will receive a confirmation email shortly.\nYou will also receive a detailed receipt of all purchases made within 24/48 Hours.',
+        payment_success_whatsapp_text: "If you'd like to discuss your track, ask a question, or simply stay updated about your campaign, feel free to reach out.",
+        payment_success_whatsapp_btn: 'Chat with us',
         campaign_tips_title: 'Tips / Requirements',
         card_tooltip_title: 'Tips & Requirements',
         campaign_tip_1: 'Tracks must be new, to perform well.',
@@ -295,6 +297,8 @@ const translations = {
         campaign_launch_btn: 'Lancer ma campagne',
         payment_success: 'Paiement confirm\u00e9 !',
         payment_success_sub: 'Votre campagne est en cours de mise en place. Vous recevrez un email de confirmation sous peu.\nVous recevrez \u00e9galement un re\u00e7u d\u00e9taill\u00e9 de tous les achats effectu\u00e9s sous 24/48H.',
+        payment_success_whatsapp_text: "Si vous souhaitez discuter de votre track, poser une question ou simplement rester informé de votre campagne, n'hésitez pas à nous contacter.",
+        payment_success_whatsapp_btn: 'Discuter avec nous',
         campaign_tips_title: 'Conseils / Pr\u00e9requis',
         card_tooltip_title: 'Conseils & Pr\u00e9requis',
         campaign_tip_1: 'Les tracks doivent \u00eatre r\u00e9centes.',
@@ -431,6 +435,8 @@ const translations = {
         campaign_launch_btn: 'Lan\u00e7ar minha campanha',
         payment_success: 'Pagamento confirmado!',
         payment_success_sub: 'Sua campanha est\u00e1 sendo configurada. Voc\u00ea receber\u00e1 um email de confirma\u00e7\u00e3o em breve.\nVoc\u00ea tamb\u00e9m receber\u00e1 um recibo detalhado de todas as compras realizadas em 24/48H.',
+        payment_success_whatsapp_text: 'Se você quiser discutir sua track, fazer uma pergunta ou simplesmente acompanhar sua campanha, fique à vontade para entrar em contato.',
+        payment_success_whatsapp_btn: 'Fale conosco',
         campaign_tips_title: 'Dicas / Requisitos',
         card_tooltip_title: 'Dicas & Requisitos',
         campaign_tip_1: 'As tracks devem ser novas.',
@@ -567,6 +573,8 @@ const translations = {
         campaign_launch_btn: 'Lanzar mi campa\u00f1a',
         payment_success: '\u00a1Pago confirmado!',
         payment_success_sub: 'Tu campa\u00f1a se est\u00e1 configurando. Recibir\u00e1s un email de confirmaci\u00f3n en breve.\nTambi\u00e9n recibir\u00e1s un recibo detallado de todas las compras realizadas en 24/48H.',
+        payment_success_whatsapp_text: 'Si deseas hablar sobre tu track, hacer una pregunta o simplemente mantenerte informado sobre tu campaña, no dudes en contactarnos.',
+        payment_success_whatsapp_btn: 'Chatea con nosotros',
         campaign_tips_title: 'Consejos / Requisitos',
         card_tooltip_title: 'Consejos & Requisitos',
         campaign_tip_1: 'Las tracks deben ser nuevas.',
@@ -703,6 +711,8 @@ const translations = {
         campaign_launch_btn: 'Meine Kampagne starten',
         payment_success: 'Zahlung best\u00e4tigt!',
         payment_success_sub: 'Ihre Kampagne wird eingerichtet. Sie erhalten in K\u00fcrze eine Best\u00e4tigungs-E-Mail.\nSie erhalten au\u00dferdem eine detaillierte Quittung aller K\u00e4ufe innerhalb von 24/48 Stunden.',
+        payment_success_whatsapp_text: 'Wenn Sie über Ihren Track sprechen, eine Frage stellen oder einfach über Ihre Kampagne auf dem Laufenden bleiben möchten, zögern Sie nicht, uns zu kontaktieren.',
+        payment_success_whatsapp_btn: 'Chatten Sie mit uns',
         campaign_tips_title: 'Tipps / Anforderungen',
         card_tooltip_title: 'Tipps & Anforderungen',
         campaign_tip_1: 'Tracks m\u00fcssen neu sein.',
@@ -1794,6 +1804,14 @@ function showPaymentConfirmation(campaign, paymentData) {
                 <span class="confirm-label">${t.campaign_artists_label || 'Similar Artists'}</span>
                 <div class="confirm-artists">${artistsHtml || artistsFallback}</div>
             </div>` : ''}
+
+            <div class="confirm-whatsapp-section">
+                <p class="confirm-whatsapp-text">${t.payment_success_whatsapp_text || "If you'd like to discuss your track, ask a question, or simply stay updated about your campaign, feel free to reach out."}</p>
+                <a href="https://api.whatsapp.com/send/?phone=13046603890&text=Hello!&type=phone_number&app_absent=0" target="_blank" rel="noopener" class="confirm-whatsapp-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    ${t.payment_success_whatsapp_btn || 'Chat with us'}
+                </a>
+            </div>
 
             <button class="confirm-btn">OK</button>
         </div>
