@@ -1487,7 +1487,7 @@ function showCampaignSetup(pack) {
             500: '$1,900',
             1000: '$3,850',
             'exclusive-800': '€920',
-            'daily-push': '$55 / Day'
+            'daily-push': '$55'
         };
         const priceLabel = t.campaign_total || 'Total';
         if (pack === 'promo-430') {
