@@ -2066,6 +2066,129 @@ body {
     opacity: 0.5;
 }
 
+/* ===== Footer Terms Link ===== */
+.footer-terms-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.65rem;
+    color: var(--white-30);
+    opacity: 0.6;
+    text-decoration: none;
+    transition: opacity var(--transition);
+}
+
+.footer-terms-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* ===== Terms Page ===== */
+.terms-page {
+    padding: 120px 0 80px;
+    min-height: 100vh;
+}
+
+.terms-content {
+    max-width: 740px;
+    margin: 0 auto;
+}
+
+.terms-main-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.terms-updated {
+    font-size: 0.8rem;
+    color: var(--white-30);
+    margin-bottom: 32px;
+}
+
+.terms-intro {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--white-06);
+}
+
+.terms-section {
+    margin-bottom: 40px;
+}
+
+.terms-section h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    letter-spacing: -0.3px;
+}
+
+.terms-section p {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin-bottom: 12px;
+}
+
+.terms-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 16px;
+}
+
+.terms-section ul li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin-bottom: 6px;
+}
+
+.terms-section ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green-primary);
+}
+
+.terms-section a {
+    color: var(--green-primary);
+    text-decoration: none;
+}
+
+.terms-section a:hover {
+    text-decoration: underline;
+}
+
+.terms-email {
+    font-weight: 600;
+}
+
+.terms-back-btn {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid var(--white-06);
+    border-radius: 50px;
+    transition: all var(--transition);
+}
+
+.terms-back-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--white-10);
+}
+
 /* ===== Field Highlight ===== */
 .field-highlight {
     animation: fieldPulse 0.6s ease-out;
