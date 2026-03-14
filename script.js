@@ -128,7 +128,7 @@ const translations = {
         feature_strategy: 'Chart Strategy & Insider Guidance',
         feature_guarantee: 'Money-back guarantee',
         search_badge: 'CHOOSE YOUR TRACK',
-        search_title: 'Start Your Beatport Campaign <span class="text-green">Today!</span>',
+        search_title: '<span class="text-green">Push</span> your track into Beatport Charts!',
         search_desc: 'Search for your track on Beatport and select it to begin.',
         search_tagline: 'No shortcuts. No automation. Just real strategy.',
         search_placeholder: 'Artist name, Beatport track url',
