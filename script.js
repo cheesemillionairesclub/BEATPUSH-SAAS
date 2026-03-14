@@ -114,7 +114,7 @@ function updateTop100Price(genre) {
 // ===== i18n - Full Translations =====
 const translations = {
     en: {
-        page_title: 'BeatPush - Beatport Promotion | Boost Your Sales',
+        page_title: 'Beatpush - Beatport promotion for DJs, producers and labels',
         page_desc: 'Boost your tracks on Beatport with BeatPush. Professional promotion for DJs, producers and labels.',
         nav_how: 'HOW IT WORKS',
         nav_pricing: 'PRICING',
@@ -250,7 +250,7 @@ const translations = {
         footer_copy: '&copy; 2026 BeatPush. All rights reserved.',
     },
     fr: {
-        page_title: 'BeatPush - Promotion Beatport | Boostez vos ventes',
+        page_title: 'Beatpush - Promotion Beatport pour DJs, producteurs et labels',
         page_desc: 'Boostez vos tracks sur Beatport avec BeatPush. Promotion professionnelle pour DJs, producteurs et labels.',
         nav_how: 'COMMENT CA MARCHE',
         nav_pricing: 'TARIFS',
@@ -386,7 +386,7 @@ const translations = {
         footer_copy: '&copy; 2026 BeatPush. Tous droits r\u00e9serv\u00e9s.',
     },
     pt: {
-        page_title: 'BeatPush - Promo\u00e7\u00e3o Beatport | Impulsione suas vendas',
+        page_title: 'Beatpush - Promoção Beatport para DJs, produtores e gravadoras',
         page_desc: 'Impulsione suas tracks no Beatport com o BeatPush. Promo\u00e7\u00e3o profissional para DJs, produtores e labels.',
         nav_how: 'COMO FUNCIONA',
         nav_pricing: 'PRE\u00c7OS',
@@ -522,7 +522,7 @@ const translations = {
         footer_copy: '&copy; 2026 BeatPush. Todos os direitos reservados.',
     },
     es: {
-        page_title: 'BeatPush - Promoci\u00f3n Beatport | Impulsa tus ventas',
+        page_title: 'Beatpush - Promoción Beatport para DJs, productores y sellos',
         page_desc: 'Impulsa tus tracks en Beatport con BeatPush. Promoci\u00f3n profesional para DJs, productores y sellos.',
         nav_how: 'C\u00d3MO FUNCIONA',
         nav_pricing: 'PRECIOS',
@@ -658,7 +658,7 @@ const translations = {
         footer_copy: '&copy; 2026 BeatPush. Todos los derechos reservados.',
     },
     de: {
-        page_title: 'BeatPush - Beatport Promotion | Steigere deine Verk\u00e4ufe',
+        page_title: 'Beatpush - Beatport Promotion für DJs, Produzenten und Labels',
         page_desc: 'Booste deine Tracks auf Beatport mit BeatPush. Professionelle Promotion f\u00fcr DJs, Produzenten und Labels.',
         nav_how: 'WIE ES FUNKTIONIERT',
         nav_pricing: 'PREISE',
