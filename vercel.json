@@ -3,6 +3,7 @@
         { "source": "/api/search", "destination": "/api/search" },
         { "source": "/api/create-checkout", "destination": "/api/create-checkout" },
         { "source": "/api/webhook", "destination": "/api/webhook" },
-        { "source": "/api/checkout-success", "destination": "/api/checkout-success" }
+        { "source": "/api/checkout-success", "destination": "/api/checkout-success" },
+        { "source": "/termsofuse", "destination": "/termsofuse.html" }
     ]
 }
