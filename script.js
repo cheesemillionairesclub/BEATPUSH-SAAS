@@ -135,7 +135,7 @@ const translations = {
         search_btn: 'SEARCH',
         search_empty: 'No tracks found on Beatport. Try another search term.',
         pricing_badge: 'PRICING',
-        pricing_title: 'Choose your campaign',
+        pricing_title: 'Choose Your <span class="text-green">Campaign</span>.',
         pricing_desc: 'Our campaigns rely on a large, established global buyer network, trusted by artists and industry professionals worldwide.',
         choose_btn: 'Choose',
         popular_badge: 'POPULAR',
