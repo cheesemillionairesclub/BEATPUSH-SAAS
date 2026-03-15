@@ -3035,3 +3035,203 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* ===== Auth Button (Navbar) ===== */
+.auth-nav {
+    display: flex;
+    align-items: center;
+}
+
+.auth-login-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--green-primary);
+    border: none;
+    color: #000;
+    padding: 7px 16px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: all var(--transition);
+    white-space: nowrap;
+}
+
+.auth-login-btn:hover {
+    background: var(--green-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px var(--green-glow);
+}
+
+.auth-user-menu {
+    position: relative;
+}
+
+.auth-avatar-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--green-primary);
+    background: var(--bg-card);
+    cursor: pointer;
+    overflow: hidden;
+    padding: 0;
+    transition: all var(--transition);
+}
+
+.auth-avatar-btn:hover {
+    border-color: var(--green-light);
+    box-shadow: 0 0 12px var(--green-glow);
+}
+
+.auth-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.auth-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: #1a1a1a;
+    border: 1px solid var(--white-15);
+    border-radius: var(--radius-md);
+    min-width: 240px;
+    z-index: 1010;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+}
+
+.auth-dropdown.open {
+    display: block;
+}
+
+.auth-dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+}
+
+.auth-dropdown-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.auth-dropdown-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.auth-dropdown-email {
+    font-size: 0.75rem;
+    color: var(--white-50);
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.auth-dropdown-divider {
+    height: 1px;
+    background: var(--white-10);
+}
+
+.auth-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    color: var(--white-70);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all var(--transition);
+    text-align: left;
+}
+
+.auth-dropdown-item:hover {
+    background: var(--white-10);
+    color: var(--white);
+}
+
+.auth-dropdown-item.auth-logout {
+    color: #ff5252;
+}
+
+.auth-dropdown-item.auth-logout:hover {
+    background: rgba(255, 82, 82, 0.1);
+}
+
+/* ===== Auth Prompt Modal ===== */
+.auth-prompt-box {
+    max-width: 400px;
+    text-align: center;
+}
+
+.auth-prompt-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.auth-prompt-text {
+    color: var(--white-50);
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.auth-google-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.auth-google-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px var(--green-glow);
+}
+
+.auth-prompt-cancel {
+    background: none;
+    border: 1px solid var(--white-15);
+    color: var(--white-50);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.auth-prompt-cancel:hover {
+    border-color: var(--white-30);
+    color: var(--white-70);
+}
+
+/* ===== Dashboard Nav Link ===== */
+.nav-dashboard-link {
+    color: var(--green-primary) !important;
+    font-weight: 600 !important;
+}
+
+.nav-dashboard-link:hover {
+    color: var(--green-light) !important;
+}
