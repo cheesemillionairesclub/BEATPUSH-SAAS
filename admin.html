@@ -190,6 +190,10 @@
             padding: 60px;
             color: #ff5252;
         }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
         @media (max-width: 768px) {
             body { padding: 10px; }
             .admin-header h1 { font-size: 1.1rem; }
@@ -411,7 +415,27 @@
                     body: file,
                 });
                 if (res.ok) {
-                    // Reload
+                    // Auto-send receipt notification email
+                    try {
+                        const emailRes = await fetch('/api/admin/send-receipt-email', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`,
+                            },
+                            body: JSON.stringify({ order_id: orderId }),
+                        });
+                        const emailData = await emailRes.json();
+                        if (emailRes.ok) {
+                            showNotification(`Receipt uploaded & email sent to ${emailData.sent_to}`, 'success');
+                        } else {
+                            showNotification(`Receipt uploaded but email failed: ${emailData.error}`, 'warning');
+                        }
+                    } catch (emailErr) {
+                        showNotification('Receipt uploaded but email notification failed', 'warning');
+                    }
+
+                    // Reload orders
                     const listRes = await fetch('/api/admin/orders', { headers: { 'Authorization': `Bearer ${token}` } });
                     const orders = await listRes.json();
                     renderStats(orders);
@@ -424,6 +448,22 @@
                 alert('Upload failed: ' + e.message);
             }
             input.value = '';
+        }
+
+        function showNotification(message, type) {
+            const notif = document.createElement('div');
+            notif.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 9999;
+                padding: 14px 24px; border-radius: 10px; font-size: 0.9rem;
+                font-weight: 500; max-width: 400px; animation: slideIn 0.3s ease;
+                ${type === 'success'
+                    ? 'background: rgba(0,230,118,0.15); border: 1px solid rgba(0,230,118,0.3); color: #00e676;'
+                    : 'background: rgba(255,193,7,0.15); border: 1px solid rgba(255,193,7,0.3); color: #ffc107;'}
+            `;
+            notif.textContent = message;
+            document.body.appendChild(notif);
+            setTimeout(() => { notif.style.opacity = '0'; notif.style.transition = 'opacity 0.3s'; }, 4000);
+            setTimeout(() => notif.remove(), 4500);
         }
 
         function esc(str) {

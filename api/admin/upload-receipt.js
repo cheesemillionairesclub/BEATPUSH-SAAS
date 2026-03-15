@@ -69,7 +69,7 @@ export default async function handler(req, res) {
         // Get public URL
         const receiptUrl = `${SUPABASE_URL}/storage/v1/object/public/receipts/${storagePath}`;
 
-        // Update order with receipt URL
+        // Update order with receipt URL and mark as completed
         await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`, {
             method: 'PATCH',
             headers: {
@@ -77,7 +77,11 @@ export default async function handler(req, res) {
                 'apikey': SUPABASE_SERVICE_KEY,
                 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
             },
-            body: JSON.stringify({ receipt_url: receiptUrl, updated_at: new Date().toISOString() }),
+            body: JSON.stringify({
+                receipt_url: receiptUrl,
+                order_status: 'completed',
+                updated_at: new Date().toISOString(),
+            }),
         });
 
         return res.status(200).json({ success: true, receipt_url: receiptUrl });

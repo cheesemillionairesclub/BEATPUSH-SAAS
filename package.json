@@ -1,6 +1,7 @@
 {
   "private": true,
   "dependencies": {
+    "resend": "^6.9.3",
     "stripe": "^17.0.0"
   }
 }

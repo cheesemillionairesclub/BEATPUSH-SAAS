@@ -4,7 +4,13 @@
         { "source": "/api/create-checkout", "destination": "/api/create-checkout" },
         { "source": "/api/webhook", "destination": "/api/webhook" },
         { "source": "/api/checkout-success", "destination": "/api/checkout-success" },
+        { "source": "/api/save-order", "destination": "/api/save-order" },
+        { "source": "/api/update-user-meta", "destination": "/api/update-user-meta" },
+        { "source": "/api/admin/orders", "destination": "/api/admin/orders" },
+        { "source": "/api/admin/upload-receipt", "destination": "/api/admin/upload-receipt" },
+        { "source": "/api/admin/send-receipt-email", "destination": "/api/admin/send-receipt-email" },
         { "source": "/termsofuse", "destination": "/termsofuse.html" },
+        { "source": "/admin", "destination": "/admin.html" },
         { "source": "/dashboard", "destination": "/dashboard.html" }
     ]
 }
