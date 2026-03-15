@@ -1567,6 +1567,9 @@ document.getElementById('tipsToggle').addEventListener('click', function() {
 
 // Launch campaign button
 document.getElementById('launchCampaignBtn').addEventListener('click', function() {
+    // Require login before any payment action
+    if (typeof requireAuth === 'function' && !requireAuth('payment')) return;
+
     const lang = detectLanguage();
     const t = translations[lang] || translations.en;
 

@@ -30,6 +30,16 @@ const BeatpushAuth = {
                     window.location.href = '/admin';
                     return null;
                 }
+                // Redirect back to saved page after OAuth
+                const savedRedirect = localStorage.getItem('beatpush_auth_redirect');
+                if (savedRedirect) {
+                    localStorage.removeItem('beatpush_auth_redirect');
+                    // Only redirect if it's a different page
+                    if (savedRedirect !== window.location.href && savedRedirect !== window.location.origin + '/') {
+                        window.location.href = savedRedirect;
+                        return null;
+                    }
+                }
             }
         }
 
