@@ -1860,6 +1860,15 @@ function showPaymentConfirmation(campaign, paymentData) {
                     campaign.pack = data.metadata.pack || '';
                     campaign.genre = data.metadata.genre || '';
                 }
+                // Save order to Supabase
+                if (typeof saveOrderToSupabase === 'function') {
+                    saveOrderToSupabase(campaign, {
+                        session_id: sessionId,
+                        customer_email: data.customer_email,
+                        amount_total: data.amount_total,
+                        currency: data.currency,
+                    });
+                }
                 showPaymentConfirmation(campaign, data);
             } else {
                 showPaymentConfirmation(campaign, data);
