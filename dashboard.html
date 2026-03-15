@@ -230,8 +230,8 @@
             // Apply translations (from i18n.js) for static data-i18n elements
             applyTranslations();
 
-            // Wait for auth.js init to finish
-            await new Promise(r => setTimeout(r, 150));
+            // Wait for auth init to finish
+            await BeatpushAuth.whenReady();
 
             const user = BeatpushAuth.getUser();
             if (!user) {
