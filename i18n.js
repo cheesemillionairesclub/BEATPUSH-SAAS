@@ -1,116 +1,3 @@
-// ===== Configuration =====
-const SEARCH_API_BASE = 'http://185.209.228.153:8080/search';
-const SEARCH_API_PROXY = '/api/search';
-const STRIPE_LINKS = {
-    50: 'https://buy.stripe.com/dRm9AU2m4aBG2eU2362VG01',
-    100: 'https://buy.stripe.com/8x2eVe3q8dNS7zegY02VG02',
-    200: 'https://buy.stripe.com/eVq6oIe4Mh04g5K4be2VG03',
-    500: 'https://buy.stripe.com/00wdRa6Ckh04aLq5fi2VG04',
-    1000: 'https://buy.stripe.com/7sY00k0dWh041aQdLO2VG05',
-    'daily-push': 'https://buy.stripe.com/9B66oIbWEcJOdXC9vy2VG07'
-};
-
-// ===== Top 100 Genre-based Pricing (No Exclusive status, in €) =====
-const TOP100_GENRE_PRICES = {
-    '140 / deep dubstep / grime': 580,
-    'afro house': 980,
-    'amapiano': 580,
-    'ambient / experimental': 480,
-    'bass / club': 580,
-    'bass house': 770,
-    'brazilian funk': 580,
-    'breaks / breakbeat / uk bass': 580,
-    'dance / electro pop': 780,
-    'deep house': 770,
-    'dj tools': 580,
-    'downtempo': 544,
-    'drum & bass': 770,
-    'dubstep': 780,
-    'electro (classic / detroit / modern)': 430,
-    'electronica': 580,
-    'funky house': 444,
-    'hard dance / hardcore': 477,
-    'hard techno': 387,
-    'house': 1700,
-    'indie dance': 990,
-    'jackin house': 570,
-    'mainstage': 1070,
-    'melodic house & techno': 1310,
-    'minimal / deep tech': 830,
-    'nu disco / disco': 780,
-    'organic house / downtempo': 680,
-    'progressive house': 632,
-    'psy-trance': 780,
-    'tech house': 1870,
-    'techno (peak time / driving)': 1870,
-    'techno (raw / deep / hypnotic)': 2370,
-    'trance (main floor)': 1870,
-    'trance (raw / deep / hypnotic)': 1870,
-    'trap / wave': 880,
-    'uk garage / bassline': 880,
-    'new african': 430,
-    'new caribbean': 430,
-    'new hip-hop': 430,
-    'new latin': 430,
-    'new pop': 430,
-    'new r&b': 430,
-};
-
-function getTop100Price(genre) {
-    if (!genre) return null;
-    const g = genre.toLowerCase().trim();
-    // Exact match first
-    if (TOP100_GENRE_PRICES[g] !== undefined) return TOP100_GENRE_PRICES[g];
-    // Partial match: check if genre contains or is contained in a key
-    for (const key in TOP100_GENRE_PRICES) {
-        if (g.includes(key) || key.includes(g)) return TOP100_GENRE_PRICES[key];
-    }
-    return null;
-}
-
-function updateTop10Price(genre) {
-    const el = document.getElementById('top10-price');
-    const genreTag = document.getElementById('top10-genre');
-    if (!el) return;
-    if (genre) {
-        el.textContent = '€920';
-        el.classList.remove('genre-pending');
-        if (genreTag) {
-            genreTag.textContent = genre;
-            genreTag.style.display = '';
-        }
-    } else {
-        el.textContent = 'Depends on genre';
-        el.classList.add('genre-pending');
-        if (genreTag) {
-            genreTag.textContent = '';
-            genreTag.style.display = 'none';
-        }
-    }
-}
-
-function updateTop100Price(genre) {
-    const el = document.getElementById('top100-price');
-    const genreTag = document.getElementById('top100-genre');
-    if (!el) return;
-    const price = getTop100Price(genre);
-    if (price !== null) {
-        el.textContent = '€' + price.toLocaleString();
-        el.classList.remove('genre-pending');
-        if (genreTag) {
-            genreTag.textContent = genre;
-            genreTag.style.display = '';
-        }
-    } else {
-        el.textContent = 'Depends on genre';
-        el.classList.add('genre-pending');
-        if (genreTag) {
-            genreTag.textContent = '';
-            genreTag.style.display = 'none';
-        }
-    }
-}
-
 // ===== i18n - Full Translations =====
 const translations = {
     en: {
@@ -119,6 +6,26 @@ const translations = {
         nav_how: 'HOW IT WORKS',
         nav_pricing: 'PRICING',
         nav_cta: 'BOOST MY TRACK',
+        nav_login: 'Sign in',
+        nav_logout: 'Sign out',
+        nav_dashboard: 'MY CAMPAIGNS',
+        auth_prompt_title: 'Sign in to continue',
+        auth_prompt_text: 'Please sign in with your Google account to proceed with your campaign.',
+        auth_google_btn: 'Sign in with Google',
+        auth_cancel: 'Cancel',
+        dashboard_badge: 'MY CAMPAIGNS',
+        dashboard_title: 'Your Campaign Dashboard',
+        dashboard_desc: 'Track the status of all your promotions.',
+        dashboard_empty: 'No campaigns yet. Start by searching for a track!',
+        dashboard_status_completed: 'Completed',
+        dashboard_status_progress: 'In Progress',
+        dashboard_label_campaign: 'Campaign',
+        dashboard_label_genre: 'Genre',
+        dashboard_label_date: 'Date',
+        dashboard_label_similar: 'Similar Artists',
+        dashboard_label_receipt: 'Receipt',
+        dashboard_cta: 'GET STARTED',
+        dashboard_error: 'Failed to load campaigns.',
         hero_badge: 'Industry-Level Promotion. Real Results.',
         hero_title: 'Professional Beatport promotion for <span class="text-gradient">DJs</span>, <span class="text-gradient">producers</span> and <span class="text-gradient">labels.</span>',
         hero_subtitle: '10+ years of pushing artists up the Beatport charts.',
@@ -259,6 +166,26 @@ const translations = {
         nav_how: 'COMMENT CA MARCHE',
         nav_pricing: 'TARIFS',
         nav_cta: 'BOOSTER MA TRACK',
+        nav_login: 'Connexion',
+        nav_logout: 'D\u00e9connexion',
+        nav_dashboard: 'MES CAMPAGNES',
+        auth_prompt_title: 'Connectez-vous pour continuer',
+        auth_prompt_text: 'Veuillez vous connecter avec votre compte Google pour finaliser votre campagne.',
+        auth_google_btn: 'Se connecter avec Google',
+        auth_cancel: 'Annuler',
+        dashboard_badge: 'MES CAMPAGNES',
+        dashboard_title: 'Tableau de bord de vos campagnes',
+        dashboard_desc: 'Suivez le statut de toutes vos promotions.',
+        dashboard_empty: 'Aucune campagne pour le moment. Commencez par rechercher une track !',
+        dashboard_status_completed: 'Terminée',
+        dashboard_status_progress: 'En cours',
+        dashboard_label_campaign: 'Campagne',
+        dashboard_label_genre: 'Genre',
+        dashboard_label_date: 'Date',
+        dashboard_label_similar: 'Artistes similaires',
+        dashboard_label_receipt: 'Reçu',
+        dashboard_cta: 'COMMENCER',
+        dashboard_error: 'Échec du chargement des campagnes.',
         hero_badge: 'Promotion de niveau professionnel. Des résultats concrets.',
         hero_title: 'Promotion Beatport professionnelle pour <span class="text-gradient">DJs</span>, <span class="text-gradient">producteurs</span> et <span class="text-gradient">labels.</span>',
         hero_subtitle: '10+ ans \u00e0 propulser les artistes dans les charts Beatport.',
@@ -399,6 +326,26 @@ const translations = {
         nav_how: 'COMO FUNCIONA',
         nav_pricing: 'PRE\u00c7OS',
         nav_cta: 'IMPULSIONAR MINHA TRACK',
+        nav_login: 'Entrar',
+        nav_logout: 'Sair',
+        nav_dashboard: 'MINHAS CAMPANHAS',
+        auth_prompt_title: 'Entre para continuar',
+        auth_prompt_text: 'Por favor, entre com sua conta Google para prosseguir com sua campanha.',
+        auth_google_btn: 'Entrar com Google',
+        auth_cancel: 'Cancelar',
+        dashboard_badge: 'MINHAS CAMPANHAS',
+        dashboard_title: 'Painel das suas campanhas',
+        dashboard_desc: 'Acompanhe o status de todas as suas promo\u00e7\u00f5es.',
+        dashboard_empty: 'Nenhuma campanha ainda. Comece pesquisando uma track!',
+        dashboard_status_completed: 'Concluída',
+        dashboard_status_progress: 'Em andamento',
+        dashboard_label_campaign: 'Campanha',
+        dashboard_label_genre: 'Gênero',
+        dashboard_label_date: 'Data',
+        dashboard_label_similar: 'Artistas semelhantes',
+        dashboard_label_receipt: 'Recibo',
+        dashboard_cta: 'COMEÇAR',
+        dashboard_error: 'Falha ao carregar campanhas.',
         hero_badge: 'Promo\u00e7\u00e3o de n\u00edvel profissional. Resultados reais.',
         hero_title: 'Promo\u00e7\u00e3o profissional no Beatport para <span class="text-gradient">DJs</span>, <span class="text-gradient">produtores</span> e <span class="text-gradient">labels.</span>',
         hero_subtitle: '10+ anos impulsionando artistas nos charts do Beatport.',
@@ -539,6 +486,26 @@ const translations = {
         nav_how: 'C\u00d3MO FUNCIONA',
         nav_pricing: 'PRECIOS',
         nav_cta: 'IMPULSAR MI TRACK',
+        nav_login: 'Iniciar sesi\u00f3n',
+        nav_logout: 'Cerrar sesi\u00f3n',
+        nav_dashboard: 'MIS CAMPAÑAS',
+        auth_prompt_title: 'Inicia sesi\u00f3n para continuar',
+        auth_prompt_text: 'Por favor, inicia sesi\u00f3n con tu cuenta de Google para continuar con tu campa\u00f1a.',
+        auth_google_btn: 'Iniciar sesi\u00f3n con Google',
+        auth_cancel: 'Cancelar',
+        dashboard_badge: 'MIS CAMPA\u00d1AS',
+        dashboard_title: 'Panel de tus campa\u00f1as',
+        dashboard_desc: 'Sigue el estado de todas tus promociones.',
+        dashboard_empty: '\u00a1A\u00fan no hay campa\u00f1as. Comienza buscando una track!',
+        dashboard_status_completed: 'Completada',
+        dashboard_status_progress: 'En curso',
+        dashboard_label_campaign: 'Campaña',
+        dashboard_label_genre: 'Género',
+        dashboard_label_date: 'Fecha',
+        dashboard_label_similar: 'Artistas similares',
+        dashboard_label_receipt: 'Recibo',
+        dashboard_cta: 'EMPEZAR',
+        dashboard_error: 'Error al cargar las campañas.',
         hero_badge: 'Promoci\u00f3n de nivel profesional. Resultados reales.',
         hero_title: 'Promoci\u00f3n profesional en Beatport para <span class="text-gradient">DJs</span>, <span class="text-gradient">productores</span> y <span class="text-gradient">sellos.</span>',
         hero_subtitle: '10+ a\u00f1os impulsando artistas en los charts de Beatport.',
@@ -679,6 +646,26 @@ const translations = {
         nav_how: 'WIE ES FUNKTIONIERT',
         nav_pricing: 'PREISE',
         nav_cta: 'MEINEN TRACK BOOSTEN',
+        nav_login: 'Anmelden',
+        nav_logout: 'Abmelden',
+        nav_dashboard: 'MEINE KAMPAGNEN',
+        auth_prompt_title: 'Anmelden um fortzufahren',
+        auth_prompt_text: 'Bitte melden Sie sich mit Ihrem Google-Konto an, um mit Ihrer Kampagne fortzufahren.',
+        auth_google_btn: 'Mit Google anmelden',
+        auth_cancel: 'Abbrechen',
+        dashboard_badge: 'MEINE KAMPAGNEN',
+        dashboard_title: 'Ihr Kampagnen-Dashboard',
+        dashboard_desc: 'Verfolgen Sie den Status aller Ihrer Promotionen.',
+        dashboard_empty: 'Noch keine Kampagnen. Beginnen Sie mit der Suche nach einem Track!',
+        dashboard_status_completed: 'Abgeschlossen',
+        dashboard_status_progress: 'In Bearbeitung',
+        dashboard_label_campaign: 'Kampagne',
+        dashboard_label_genre: 'Genre',
+        dashboard_label_date: 'Datum',
+        dashboard_label_similar: 'Ähnliche Künstler',
+        dashboard_label_receipt: 'Beleg',
+        dashboard_cta: 'JETZT STARTEN',
+        dashboard_error: 'Kampagnen konnten nicht geladen werden.',
         hero_badge: 'Promotion auf Branchenniveau. Echte Ergebnisse.',
         hero_title: 'Professionelle Beatport-Promotion f\u00fcr <span class="text-gradient">DJs</span>, <span class="text-gradient">Produzenten</span> und <span class="text-gradient">Labels.</span>',
         hero_subtitle: '10+ Jahre, K\u00fcnstler in den Beatport-Charts nach oben zu bringen.',
@@ -883,1024 +870,10 @@ document.addEventListener('click', (e) => {
         localStorage.setItem('beatpush_lang', lang);
         applyTranslations(lang);
         dropdown.classList.remove('open');
+        window.dispatchEvent(new CustomEvent('beatpush-langchange', { detail: { lang } }));
         return;
     }
 
     // Close dropdown on outside click
     if (dropdown) dropdown.classList.remove('open');
 });
-
-// ===== DOM Elements =====
-const menuToggle = document.querySelector('.menu-toggle');
-const navLinks = document.querySelector('.nav-links');
-const searchInput = document.getElementById('trackSearch');
-const searchBtn = document.getElementById('searchBtn');
-const searchResults = document.getElementById('searchResults');
-
-// ===== State =====
-let selectedTrack = null;
-let selectedPack = null;
-let searchTimeout = null;
-let currentSearchQuery = '';
-let genreConfirmed = false;
-
-// ===== Mobile Menu =====
-menuToggle.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-    menuToggle.classList.toggle('active');
-});
-
-navLinks.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-        menuToggle.classList.remove('active');
-    });
-});
-
-// ===== Artist Autocomplete Search =====
-const artistInput = document.getElementById('similarArtists');
-const artistResults = document.getElementById('artistSearchResults');
-const artistTagsContainer = document.getElementById('artistTags');
-let selectedArtists = [];
-let artistSearchTimeout = null;
-
-if (artistInput && artistResults) {
-    artistInput.addEventListener('input', () => {
-        clearTimeout(artistSearchTimeout);
-        const query = artistInput.value.trim();
-        if (query.length < 2) {
-            artistResults.classList.remove('visible');
-            return;
-        }
-        artistSearchTimeout = setTimeout(async () => {
-            artistInput.classList.add('loading');
-            try {
-                let response;
-                try {
-                    response = await fetch(`${SEARCH_API_PROXY}?q=${encodeURIComponent(query)}&type=artist`);
-                } catch (e) {
-                    response = null;
-                }
-                if (!response || !response.ok) {
-                    response = await fetch(`${SEARCH_API_BASE}?q=${encodeURIComponent(query)}&type=artist`);
-                }
-                if (!response.ok) throw new Error('API error');
-                const data = await response.json();
-                console.log('Artist search response:', data);
-                renderArtistResults(data);
-            } catch (err) {
-                console.error('Artist search error:', err);
-                artistResults.classList.remove('visible');
-            } finally {
-                artistInput.classList.remove('loading');
-            }
-        }, 300);
-    });
-
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.artist-search-wrapper')) {
-            artistResults.classList.remove('visible');
-        }
-    });
-}
-
-function renderArtistResults(data) {
-    const artists = data.results || data.artists || data || [];
-    if (!artists.length) {
-        artistResults.classList.remove('visible');
-        return;
-    }
-    artistResults.innerHTML = artists.slice(0, 8).map(artist => {
-        const name = artist.name || artist.title || artist;
-        const img = artist.image || artist.image_url || artist.artwork || artist.thumb || '';
-        const id = artist.id || name;
-        const safeImg = typeof img === 'string' ? img.replace(/"/g, '&quot;') : '';
-        return `<div class="artist-result-item" data-name="${typeof name === 'string' ? name.replace(/"/g, '&quot;') : name}" data-id="${id}" data-img="${safeImg}">
-            ${img
-                ? `<img src="${safeImg}" alt="" onerror="this.outerHTML='<div class=\\'artist-avatar-placeholder\\'><svg width=\\'16\\' height=\\'16\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1.5\\'><path d=\\'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\\'/><circle cx=\\'12\\' cy=\\'7\\' r=\\'4\\'/></svg></div>'">`
-                : `<div class="artist-avatar-placeholder"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>`
-            }
-            <span>${typeof name === 'string' ? name : name}</span>
-        </div>`;
-    }).join('');
-    artistResults.classList.add('visible');
-
-    artistResults.querySelectorAll('.artist-result-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const name = item.dataset.name;
-            const img = item.dataset.img || '';
-            if (!selectedArtists.find(a => a.name === name)) {
-                selectedArtists.push({ name, img });
-                renderArtistTags();
-            }
-            artistInput.value = '';
-            artistResults.classList.remove('visible');
-        });
-    });
-}
-
-function renderArtistTags() {
-    artistTagsContainer.innerHTML = selectedArtists.map((artist, i) => {
-        const name = typeof artist === 'string' ? artist : artist.name;
-        const img = typeof artist === 'string' ? '' : (artist.img || '');
-        return `<span class="artist-tag">
-            ${img
-                ? `<img src="${img}" alt="" class="artist-tag-img" onerror="this.remove()">`
-                : `<span class="artist-tag-avatar"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>`
-            }
-            ${name}
-            <button class="artist-tag-remove" data-index="${i}" type="button">&times;</button>
-        </span>`;
-    }).join('');
-
-    artistTagsContainer.querySelectorAll('.artist-tag-remove').forEach(btn => {
-        btn.addEventListener('click', () => {
-            selectedArtists.splice(parseInt(btn.dataset.index), 1);
-            renderArtistTags();
-        });
-    });
-}
-
-// ===== Smooth Scroll =====
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        const target = document.querySelector(targetId);
-        if (target) {
-            const offset = 80;
-            const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
-            window.scrollTo({ top, behavior: 'smooth' });
-        }
-    });
-});
-
-// ===== Navbar scroll effect =====
-const navbar = document.querySelector('.navbar');
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 100) {
-        navbar.style.background = 'rgba(0, 0, 0, 0.9)';
-    } else {
-        navbar.style.background = 'rgba(0, 0, 0, 0.6)';
-    }
-});
-
-// ===== Search Bar Glow Animation =====
-const searchWrap = document.getElementById('searchWrap');
-if (searchWrap) {
-    searchWrap.addEventListener('click', function(e) {
-        this.style.animation = 'none';
-        void this.offsetWidth;
-        this.style.animation = '';
-        this.classList.add('search-pulse');
-        setTimeout(() => this.classList.remove('search-pulse'), 600);
-    });
-}
-
-// ===== Scroll Animations =====
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-        }
-    });
-}, observerOptions);
-
-document.querySelectorAll('.step-card, .product-card, .section-header, .search-box, .cta-box, .faq-item, .why-choose-card, .campaign-setup-card').forEach(el => {
-    el.classList.add('fade-in');
-    observer.observe(el);
-});
-
-// ===== Step Timeline Scroll Highlight =====
-const stepCards = document.querySelectorAll('.step-card-v2');
-const stepObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('step-active');
-        }
-    });
-}, {
-    threshold: 0.3,
-    rootMargin: '0px 0px -20% 0px'
-});
-
-stepCards.forEach(card => {
-    stepObserver.observe(card);
-});
-
-// ===== Beatport URL Detection =====
-function parseBeatportUrl(input) {
-    const urlPattern = /(?:https?:\/\/)?(?:www\.)?beatport\.com\/track\/([^/]+)\/(\d+)/i;
-    const match = input.match(urlPattern);
-    if (match) {
-        return {
-            slug: match[1],
-            id: match[2],
-            name: match[1].replace(/-/g, ' ')
-        };
-    }
-    return null;
-}
-
-// ===== Track Search =====
-searchInput.addEventListener('input', () => {
-    clearTimeout(searchTimeout);
-    const query = searchInput.value.trim();
-
-    if (query.length < 2) {
-        searchResults.innerHTML = '';
-        hideSearchLoading();
-        return;
-    }
-
-    showSearchLoading();
-    searchTimeout = setTimeout(() => performSearch(), 400);
-});
-
-searchInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        clearTimeout(searchTimeout);
-        performSearch();
-    }
-});
-
-searchBtn.addEventListener('click', () => {
-    clearTimeout(searchTimeout);
-    performSearch();
-});
-
-function showSearchLoading() {
-    const btnText = searchBtn.querySelector('.search-btn-text');
-    const spinner = searchBtn.querySelector('.search-spinner');
-    btnText.style.display = 'none';
-    spinner.style.display = 'block';
-    searchBtn.disabled = true;
-}
-
-function hideSearchLoading() {
-    const btnText = searchBtn.querySelector('.search-btn-text');
-    const spinner = searchBtn.querySelector('.search-spinner');
-    btnText.style.display = 'inline';
-    spinner.style.display = 'none';
-    searchBtn.disabled = false;
-}
-
-async function performSearch() {
-    const query = searchInput.value.trim();
-    if (!query) return;
-
-    if (query === currentSearchQuery) {
-        hideSearchLoading();
-        return;
-    }
-    currentSearchQuery = query;
-
-    showSearchLoading();
-
-    try {
-        const beatportUrl = parseBeatportUrl(query);
-        let searchQuery = beatportUrl ? beatportUrl.name : query;
-
-        let response;
-        try {
-            response = await fetch(`${SEARCH_API_PROXY}?q=${encodeURIComponent(searchQuery)}&type=track`);
-        } catch (e) {
-            response = null;
-        }
-        if (!response || !response.ok) {
-            response = await fetch(`${SEARCH_API_BASE}?q=${encodeURIComponent(searchQuery)}&type=track`);
-        }
-
-        if (!response.ok) {
-            throw new Error(`API error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('Track search response:', data);
-        displayResults(data, beatportUrl ? beatportUrl.id : null);
-    } catch (error) {
-        console.error('Search error:', error);
-        currentSearchQuery = '';
-        displayDemoResults(query);
-    } finally {
-        hideSearchLoading();
-    }
-}
-
-function displayResults(data, targetTrackId) {
-    searchResults.innerHTML = '';
-
-    let tracks = Array.isArray(data) ? data : (data.results || data.tracks || data.data || []);
-    tracks = tracks.filter(item => item.title || item.name);
-
-    if (!tracks.length) {
-        const lang = detectLanguage();
-        const t = translations[lang] || translations.en;
-        const emptyMsg = t.search_empty || 'No tracks found.';
-        searchResults.innerHTML = `<div class="search-empty">${emptyMsg}</div>`;
-        return;
-    }
-
-    if (targetTrackId) {
-        tracks.sort((a, b) => {
-            const aMatch = a.link && a.link.includes(targetTrackId);
-            const bMatch = b.link && b.link.includes(targetTrackId);
-            return bMatch - aMatch;
-        });
-    }
-
-    tracks.slice(0, 10).forEach(track => {
-        const title = track.title || track.name;
-        const artist = Array.isArray(track.artists) ? track.artists.join(', ') : (track.artist || 'Unknown artist');
-        const artwork = track.image_url || track.image || track.artwork || '';
-        const genre = Array.isArray(track.genre) ? track.genre.join(', ') : '';
-        const link = track.link || '';
-
-        const el = createTrackElement(title, artist, artwork, link, genre);
-        searchResults.appendChild(el);
-    });
-}
-
-function displayDemoResults(query) {
-    searchResults.innerHTML = '';
-
-    const beatportUrl = parseBeatportUrl(query);
-    const displayName = beatportUrl ? beatportUrl.name : query;
-
-    const demoTracks = [
-        { title: `${displayName} (Original Mix)`, artist: 'Various Artists', artwork: '' },
-        { title: `${displayName} - Extended Mix`, artist: 'DJ Producer', artwork: '' },
-        { title: `${displayName} (Remix)`, artist: 'Top Artist', artwork: '' },
-    ];
-
-    demoTracks.forEach((track) => {
-        const el = createTrackElement(track.title, track.artist, track.artwork, '', '');
-        searchResults.appendChild(el);
-    });
-}
-
-function createTrackElement(title, artist, artwork, link, genre) {
-    const el = document.createElement('div');
-    el.className = 'track-result';
-
-    const safeTitle = escapeHtml(title);
-    const safeArtist = escapeHtml(artist);
-    const safeGenre = genre ? escapeHtml(genre) : '';
-    const largeArtwork = artwork ? artwork.replace('200x200', '500x500') : '';
-
-    el.innerHTML = `
-        <div class="track-art">
-            ${artwork
-                ? `<img src="${escapeHtml(artwork)}" alt="${safeTitle}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                   <div class="track-art-placeholder" style="display:none;">
-                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-                   </div>`
-                : `<div class="track-art-placeholder">
-                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-                   </div>`
-            }
-        </div>
-        <div class="track-info">
-            <div class="track-title">${safeTitle}</div>
-            <div class="track-artist">${safeArtist}</div>
-            ${safeGenre ? `<div class="track-genre">${safeGenre}</div>` : ''}
-        </div>
-    `;
-
-    el.addEventListener('click', () => {
-        selectTrack(title, artist, largeArtwork, link, genre);
-    });
-
-    return el;
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-function selectTrack(title, artist, artwork, id, genre) {
-    selectedTrack = { title, artist, artwork, id, genre: genre || '' };
-
-    // Update Top 10 / Top 100 card price based on genre
-    updateTop10Price(genre);
-    updateTop100Price(genre);
-
-    // Show pricing section
-    const pricingSection = document.getElementById('pricing');
-    if (pricingSection) {
-        pricingSection.style.display = '';
-
-        // Show selected track banner
-        let banner = document.getElementById('selectedTrackBanner');
-        if (!banner) {
-            banner = document.createElement('div');
-            banner.id = 'selectedTrackBanner';
-            banner.className = 'selected-track-banner';
-            const sectionHeader = pricingSection.querySelector('.section-header');
-            sectionHeader.parentNode.insertBefore(banner, sectionHeader.nextSibling);
-        }
-
-        const safeTitle = escapeHtml(title);
-        const safeArtist = escapeHtml(artist);
-        const largeArtwork = artwork ? artwork.replace('200x200', '500x500') : '';
-        const lang = detectLanguage();
-        const t = translations[lang] || translations.en;
-
-        banner.innerHTML = `
-            <div class="selected-track">
-                ${largeArtwork ? `<img src="${escapeHtml(largeArtwork)}" alt="${safeTitle}" class="selected-track-art">` : ''}
-                <div class="selected-track-info">
-                    <div class="selected-track-title">${safeTitle}</div>
-                    <div class="selected-track-artist">${safeArtist}</div>
-                </div>
-                <button class="selected-track-change" onclick="changeTrack()">${t.change_track || 'Change'}</button>
-            </div>
-        `;
-
-        setTimeout(() => {
-            pricingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-    }
-
-    // Clear search results
-    searchResults.innerHTML = '';
-}
-
-function changeTrack() {
-    selectedTrack = null;
-    selectedPack = null;
-    // Reset Top 10 / Top 100 price
-    updateTop10Price(null);
-    updateTop100Price(null);
-    const pricingSection = document.getElementById('pricing');
-    if (pricingSection) {
-        pricingSection.style.display = 'none';
-    }
-    const banner = document.getElementById('selectedTrackBanner');
-    if (banner) banner.remove();
-
-    // Hide campaign setup
-    const campaignSetup = document.getElementById('campaignSetup');
-    if (campaignSetup) campaignSetup.style.display = 'none';
-
-    // Scroll back to search
-    const searchSection = document.getElementById('search');
-    if (searchSection) {
-        searchSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-    searchInput.focus();
-}
-
-// ===== Package Selection =====
-document.querySelectorAll('.pack-select-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        e.preventDefault();
-
-        // Require a track to be selected first
-        if (!selectedTrack) {
-            const lang = detectLanguage();
-            const t = translations[lang] || translations.en;
-            showToast(t.choose_validate_track || 'Please select a track first before choosing a campaign.', true);
-            return;
-        }
-
-        const pack = btn.dataset.pack;
-        selectedPack = pack;
-        showCampaignSetup(pack);
-    });
-});
-
-function showCampaignSetup(pack) {
-    const campaignSetup = document.getElementById('campaignSetup');
-    if (!campaignSetup) return;
-
-    campaignSetup.style.display = '';
-    genreConfirmed = false;
-
-    const lang = detectLanguage();
-    const t = translations[lang] || translations.en;
-
-    // Update summary
-    const summary = document.getElementById('campaignSummary');
-    if (summary && selectedTrack) {
-        const safeTitle = escapeHtml(selectedTrack.title);
-        const safeArtist = escapeHtml(selectedTrack.artist);
-        const artworkUrl = selectedTrack.artwork ? escapeHtml(selectedTrack.artwork.replace('200x200', '500x500')) : '';
-        summary.innerHTML = `
-            <div class="campaign-summary-track">
-                ${artworkUrl ? `<img src="${artworkUrl}" alt="${safeTitle}" class="campaign-summary-art">` : ''}
-                <div class="campaign-summary-details">
-                    <div class="campaign-summary-row">
-                        <span class="campaign-summary-label">${t.campaign_summary_track || 'Track'}:</span>
-                        <span class="campaign-summary-value">${safeTitle} - ${safeArtist}</span>
-                    </div>
-                    <div class="campaign-summary-row">
-                        <span class="campaign-summary-label">${t.campaign_summary_pack || 'Package'}:</span>
-                        <span class="campaign-summary-value">${pack === 'exclusive-800' ? 'Top 10 by genre' : pack === 'promo-430' ? 'Top 100 by genre' : pack === 'daily-push' ? 'Daily push - 10 copies / day' : pack}</span>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    // Set genre from selected track
-    const genreTag = document.getElementById('campaignGenreTag');
-    const genreInput = document.getElementById('campaignGenreInput');
-    const hasGenre = selectedTrack && selectedTrack.genre;
-    if (genreTag) {
-        genreTag.textContent = hasGenre ? selectedTrack.genre : '';
-        genreTag.style.display = hasGenre ? '' : 'none';
-    }
-    if (genreInput) {
-        genreInput.style.display = hasGenre ? 'none' : '';
-        genreInput.value = '';
-    }
-
-    // Update hint text based on genre detection
-    const genreHint = document.querySelector('[data-i18n="campaign_genre_hint"]');
-    if (genreHint) {
-        genreHint.textContent = hasGenre
-            ? (t.campaign_genre_hint || 'Confirm the genre detected for your track.')
-            : (t.campaign_genre_hint_manual || 'Please type your genre below.');
-    }
-
-    // Reset confirm button
-    const confirmBtn = document.getElementById('genreConfirmBtn');
-    if (confirmBtn) {
-        confirmBtn.textContent = t.campaign_confirm || 'Confirm';
-        confirmBtn.classList.remove('confirmed');
-        confirmBtn.disabled = false;
-    }
-
-    // Update tips based on pack
-    const tipsContent = document.getElementById('tipsContent');
-    if (tipsContent) {
-        if (pack === 'exclusive-800') {
-            tipsContent.innerHTML = `
-                <p style="margin: 0 0 8px 0; color: #ccc;">${t.top10_tooltip_title || 'To qualify for this promotion, tracks must meet the following criteria:'}</p>
-                <ul>
-                    <li data-i18n="top10_tip_1">${t.top10_tip_1 || 'Released within the last six days.'}</li>
-                    <li data-i18n="top10_tip_2">${t.top10_tip_2 || 'Not currently in a downward trend.'}</li>
-                    <li data-i18n="top10_tip_3">${t.top10_tip_3 || 'Current minimum position number 20.'}</li>
-                    <li data-i18n="top10_tip_4">${t.top10_tip_4 || 'Must be the track\'s first time appearing on the chart.'}</li>
-                </ul>
-                <p style="margin: 8px 0 0 0; color: #999; font-size: 0.75rem; line-height: 1.4;">${t.top10_tip_footer_1 || 'If your track does not yet meet these requirements, you can begin with our'} <span style="color: #4CAF50;">${t.top10_tip_footer_daily_push || 'Daily Push Promotion'}</span>, ${t.top10_tip_footer_2 || 'designed to help tracks gain momentum and climb the charts.'}<br>${t.top10_tip_footer_3 || 'After reaching approximately position #20, you will be able to access and benefit from this exclusive promotion package.'}</p>
-            `;
-        } else if (pack === 'daily-push') {
-            tipsContent.innerHTML = `
-                <ul>
-                    <li data-i18n="dailypush_tip_1">${t.dailypush_tip_1 || 'Once you get in the chart, to keep the position, to continue and climb, you can purchase a discounted DAILY PUSH.'}</li>
-                    <li data-i18n="dailypush_tip_2">${t.dailypush_tip_2 || 'This consists in 10 daily purchases of your track, from DJ\'s all around the world and fitting with your genre.'}</li>
-                    <li data-i18n="dailypush_tip_3">${t.dailypush_tip_3 || 'Challenges at the Top: The closer you get to the top, the more challenging it becomes to move up.'}</li>
-                </ul>
-            `;
-        } else {
-            tipsContent.innerHTML = `
-                <p style="margin: 0 0 8px 0; color: #ccc;">${t.top100_tooltip_title || 'To ensure an effective promotion, the track(s) must meet the following criteria:'}</p>
-                <ul>
-                    <li data-i18n="top100_tip_1">${t.top100_tip_1 || 'The track must be brand new (ideally in pre-order stage).'}</li>
-                    <li data-i18n="top100_tip_2">${t.top100_tip_2 || 'The release must be no older than 24 hours at the time the campaign begins.'}</li>
-                    <li data-i18n="top100_tip_3">${t.top100_tip_3 || 'The track must never have been charted before.'}</li>
-                    <li data-i18n="top100_tip_4">${t.top100_tip_4 || 'The artist or label should have at least 7 previous releases on Beatport.'}</li>
-                    <li data-i18n="top100_tip_5">${t.top100_tip_5 || 'The artist or label must have reached the Top 100 of the selected genre at least twice within the last 6 months.'}</li>
-                    <li data-i18n="top100_tip_6">${t.top100_tip_6 || 'The track must appear in Beatport Hype Picks for the genre.'}</li>
-                    <li data-i18n="top100_tip_7">${t.top100_tip_7 || 'Campaigns cannot start on Sundays or Mondays.'}</li>
-                </ul>
-            `;
-        }
-    }
-
-    // Display price summary above launch button
-    const priceSummary = document.getElementById('campaignPriceSummary');
-    if (priceSummary) {
-        const PACK_PRICES = {
-            50: '$240',
-            100: '$480',
-            200: '$960',
-            500: '$1,900',
-            1000: '$3,850',
-            'exclusive-800': '€920',
-            'daily-push': '$55'
-        };
-        const priceLabel = t.campaign_total || 'Total';
-        if (pack === 'promo-430') {
-            const genre = selectedTrack && selectedTrack.genre ? selectedTrack.genre : null;
-            const genrePrice = genre ? getTop100Price(genre) : null;
-            if (genrePrice) {
-                priceSummary.textContent = `${priceLabel}: $${genrePrice.toLocaleString('en-US')}`;
-            } else {
-                priceSummary.textContent = `${priceLabel}: ${t.campaign_price_genre || 'Depends on genre'}`;
-            }
-        } else {
-            priceSummary.textContent = `${priceLabel}: ${PACK_PRICES[pack] || ''}`;
-        }
-    }
-
-    // Update launch button text and store pack on the button itself
-    const launchBtn = document.getElementById('launchCampaignBtn');
-    if (launchBtn) {
-        launchBtn.dataset.selectedPack = pack;
-        if (pack === 'exclusive-800' || pack === 'promo-430') {
-            launchBtn.textContent = t.campaign_whatsapp_btn || 'Contact us on Whatsapp to finalize';
-        } else {
-            launchBtn.textContent = t.campaign_launch_btn || 'Run my campaign';
-        }
-    }
-
-    // Scroll to campaign setup
-    setTimeout(() => {
-        campaignSetup.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-}
-
-// Genre confirm button
-document.getElementById('genreConfirmBtn').addEventListener('click', function() {
-    const genreInput = document.getElementById('campaignGenreInput');
-    const genreTag = document.getElementById('campaignGenreTag');
-
-    // If manual input is visible, validate and use its value
-    if (genreInput && genreInput.style.display !== 'none') {
-        const manualGenre = genreInput.value.trim();
-        if (!manualGenre) {
-            genreInput.classList.add('field-highlight');
-            setTimeout(() => genreInput.classList.remove('field-highlight'), 2000);
-            return;
-        }
-        // Set the genre tag with manual value
-        if (genreTag) {
-            genreTag.textContent = manualGenre;
-            genreTag.style.display = '';
-        }
-        genreInput.style.display = 'none';
-    }
-
-    genreConfirmed = true;
-    this.classList.add('confirmed');
-    const lang = detectLanguage();
-    const t = translations[lang] || translations.en;
-    this.textContent = t.campaign_confirmed || 'Confirmed';
-    this.disabled = true;
-
-    // Update price summary for Top 100 based on confirmed genre
-    if (selectedPack === 'promo-430') {
-        const confirmedGenre = genreTag ? genreTag.textContent.trim() : null;
-        const genrePrice = confirmedGenre ? getTop100Price(confirmedGenre) : null;
-        const priceSummary = document.getElementById('campaignPriceSummary');
-        if (priceSummary && genrePrice) {
-            const priceLabel = t.campaign_total || 'Total';
-            priceSummary.textContent = `${priceLabel}: $${genrePrice.toLocaleString('en-US')}`;
-        }
-    }
-});
-
-// Tips toggle
-document.getElementById('tipsToggle').addEventListener('click', function() {
-    this.closest('.campaign-tips').classList.toggle('open');
-});
-
-// Launch campaign button
-document.getElementById('launchCampaignBtn').addEventListener('click', function() {
-    const lang = detectLanguage();
-    const t = translations[lang] || translations.en;
-
-    // Use pack stored on button as source of truth (set in showCampaignSetup)
-    const activePack = this.dataset.selectedPack || selectedPack;
-    if (activePack && activePack !== selectedPack) {
-        console.warn('Pack mismatch! button:', activePack, 'variable:', selectedPack);
-        selectedPack = activePack;
-    }
-
-    // Validate genre confirmed
-    if (!genreConfirmed) {
-        showToast(t.campaign_validate_genre || 'Please confirm the genre of your track before launching.');
-        highlightField(document.getElementById('genreConfirmBtn'));
-        return;
-    }
-
-    // Validate at least 1 similar artist
-    const artistsField = document.getElementById('similarArtists');
-    if (!selectedArtists.length) {
-        showToast(t.campaign_validate_artists || 'Please enter at least 1 similar artist.');
-        highlightField(artistsField);
-        return;
-    }
-
-    // Top 10 & Top 100: redirect to WhatsApp
-    if (selectedPack === 'exclusive-800') {
-        const track = selectedTrack || {};
-        const genre = document.getElementById('campaignGenreTag')?.textContent?.trim() || track.genre || '';
-        const artists = selectedArtists.map(a => a.name).join(', ');
-        const beatportUrl = track.id || '';
-        let msg = `Hello, I'd like to finalize my Beatport Top 10 Campaign!\n\n`;
-        msg += `Track: ${track.title || ''} - ${track.artist || ''}\n`;
-        msg += `Beatport URL: ${beatportUrl}\n`;
-        msg += `Genre: ${genre}\n`;
-        msg += `Price: €920\n`;
-        msg += `Similar Artists: ${artists}`;
-        const encoded = encodeURIComponent(msg);
-        window.open(`https://api.whatsapp.com/send/?phone=13046603890&text=${encoded}&type=phone_number&app_absent=0`, '_blank');
-        return;
-    }
-    if (selectedPack === 'promo-430') {
-        const track = selectedTrack || {};
-        const genre = document.getElementById('campaignGenreTag')?.textContent?.trim() || track.genre || '';
-        const artists = selectedArtists.map(a => a.name).join(', ');
-        const beatportUrl = track.id || '';
-        const genrePrice = getTop100Price(genre);
-        let msg = `Hello, I'd like to finalize my Beatport Top 100 Campaign!\n\n`;
-        msg += `Track: ${track.title || ''} - ${track.artist || ''}\n`;
-        msg += `Beatport URL: ${beatportUrl}\n`;
-        msg += `Genre: ${genre}\n`;
-        if (genrePrice) msg += `Price: $${genrePrice.toLocaleString('en-US')}\n`;
-        msg += `Similar Artists: ${artists}`;
-        const encoded = encodeURIComponent(msg);
-        window.open(`https://api.whatsapp.com/send/?phone=13046603890&text=${encoded}&type=phone_number&app_absent=0`, '_blank');
-        return;
-    }
-
-    // Other packs: create Stripe Checkout Session with metadata
-    // Use pack from button data attribute as primary source of truth
-    const packToSend = this.dataset.selectedPack || selectedPack;
-    if (!packToSend) return;
-
-    console.log('[BeatPush] selectedPack variable:', selectedPack);
-    console.log('[BeatPush] button data-selected-pack:', this.dataset.selectedPack);
-    console.log('[BeatPush] pack being sent to API:', packToSend);
-
-    const track = selectedTrack || {};
-    const genre = document.getElementById('campaignGenreTag')?.textContent?.trim() || track.genre || '';
-    const artists = selectedArtists.map(a => a.name).join(', ');
-    const releaseStatus = document.querySelector('input[name="releaseStatus"]:checked')?.value || '';
-
-    const requestBody = {
-        pack: packToSend,
-        track_title: track.title || '',
-        track_artist: track.artist || '',
-        track_url: track.id || '',
-        genre: genre,
-        similar_artists: artists,
-        release_status: releaseStatus,
-    };
-    console.log('[BeatPush] Request body:', JSON.stringify(requestBody));
-
-    // Save rich campaign data for confirmation popup on return
-    localStorage.setItem('beatpush_pending_campaign', JSON.stringify({
-        pack: packToSend,
-        track_title: track.title || '',
-        track_artist: track.artist || '',
-        track_artwork: track.artwork ? track.artwork.replace('200x200', '500x500') : '',
-        genre: genre,
-        similar_artists: selectedArtists.map(a => ({ name: a.name, img: a.img || '' })),
-        release_status: releaseStatus,
-    }));
-
-    const launchBtn = document.getElementById('launchCampaignBtn');
-    if (launchBtn) {
-        launchBtn.disabled = true;
-        launchBtn.style.opacity = '0.6';
-    }
-
-    fetch('/api/create-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody),
-    })
-    .then(r => {
-        console.log('[BeatPush] API response status:', r.status);
-        return r.json();
-    })
-    .then(data => {
-        console.log('[BeatPush] API response:', JSON.stringify(data));
-        if (data.url) {
-            window.location.href = data.url;
-        } else {
-            console.warn('[BeatPush] No URL in response, using fallback Payment Link');
-            window.open(STRIPE_LINKS[packToSend], '_blank');
-        }
-    })
-    .catch((err) => {
-        console.error('[BeatPush] Fetch error:', err);
-        window.open(STRIPE_LINKS[packToSend], '_blank');
-    })
-    .finally(() => {
-        if (launchBtn) {
-            launchBtn.disabled = false;
-            launchBtn.style.opacity = '';
-        }
-    });
-});
-
-// ===== Field Highlight =====
-function highlightField(el) {
-    if (!el) return;
-    el.classList.add('field-highlight');
-    setTimeout(() => el.classList.remove('field-highlight'), 2000);
-}
-
-// ===== Toast Popup =====
-function showToast(message, scrollToSearch) {
-    // Remove existing toast
-    const existing = document.querySelector('.toast-overlay');
-    if (existing) existing.remove();
-
-    const overlay = document.createElement('div');
-    overlay.className = 'toast-overlay';
-    overlay.innerHTML = `
-        <div class="toast-box">
-            <div class="toast-icon">
-                <img src="https://i.ibb.co/nMjbdTkQ/White-and-Black-Modern-Initial-B-Logo-5000-x-5000-px-1.png" alt="BeatPush" class="toast-logo">
-            </div>
-            <p class="toast-msg">${message}</p>
-            <button class="toast-close">OK</button>
-        </div>
-    `;
-
-    document.body.appendChild(overlay);
-    requestAnimationFrame(() => overlay.classList.add('visible'));
-
-    const close = () => {
-        overlay.classList.remove('visible');
-        setTimeout(() => {
-            overlay.remove();
-            if (scrollToSearch) {
-                const searchSection = document.getElementById('search');
-                if (searchSection) {
-                    searchSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }
-        }, 300);
-    };
-
-    overlay.querySelector('.toast-close').addEventListener('click', close);
-    overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) close();
-    });
-}
-
-// ===== Checkout Success Detection =====
-function showPaymentConfirmation(campaign, paymentData) {
-    const lang = detectLanguage();
-    const t = translations[lang] || translations.en;
-    const packLabel = campaign.pack === 'daily-push' ? 'Daily Push - 10 copies/day' : `${campaign.pack} copies`;
-
-    // Build artist chips HTML
-    const artistsHtml = (campaign.similar_artists || []).map(a => {
-        const name = typeof a === 'string' ? a : a.name;
-        const img = typeof a === 'string' ? '' : (a.img || '');
-        return `<div class="confirm-artist">
-            ${img ? `<img src="${escapeHtml(img)}" alt="" class="confirm-artist-img" onerror="this.outerHTML='<div class=\\'confirm-artist-placeholder\\'><svg width=\\'14\\' height=\\'14\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1.5\\'><path d=\\'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\\'/><circle cx=\\'12\\' cy=\\'7\\' r=\\'4\\'/></svg></div>'">` : `<div class="confirm-artist-placeholder"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>`}
-            <span class="confirm-artist-name">${escapeHtml(name)}</span>
-        </div>`;
-    }).join('');
-
-    // Fallback if similar_artists is a string
-    let artistsFallback = '';
-    if (!Array.isArray(campaign.similar_artists) && paymentData?.metadata?.similar_artists) {
-        artistsFallback = paymentData.metadata.similar_artists.split(',').map(name =>
-            `<div class="confirm-artist"><div class="confirm-artist-placeholder"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="confirm-artist-name">${escapeHtml(name.trim())}</span></div>`
-        ).join('');
-    }
-
-    const overlay = document.createElement('div');
-    overlay.className = 'toast-overlay';
-    overlay.innerHTML = `
-        <div class="confirm-box">
-            <img src="https://i.ibb.co/FLyL2c8K/icon.png" alt="BeatPush" class="confirm-logo">
-            <h2 class="confirm-title">Payment Successful 🎉</h2>
-            <p class="confirm-subtitle">Your order has been confirmed. Our team will begin processing your campaign shortly. The average delivery time is 24–48 hours. You can track your order status anytime from your dashboard, where you will also receive the receipt and proof of delivery once the campaign is completed. Thank you for your trust. 🚀</p>
-
-            <div class="confirm-divider"></div>
-
-            ${campaign.track_artwork ? `
-            <div class="confirm-track">
-                <img src="${escapeHtml(campaign.track_artwork)}" alt="" class="confirm-track-art" onerror="this.style.display='none'">
-                <div class="confirm-track-info">
-                    <div class="confirm-track-title">${escapeHtml(campaign.track_title)}</div>
-                    <div class="confirm-track-artist">${escapeHtml(campaign.track_artist)}</div>
-                </div>
-            </div>
-            ` : campaign.track_title ? `
-            <div class="confirm-track">
-                <div class="confirm-track-info">
-                    <div class="confirm-track-title">${escapeHtml(campaign.track_title)}</div>
-                    <div class="confirm-track-artist">${escapeHtml(campaign.track_artist)}</div>
-                </div>
-            </div>
-            ` : ''}
-
-            <div class="confirm-details">
-                <div class="confirm-row">
-                    <span class="confirm-label">${t.campaign_summary_pack || 'Package'}</span>
-                    <span class="confirm-value">${escapeHtml(packLabel)}</span>
-                </div>
-                ${campaign.genre ? `
-                <div class="confirm-row">
-                    <span class="confirm-label">Genre</span>
-                    <span class="confirm-value">${escapeHtml(campaign.genre)}</span>
-                </div>` : ''}
-            </div>
-
-            ${(artistsHtml || artistsFallback) ? `
-            <div class="confirm-artists-section">
-                <span class="confirm-label">${t.campaign_artists_label || 'Similar Artists'}</span>
-                <div class="confirm-artists">${artistsHtml || artistsFallback}</div>
-            </div>` : ''}
-
-            <button class="confirm-btn">Go to Dashboard</button>
-        </div>
-    `;
-
-    document.body.appendChild(overlay);
-    requestAnimationFrame(() => overlay.classList.add('visible'));
-
-    const close = () => {
-        overlay.classList.remove('visible');
-        setTimeout(() => {
-            overlay.remove();
-            window.location.href = '/dashboard';
-        }, 300);
-    };
-    overlay.querySelector('.confirm-btn').addEventListener('click', close);
-    overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
-}
-
-(function() {
-    const params = new URLSearchParams(window.location.search);
-    const sessionId = params.get('session_id');
-    if (!sessionId) return;
-
-    // Clean URL
-    window.history.replaceState({}, '', window.location.pathname);
-
-    // Retrieve saved campaign data
-    let campaign = {};
-    try {
-        campaign = JSON.parse(localStorage.getItem('beatpush_pending_campaign') || '{}');
-        localStorage.removeItem('beatpush_pending_campaign');
-    } catch (e) {}
-
-    fetch(`/api/checkout-success?session_id=${encodeURIComponent(sessionId)}`)
-        .then(r => r.json())
-        .then(data => {
-            if (data.status === 'paid') {
-                // Merge API metadata with local campaign data
-                if (!campaign.track_title && data.metadata) {
-                    campaign.track_title = data.metadata.track_title || '';
-                    campaign.track_artist = data.metadata.track_artist || '';
-                    campaign.pack = data.metadata.pack || '';
-                    campaign.genre = data.metadata.genre || '';
-                }
-                showPaymentConfirmation(campaign, data);
-            } else {
-                showPaymentConfirmation(campaign, data);
-            }
-        })
-        .catch(() => {
-            showPaymentConfirmation(campaign, null);
-        });
-})();
-
-// ===== FAQ Toggle =====
-function toggleFaq(btn) {
-    const item = btn.closest('.faq-item');
-    const isOpen = item.classList.contains('open');
-
-    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-
-    if (!isOpen) {
-        item.classList.add('open');
-    }
-}
-
-/* Product card info tooltip — hover on desktop, tap on mobile */
-(function() {
-    const isTouch = 'ontouchstart' in window;
-
-    document.querySelectorAll('.product-card-info').forEach(btn => {
-        const card = btn.closest('.product-card');
-
-        if (!isTouch) {
-            /* Desktop: hover to show, leave card to hide */
-            btn.addEventListener('mouseenter', () => {
-                card.classList.add('tooltip-active');
-            });
-            card.addEventListener('mouseleave', () => {
-                card.classList.remove('tooltip-active');
-            });
-        }
-
-        /* Touch & click: single tap to toggle */
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            card.classList.toggle('tooltip-active');
-        });
-    });
-})();

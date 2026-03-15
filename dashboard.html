@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MY CAMPAIGNS - BeatPush</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/FLyL2c8K/icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="/" class="logo">
+                <img src="https://i.ibb.co/nMjbdTkQ/White-and-Black-Modern-Initial-B-Logo-5000-x-5000-px-1.png" alt="BeatPush" class="logo-img">
+            </a>
+            <div class="nav-actions">
+                <div class="lang-selector" id="langSelector">
+                    <button class="lang-btn" id="langBtn" aria-label="Language">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        <span id="currentLang">FR</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <button class="lang-option" data-lang="fr">FR</button>
+                        <button class="lang-option" data-lang="en">EN</button>
+                        <button class="lang-option" data-lang="pt">PT</button>
+                        <button class="lang-option" data-lang="es">ES</button>
+                        <button class="lang-option" data-lang="de">DE</button>
+                    </div>
+                </div>
+                <!-- Auth button -->
+                <div class="auth-nav" id="authNav">
+                    <button class="auth-login-btn" id="authLoginBtn" data-i18n="nav_login">Sign in</button>
+                    <div class="auth-user-menu" id="authUserMenu" style="display:none;">
+                        <button class="auth-avatar-btn" id="authAvatarBtn">
+                            <img src="" alt="" class="auth-avatar-img" id="authAvatarImg">
+                        </button>
+                        <div class="auth-dropdown" id="authDropdown">
+                            <div class="auth-dropdown-header">
+                                <img src="" alt="" class="auth-dropdown-avatar" id="authDropdownAvatar">
+                                <div>
+                                    <div class="auth-dropdown-name" id="authDropdownName"></div>
+                                    <div class="auth-dropdown-email" id="authDropdownEmail"></div>
+                                </div>
+                            </div>
+                            <div class="auth-dropdown-divider"></div>
+                            <button class="auth-dropdown-item" id="authDashboardBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                                <span data-i18n="nav_dashboard">MY CAMPAIGNS</span>
+                            </button>
+                            <button class="auth-dropdown-item" id="authAdminBtn" style="display:none;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+                                <span>Admin Panel</span>
+                            </button>
+                            <div class="auth-dropdown-divider"></div>
+                            <button class="auth-dropdown-item auth-logout" id="authLogoutBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                <span data-i18n="nav_logout">Sign out</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <button class="menu-toggle" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="/#search" class="nav-cta" data-i18n="nav_cta">BOOST MY TRACK</a></li>
+        <li><a href="/#how-it-works" data-i18n="nav_how">HOW IT WORKS</a></li>
+        <li><a href="/#pricing" data-i18n="nav_pricing">Pricing</a></li>
+        <li><a href="/#faq">FAQ</a></li>
+        <li class="nav-dashboard-item"><a href="/dashboard" class="nav-dashboard-link active" data-i18n="nav_dashboard">MY CAMPAIGNS</a></li>
+    </ul>
+
+    <!-- Dashboard Content -->
+    <section class="dashboard-section dashboard-page">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge" data-i18n="dashboard_badge">MY CAMPAIGNS</span>
+                <h2 class="section-title" data-i18n="dashboard_title">Your Campaign Dashboard</h2>
+                <p class="section-desc" data-i18n="dashboard_desc">Track the status of all your promotions.</p>
+            </div>
+            <div class="dashboard-grid" id="dashboardGrid">
+                <div class="dashboard-loading">
+                    <div class="search-spinner" style="display:block;width:32px;height:32px;margin:40px auto;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="supabase.js"></script>
+    <script src="auth.js"></script>
+    <script src="i18n.js"></script>
+    <script>
+    (function() {
+        'use strict';
+
+        function getT() {
+            const lang = detectLanguage();
+            return translations[lang] || translations.en;
+        }
+
+        // Mobile menu
+        function setupMobileMenu() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            if (!menuToggle || !navLinks) return;
+
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                menuToggle.classList.toggle('active');
+            });
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    menuToggle.classList.remove('active');
+                });
+            });
+        }
+
+        function escapeHtmlAttr(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function createOrderCard(order) {
+            const t = getT();
+            const card = document.createElement('div');
+            card.className = 'dashboard-order-card';
+
+            const similarArtists = Array.isArray(order.similar_artists) ? order.similar_artists : [];
+            const artistsHtml = similarArtists.map(a => {
+                const name = typeof a === 'string' ? a : (a.name || '');
+                const img = typeof a === 'string' ? '' : (a.img || '');
+                return `<div class="dash-artist-chip">
+                    ${img ? `<img src="${escapeHtmlAttr(img)}" alt="" class="dash-artist-chip-img" onerror="this.style.display='none'">` : ''}
+                    <span>${escapeHtmlAttr(name)}</span>
+                </div>`;
+            }).join('');
+
+            const isCompleted = order.order_status === 'completed';
+            const statusClass = isCompleted ? 'status-completed' : 'status-progress';
+            const statusText = isCompleted ? (t.dashboard_status_completed || 'Completed') : (t.dashboard_status_progress || 'In Progress');
+            const packLabel = order.pack === 'daily-push' ? 'Daily Push' : `${order.pack} Copies`;
+            const receiptDisabled = !order.receipt_url;
+
+            card.innerHTML = `
+                <div class="dash-order-header">
+                    <div class="dash-track-info">
+                        ${order.track_artwork ? `<img src="${escapeHtmlAttr(order.track_artwork)}" alt="" class="dash-track-art" onerror="this.style.display='none'">` : '<div class="dash-track-art-placeholder"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--white-30)" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>'}
+                        <div>
+                            <div class="dash-track-title">${escapeHtmlAttr(order.track_title || 'Unknown Track')}</div>
+                            <div class="dash-track-artist">${escapeHtmlAttr(order.track_artist || 'Unknown Artist')}</div>
+                        </div>
+                    </div>
+                    <div class="dash-order-status ${statusClass}">${statusText}</div>
+                </div>
+                <div class="dash-order-details">
+                    <div class="dash-detail-row">
+                        <span class="dash-detail-label">${t.dashboard_label_campaign || 'Campaign'}</span>
+                        <span class="dash-detail-value">${escapeHtmlAttr(packLabel)}</span>
+                    </div>
+                    ${order.genre ? `<div class="dash-detail-row">
+                        <span class="dash-detail-label">${t.dashboard_label_genre || 'Genre'}</span>
+                        <span class="dash-detail-value">${escapeHtmlAttr(order.genre)}</span>
+                    </div>` : ''}
+                    <div class="dash-detail-row">
+                        <span class="dash-detail-label">${t.dashboard_label_date || 'Date'}</span>
+                        <span class="dash-detail-value">${new Date(order.created_at).toLocaleDateString()}</span>
+                    </div>
+                </div>
+                ${artistsHtml ? `
+                <div class="dash-similar-artists">
+                    <span class="dash-detail-label">${t.dashboard_label_similar || 'Similar Artists'}</span>
+                    <div class="dash-artist-chips">${artistsHtml}</div>
+                </div>` : ''}
+                <div class="dash-order-footer">
+                    <div class="dash-receipt-wrapper">
+                        <button class="dash-receipt-btn ${receiptDisabled ? 'disabled' : ''}" ${receiptDisabled ? 'disabled' : ''} onclick="${receiptDisabled ? '' : `window.open('${escapeHtmlAttr(order.receipt_url)}', '_blank')`}">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                            ${t.dashboard_label_receipt || 'Receipt'}
+                        </button>
+                        ${receiptDisabled ? '<div class="dash-receipt-tooltip">You will be able to download your PDF receipt here once your campaign is completed!</div>' : ''}
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        async function loadDashboard() {
+            const t = getT();
+            const grid = document.getElementById('dashboardGrid');
+            if (!grid) return;
+
+            try {
+                const orders = await BeatpushAuth.getMyOrders();
+                grid.innerHTML = '';
+
+                if (!orders.length) {
+                    const div = document.createElement('div');
+                    div.className = 'dashboard-empty';
+                    div.innerHTML = `
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--white-30)" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                        <p>${t.dashboard_empty || 'No campaigns yet. Start by searching for a track!'}</p>
+                        <a href="/#search" class="btn-primary">${t.dashboard_cta || 'GET STARTED'}</a>
+                    `;
+                    grid.appendChild(div);
+                    return;
+                }
+
+                orders.forEach(order => grid.appendChild(createOrderCard(order)));
+            } catch (e) {
+                const t2 = getT();
+                grid.innerHTML = '<p style="text-align:center;color:var(--white-50);padding:40px;">' + (t2.dashboard_error || 'Failed to load campaigns.') + '</p>';
+            }
+        }
+
+        async function init() {
+            setupMobileMenu();
+
+            // Apply translations (from i18n.js) for static data-i18n elements
+            applyTranslations();
+
+            // Wait for auth.js init to finish
+            await new Promise(r => setTimeout(r, 150));
+
+            const user = BeatpushAuth.getUser();
+            if (!user) {
+                window.location.href = '/';
+                return;
+            }
+
+            loadDashboard();
+
+            // Re-render cards when language changes
+            window.addEventListener('beatpush-langchange', () => loadDashboard());
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

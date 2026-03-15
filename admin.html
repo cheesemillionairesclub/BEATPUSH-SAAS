@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeatPush Admin</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/FLyL2c8K/icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --green-primary: #00e676;
+            --green-dark: #00c853;
+            --green-glow: rgba(0, 230, 118, 0.3);
+            --bg-primary: #000;
+            --bg-card: #111;
+            --white: #fff;
+            --white-70: rgba(255,255,255,0.7);
+            --white-50: rgba(255,255,255,0.5);
+            --white-30: rgba(255,255,255,0.3);
+            --white-15: rgba(255,255,255,0.15);
+            --white-10: rgba(255,255,255,0.1);
+            --white-05: rgba(255,255,255,0.05);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--white);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .admin-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--white-10);
+            margin-bottom: 30px;
+        }
+        .admin-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .admin-header h1 img { height: 40px; }
+        .admin-header .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--white-70);
+            font-size: 0.85rem;
+        }
+        .admin-header .admin-user img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+        .admin-login {
+            text-align: center;
+            padding: 100px 20px;
+        }
+        .admin-login h2 { margin-bottom: 16px; }
+        .admin-login p { color: var(--white-50); margin-bottom: 24px; }
+        .admin-login-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 28px;
+            background: var(--green-primary);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        .admin-stat {
+            background: var(--bg-card);
+            border: 1px solid var(--white-10);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .admin-stat-label { font-size: 0.75rem; color: var(--white-50); text-transform: uppercase; letter-spacing: 1px; }
+        .admin-stat-value { font-size: 1.8rem; font-weight: 700; color: var(--green-primary); margin-top: 4px; }
+        .admin-table-wrap {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--white-10);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            text-align: left;
+            padding: 14px 16px;
+            background: var(--bg-card);
+            color: var(--white-50);
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 14px 16px;
+            border-top: 1px solid var(--white-05);
+            vertical-align: middle;
+        }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+        .order-track {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .order-track img {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+        .order-track-title { font-weight: 600; }
+        .order-track-artist { color: var(--white-50); font-size: 0.8rem; }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-in_progress {
+            background: rgba(255,255,255,0.1);
+            color: var(--white-50);
+        }
+        .status-completed {
+            background: rgba(0, 230, 118, 0.15);
+            color: var(--green-primary);
+        }
+        .admin-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .admin-btn {
+            padding: 6px 14px;
+            border: 1px solid var(--white-15);
+            border-radius: 6px;
+            background: none;
+            color: var(--white-70);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .admin-btn:hover {
+            background: var(--white-10);
+            border-color: var(--green-primary);
+            color: var(--white);
+        }
+        .admin-btn.btn-green {
+            background: var(--green-primary);
+            color: #000;
+            border-color: var(--green-primary);
+            font-weight: 600;
+        }
+        .admin-btn.btn-green:hover {
+            background: var(--green-dark);
+        }
+        .admin-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        input[type="file"] { display: none; }
+        .admin-loading {
+            text-align: center;
+            padding: 60px;
+            color: var(--white-50);
+        }
+        .admin-error {
+            text-align: center;
+            padding: 60px;
+            color: #ff5252;
+        }
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .admin-header h1 { font-size: 1.1rem; }
+            th, td { padding: 10px 8px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="adminApp">
+        <div class="admin-login" id="adminLogin">
+            <h2>BeatPush Admin Panel</h2>
+            <p id="adminLoginMsg">Checking session...</p>
+            <a href="/" class="admin-login-btn" id="adminGoLogin" style="display:none;text-decoration:none;">Go to main site to sign in</a>
+        </div>
+
+        <div id="adminPanel" style="display:none;">
+            <div class="admin-header">
+                <h1>
+                    <img src="https://i.ibb.co/FLyL2c8K/icon.png" alt="">
+                    BeatPush Admin
+                </h1>
+                <div class="admin-user">
+                    <span id="adminUserName"></span>
+                    <img id="adminUserAvatar" src="" alt="">
+                </div>
+            </div>
+
+            <div class="admin-stats" id="adminStats"></div>
+
+            <div class="admin-table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Track</th>
+                            <th>Customer</th>
+                            <th>Pack</th>
+                            <th>Genre</th>
+                            <th>Status</th>
+                            <th>Receipt</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminOrdersBody">
+                        <tr><td colspan="8" class="admin-loading">Loading orders...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="supabase.js"></script>
+    <script>
+        const ADMIN_SUPABASE_URL = BeatpushAuth.supabaseUrl;
+        const ADMIN_SUPABASE_KEY = BeatpushAuth.supabaseKey;
+
+        // Init - detect existing session
+        (async function() {
+            const msg = document.getElementById('adminLoginMsg');
+            const token = localStorage.getItem('beatpush_access_token');
+
+            if (!token) {
+                msg.textContent = 'No session found. Sign in on the main site first.';
+                document.getElementById('adminGoLogin').style.display = 'inline-flex';
+                return;
+            }
+
+            msg.textContent = 'Session found, verifying...';
+
+            let user = null;
+            try {
+                const res = await fetch(`${ADMIN_SUPABASE_URL}/auth/v1/user`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'apikey': ADMIN_SUPABASE_KEY,
+                    },
+                });
+                if (res.ok) {
+                    user = await res.json();
+                } else {
+                    msg.textContent = 'Session expired. Sign in again on the main site.';
+                    document.getElementById('adminGoLogin').style.display = 'inline-flex';
+                    return;
+                }
+            } catch (e) {
+                msg.textContent = 'Network error: ' + e.message;
+                document.getElementById('adminGoLogin').style.display = 'inline-flex';
+                return;
+            }
+
+            if (user) {
+                checkAndShowAdmin(user);
+            } else {
+                msg.textContent = 'Could not verify session. Sign in again on the main site.';
+                document.getElementById('adminGoLogin').style.display = 'inline-flex';
+            }
+        })();
+
+        async function checkAndShowAdmin(user) {
+            const meta = user.user_metadata || {};
+            document.getElementById('adminUserName').textContent = meta.full_name || user.email;
+            document.getElementById('adminUserAvatar').src = meta.avatar_url || '';
+
+            // Fetch orders via admin API
+            const token = BeatpushAuth.getToken();
+            try {
+                const res = await fetch('/api/admin/orders', {
+                    headers: { 'Authorization': `Bearer ${token}` },
+                });
+                if (res.status === 403) {
+                    document.getElementById('adminLogin').innerHTML = '<div class="admin-error"><h2>Access Denied</h2><p>Your account is not an admin.</p></div>';
+                    return;
+                }
+                if (!res.ok) throw new Error('Failed to load');
+
+                const orders = await res.json();
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminPanel').style.display = '';
+                renderStats(orders);
+                renderOrders(orders);
+            } catch (e) {
+                document.getElementById('adminLogin').innerHTML = `<div class="admin-error"><h2>Error</h2><p>${e.message}</p></div>`;
+            }
+        }
+
+        function renderStats(orders) {
+            const total = orders.length;
+            const completed = orders.filter(o => o.order_status === 'completed').length;
+            const inProgress = orders.filter(o => o.order_status === 'in_progress').length;
+            const revenue = orders.reduce((sum, o) => sum + (o.amount || 0), 0);
+
+            document.getElementById('adminStats').innerHTML = `
+                <div class="admin-stat"><div class="admin-stat-label">Total Orders</div><div class="admin-stat-value">${total}</div></div>
+                <div class="admin-stat"><div class="admin-stat-label">In Progress</div><div class="admin-stat-value">${inProgress}</div></div>
+                <div class="admin-stat"><div class="admin-stat-label">Completed</div><div class="admin-stat-value">${completed}</div></div>
+                <div class="admin-stat"><div class="admin-stat-label">Revenue</div><div class="admin-stat-value">$${(revenue / 100).toLocaleString()}</div></div>
+            `;
+        }
+
+        function renderOrders(orders) {
+            const tbody = document.getElementById('adminOrdersBody');
+            if (!orders.length) {
+                tbody.innerHTML = '<tr><td colspan="8" class="admin-loading">No orders yet.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = orders.map(order => {
+                const packLabel = order.pack === 'daily-push' ? 'Daily Push' : `${order.pack} Copies`;
+                const statusClass = `status-${order.order_status}`;
+                const statusText = order.order_status === 'completed' ? 'Completed' : 'In Progress';
+                const hasReceipt = !!order.receipt_url;
+
+                return `<tr data-order-id="${order.id}">
+                    <td>${new Date(order.created_at).toLocaleDateString()}</td>
+                    <td>
+                        <div class="order-track">
+                            ${order.track_artwork ? `<img src="${esc(order.track_artwork)}" alt="" onerror="this.style.display='none'">` : ''}
+                            <div>
+                                <div class="order-track-title">${esc(order.track_title || '-')}</div>
+                                <div class="order-track-artist">${esc(order.track_artist || '-')}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${esc(order.customer_email || '-')}</td>
+                    <td>${esc(packLabel)}</td>
+                    <td>${esc(order.genre || '-')}</td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td>${hasReceipt ? `<a href="${esc(order.receipt_url)}" target="_blank" class="admin-btn" style="text-decoration:none;">View PDF</a>` : '<span style="color:var(--white-30)">-</span>'}</td>
+                    <td>
+                        <div class="admin-actions">
+                            ${order.order_status === 'in_progress' ? `<button class="admin-btn btn-green" onclick="toggleStatus('${order.id}', 'completed')">Mark Complete</button>` : `<button class="admin-btn" onclick="toggleStatus('${order.id}', 'in_progress')">Mark In Progress</button>`}
+                            <label class="admin-btn">
+                                Upload PDF
+                                <input type="file" accept=".pdf" onchange="uploadReceipt('${order.id}', this)">
+                            </label>
+                        </div>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        async function toggleStatus(orderId, newStatus) {
+            const token = BeatpushAuth.getToken();
+            try {
+                const res = await fetch('/api/admin/orders', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ order_id: orderId, order_status: newStatus }),
+                });
+                if (res.ok) {
+                    // Reload
+                    const listRes = await fetch('/api/admin/orders', { headers: { 'Authorization': `Bearer ${token}` } });
+                    const orders = await listRes.json();
+                    renderStats(orders);
+                    renderOrders(orders);
+                }
+            } catch (e) {
+                alert('Failed to update status: ' + e.message);
+            }
+        }
+
+        async function uploadReceipt(orderId, input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const token = BeatpushAuth.getToken();
+            try {
+                const res = await fetch('/api/admin/upload-receipt', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'X-Order-Id': orderId,
+                        'X-File-Name': file.name,
+                        'Content-Type': 'application/pdf',
+                    },
+                    body: file,
+                });
+                if (res.ok) {
+                    // Reload
+                    const listRes = await fetch('/api/admin/orders', { headers: { 'Authorization': `Bearer ${token}` } });
+                    const orders = await listRes.json();
+                    renderStats(orders);
+                    renderOrders(orders);
+                } else {
+                    const err = await res.json();
+                    alert('Upload failed: ' + (err.details || err.error));
+                }
+            } catch (e) {
+                alert('Upload failed: ' + e.message);
+            }
+            input.value = '';
+        }
+
+        function esc(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+    </script>
+</body>
+</html>

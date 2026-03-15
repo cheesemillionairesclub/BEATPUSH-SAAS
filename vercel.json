@@ -4,6 +4,7 @@
         { "source": "/api/create-checkout", "destination": "/api/create-checkout" },
         { "source": "/api/webhook", "destination": "/api/webhook" },
         { "source": "/api/checkout-success", "destination": "/api/checkout-success" },
-        { "source": "/termsofuse", "destination": "/termsofuse.html" }
+        { "source": "/termsofuse", "destination": "/termsofuse.html" },
+        { "source": "/dashboard", "destination": "/dashboard.html" }
     ]
 }
