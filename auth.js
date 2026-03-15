@@ -118,8 +118,19 @@
         if (returnAction) {
             localStorage.setItem('beatpush_auth_redirect', returnAction);
         }
-        // Save campaign state
+        // Save campaign state so it can be restored after OAuth redirect
         localStorage.setItem('beatpush_auth_pending_action', 'payment');
+        try {
+            if (typeof selectedTrack !== 'undefined' && selectedTrack) {
+                localStorage.setItem('beatpush_pending_track', JSON.stringify(selectedTrack));
+            }
+            if (typeof selectedPack !== 'undefined' && selectedPack) {
+                localStorage.setItem('beatpush_pending_pack', selectedPack);
+            }
+            if (typeof selectedArtists !== 'undefined' && selectedArtists.length) {
+                localStorage.setItem('beatpush_pending_artists', JSON.stringify(selectedArtists));
+            }
+        } catch (e) {}
 
         // Show login prompt
         showLoginPrompt();
@@ -238,12 +249,57 @@
             const pendingAction = localStorage.getItem('beatpush_auth_pending_action');
             if (pendingAction === 'payment') {
                 localStorage.removeItem('beatpush_auth_pending_action');
-                // Scroll back to campaign setup if it's visible
-                const campaignSetup = document.getElementById('campaignSetup');
-                if (campaignSetup && campaignSetup.style.display !== 'none') {
+
+                // Restore campaign state saved before OAuth redirect
+                try {
+                    const savedTrack = localStorage.getItem('beatpush_pending_track');
+                    const savedPack = localStorage.getItem('beatpush_pending_pack');
+                    const savedArtists = localStorage.getItem('beatpush_pending_artists');
+
+                    if (savedTrack) {
+                        const track = JSON.parse(savedTrack);
+                        localStorage.removeItem('beatpush_pending_track');
+                        // Re-select the track (rebuilds pricing section + banner)
+                        if (typeof selectTrack === 'function') {
+                            selectTrack(track.title, track.artist, track.artwork, track.id, track.genre);
+                        }
+                    }
+
+                    if (savedPack) {
+                        localStorage.removeItem('beatpush_pending_pack');
+                        if (typeof selectedPack !== 'undefined') {
+                            selectedPack = savedPack;
+                        }
+                        // Re-show campaign setup with the saved pack
+                        if (typeof showCampaignSetup === 'function') {
+                            showCampaignSetup(savedPack);
+                        }
+                    }
+
+                    if (savedArtists) {
+                        const artists = JSON.parse(savedArtists);
+                        localStorage.removeItem('beatpush_pending_artists');
+                        if (typeof selectedArtists !== 'undefined' && Array.isArray(artists)) {
+                            selectedArtists.length = 0;
+                            artists.forEach(a => selectedArtists.push(a));
+                            if (typeof renderArtistTags === 'function') renderArtistTags();
+                        }
+                    }
+
+                    // Scroll to the launch button so user sees "Run my campaign"
                     setTimeout(() => {
-                        campaignSetup.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 500);
+                        const launchBtn = document.getElementById('launchCampaignBtn');
+                        if (launchBtn) {
+                            launchBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        } else {
+                            const campaignSetup = document.getElementById('campaignSetup');
+                            if (campaignSetup && campaignSetup.style.display !== 'none') {
+                                campaignSetup.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                            }
+                        }
+                    }, 600);
+                } catch (e) {
+                    console.error('[BeatPush] Failed to restore campaign state:', e);
                 }
             }
         }

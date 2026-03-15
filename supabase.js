@@ -7,12 +7,25 @@ const BeatpushAuth = {
     _session: null,
     _user: null,
     _listeners: [],
+    _readyResolve: null,
+    _readyPromise: null,
 
     get supabaseUrl() { return SUPABASE_URL; },
     get supabaseKey() { return SUPABASE_ANON_KEY; },
 
+    // Wait until init() has completed
+    whenReady() {
+        if (!this._readyPromise) {
+            this._readyPromise = new Promise(resolve => { this._readyResolve = resolve; });
+        }
+        return this._readyPromise;
+    },
+
     // Initialize: check for existing session
     async init() {
+        if (!this._readyPromise) {
+            this._readyPromise = new Promise(resolve => { this._readyResolve = resolve; });
+        }
         // Check if returning from OAuth redirect
         const hash = window.location.hash;
         if (hash && hash.includes('access_token')) {
@@ -28,17 +41,8 @@ const BeatpushAuth = {
                 if (localStorage.getItem('beatpush_admin_redirect')) {
                     localStorage.removeItem('beatpush_admin_redirect');
                     window.location.href = '/admin';
+                    this._readyResolve(null);
                     return null;
-                }
-                // Redirect back to saved page after OAuth
-                const savedRedirect = localStorage.getItem('beatpush_auth_redirect');
-                if (savedRedirect) {
-                    localStorage.removeItem('beatpush_auth_redirect');
-                    // Only redirect if it's a different page
-                    if (savedRedirect !== window.location.href && savedRedirect !== window.location.origin + '/') {
-                        window.location.href = savedRedirect;
-                        return null;
-                    }
                 }
             }
         }
@@ -51,17 +55,19 @@ const BeatpushAuth = {
                     this._session = { access_token: token };
                     this._user = user;
                     this._notify();
+                    this._readyResolve(user);
                     return user;
                 } else {
                     // Token expired, try refresh
                     const refreshed = await this._refreshSession();
-                    if (refreshed) return this._user;
+                    if (refreshed) { this._readyResolve(this._user); return this._user; }
                     this._clearSession();
                 }
             } catch (e) {
                 this._clearSession();
             }
         }
+        this._readyResolve(null);
         return null;
     },
 
