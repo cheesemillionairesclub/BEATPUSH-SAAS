@@ -113,9 +113,6 @@ function buildEmailHtml({ greeting, packLabel, order }) {
 
         <!-- Content -->
         <div style="padding:40px 0;text-align:center;">
-            <div style="width:64px;height:64px;background:rgba(0,230,118,0.15);border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;">
-                <span style="font-size:28px;">&#10003;</span>
-            </div>
             <h1 style="color:#fff;font-size:24px;font-weight:700;margin:0 0 10px;">Campaign Completed!</h1>
             <p style="color:rgba(255,255,255,0.6);font-size:16px;margin:0 0 30px;line-height:1.5;">
                 Hey ${escapeHtml(greeting)}, great news!<br>
