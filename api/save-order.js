@@ -25,6 +25,40 @@ export default async function handler(req, res) {
     } = body;
 
     try {
+        // Check if order already exists (webhook may have already created it)
+        if (stripe_session_id) {
+            const checkRes = await fetch(
+                `${SUPABASE_URL}/rest/v1/orders?stripe_session_id=eq.${stripe_session_id}&select=*`,
+                {
+                    headers: {
+                        'apikey': SUPABASE_SERVICE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+                    },
+                }
+            );
+            const existing = await checkRes.json();
+            if (existing && existing.length > 0) {
+                // Order already exists - update with user_id if missing
+                const order = existing[0];
+                if (user_id && !order.user_id) {
+                    await fetch(
+                        `${SUPABASE_URL}/rest/v1/orders?id=eq.${order.id}`,
+                        {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'apikey': SUPABASE_SERVICE_KEY,
+                                'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+                            },
+                            body: JSON.stringify({ user_id }),
+                        }
+                    );
+                    order.user_id = user_id;
+                }
+                return res.status(200).json({ success: true, order, existing: true });
+            }
+        }
+
         const response = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
             method: 'POST',
             headers: {
