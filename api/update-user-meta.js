@@ -60,31 +60,36 @@ export default async function handler(req, res) {
         }
     }
 
-    // Update profile
+    // Upsert profile (create if new user, update if existing)
     try {
-        const updateData = {
+        const meta = user.user_metadata || {};
+        const profileData = {
+            id: user.id,
+            email: user.email || '',
+            full_name: meta.full_name || meta.name || '',
+            avatar_url: meta.avatar_url || meta.picture || '',
             country,
             device_type,
             updated_at: new Date().toISOString(),
         };
 
         const response = await fetch(
-            `${SUPABASE_URL}/rest/v1/profiles?id=eq.${user.id}`,
+            `${SUPABASE_URL}/rest/v1/profiles`,
             {
-                method: 'PATCH',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'apikey': SUPABASE_SERVICE_KEY,
                     'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
-                    'Prefer': 'return=representation',
+                    'Prefer': 'return=representation,resolution=merge-duplicates',
                 },
-                body: JSON.stringify(updateData),
+                body: JSON.stringify(profileData),
             }
         );
 
         if (!response.ok) {
             const errText = await response.text();
-            console.error('Profile update error:', errText);
+            console.error('Profile upsert error:', errText);
             return res.status(500).json({ error: 'Failed to update profile' });
         }
 
