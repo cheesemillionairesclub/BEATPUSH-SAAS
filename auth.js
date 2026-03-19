@@ -180,6 +180,8 @@
 
     // ===== Save order after payment =====
     window.saveOrderToSupabase = async function (campaign, paymentData) {
+        // Wait for auth to initialize before checking user
+        await BeatpushAuth.whenReady();
         const user = BeatpushAuth.getUser();
         if (!user) return;
 
