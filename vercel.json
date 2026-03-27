@@ -8,6 +8,7 @@
         { "source": "/api/update-user-meta", "destination": "/api/update-user-meta" },
         { "source": "/api/admin/orders", "destination": "/api/admin/orders" },
         { "source": "/api/admin/upload-receipt", "destination": "/api/admin/upload-receipt" },
+        { "source": "/api/log-track-activity", "destination": "/api/log-track-activity" },
         { "source": "/api/admin/send-receipt-email", "destination": "/api/admin/send-receipt-email" },
         { "source": "/termsofuse", "destination": "/termsofuse.html" },
         { "source": "/admin", "destination": "/admin.html" },
