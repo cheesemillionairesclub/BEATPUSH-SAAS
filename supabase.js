@@ -166,6 +166,46 @@ const BeatpushAuth = {
         this._listeners.forEach(cb => cb(this._user));
     },
 
+    // ===== Track Activity Logging =====
+
+    async logTrackSearch(query) {
+        const user = this.getUser();
+        try {
+            await fetch('/api/log-track-activity', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'search',
+                    query: query,
+                    user_id: user ? user.id : null,
+                }),
+            });
+        } catch (e) {
+            console.error('Failed to log track search:', e);
+        }
+    },
+
+    async logTrackSelect(track) {
+        const user = this.getUser();
+        try {
+            await fetch('/api/log-track-activity', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'select',
+                    track_title: track.title,
+                    track_artist: track.artist,
+                    track_artwork: track.artwork,
+                    track_url: track.id,
+                    track_genre: track.genre,
+                    user_id: user ? user.id : null,
+                }),
+            });
+        } catch (e) {
+            console.error('Failed to log track selection:', e);
+        }
+    },
+
     // ===== Database helpers (using REST API) =====
 
     // Fetch user's orders

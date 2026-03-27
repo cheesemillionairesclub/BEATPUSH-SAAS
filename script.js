@@ -1162,6 +1162,9 @@ async function performSearch() {
 
     showSearchLoading();
 
+    // Log search activity (fire and forget)
+    BeatpushAuth.logTrackSearch(query);
+
     try {
         const beatportUrl = parseBeatportUrl(query);
         let searchQuery = beatportUrl ? beatportUrl.name : query;
@@ -1287,6 +1290,9 @@ function escapeHtml(text) {
 
 function selectTrack(title, artist, artwork, id, genre) {
     selectedTrack = { title, artist, artwork, id, genre: genre || '' };
+
+    // Log track selection (fire and forget)
+    BeatpushAuth.logTrackSelect(selectedTrack);
 
     // Update Top 10 / Top 100 card price based on genre
     updateTop10Price(genre);
