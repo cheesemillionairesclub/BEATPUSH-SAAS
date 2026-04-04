@@ -1724,7 +1724,7 @@ function showToast(message, scrollToSearch) {
     overlay.innerHTML = `
         <div class="toast-box">
             <div class="toast-icon">
-                <img src="https://res.cloudinary.com/dymdijw7n/image/upload/v1773608918/logo_c9plj2.png" alt="BeatPush" class="toast-logo">
+                <img src="/images/logo.png" alt="BeatPush" class="toast-logo">
             </div>
             <p class="toast-msg">${message}</p>
             <button class="toast-close">OK</button>
@@ -1781,7 +1781,7 @@ function showPaymentConfirmation(campaign, paymentData) {
     overlay.className = 'toast-overlay';
     overlay.innerHTML = `
         <div class="confirm-box">
-            <img src="https://res.cloudinary.com/dymdijw7n/image/upload/v1773608870/icon_qf430c.png" alt="BeatPush" class="confirm-logo">
+            <img src="/images/icon.png" alt="BeatPush" class="confirm-logo">
             <h2 class="confirm-title">Payment Successful 🎉</h2>
             <p class="confirm-subtitle">Your order has been confirmed. Our team will begin processing your campaign shortly. The average delivery time is 24–48 hours. You can track your order status anytime from your dashboard, where you will also receive the receipt and proof of delivery once the campaign is completed. Thank you for your trust. 🚀</p>
 

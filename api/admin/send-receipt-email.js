@@ -108,7 +108,7 @@ function buildEmailHtml({ greeting, packLabel, order }) {
     <div style="max-width:600px;margin:0 auto;background:#000;padding:40px 20px;">
         <!-- Header -->
         <div style="text-align:center;padding-bottom:30px;border-bottom:1px solid rgba(255,255,255,0.1);">
-            <img src="https://res.cloudinary.com/dymdijw7n/image/upload/v1773608918/logo_c9plj2.png" alt="BeatPush" style="height:50px;" />
+            <img src="/images/logo.png" alt="BeatPush" style="height:50px;" />
         </div>
 
         <!-- Content -->
