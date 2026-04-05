@@ -10,8 +10,16 @@
         { "source": "/api/admin/upload-receipt", "destination": "/api/admin/upload-receipt" },
         { "source": "/api/log-track-activity", "destination": "/api/log-track-activity" },
         { "source": "/api/admin/send-receipt-email", "destination": "/api/admin/send-receipt-email" },
+        { "source": "/api/telegram/daily-report", "destination": "/api/telegram/daily-report" },
+        { "source": "/api/telegram/webhook", "destination": "/api/telegram/webhook" },
         { "source": "/termsofuse", "destination": "/termsofuse.html" },
         { "source": "/admin", "destination": "/admin.html" },
         { "source": "/dashboard", "destination": "/dashboard.html" }
+    ],
+    "crons": [
+        {
+            "path": "/api/telegram/daily-report",
+            "schedule": "0 18 * * *"
+        }
     ]
 }
