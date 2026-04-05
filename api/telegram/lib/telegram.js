@@ -8,11 +8,12 @@ async function sendTelegramMessage(text, chatId, botToken, parseMode = 'HTML') {
   const chunks = splitMessage(text, 4096);
 
   for (const chunk of chunks) {
+    // Keep chat_id as string to preserve large negative IDs (e.g. -100xxx for channels)
     const res = await fetch(`${TELEGRAM_API}${botToken}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        chat_id: chatId,
+        chat_id: String(chatId),
         text: chunk,
         parse_mode: parseMode,
         disable_web_page_preview: true,
@@ -21,7 +22,7 @@ async function sendTelegramMessage(text, chatId, botToken, parseMode = 'HTML') {
 
     if (!res.ok) {
       const error = await res.text();
-      throw new Error(`Telegram error: ${res.status} ${error}`);
+      throw new Error(`Telegram error: ${res.status} ${error} (chat_id: ${String(chatId)})`);
     }
   }
 }
