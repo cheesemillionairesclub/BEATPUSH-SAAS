@@ -9,7 +9,7 @@
 //   GOOGLE_ADS_CUSTOMER_ID      - Customer ID (no dashes)
 //   GOOGLE_ADS_MCC_ID           - Manager account ID (optional, no dashes)
 
-const GOOGLE_ADS_API_VERSION = 'v18';
+const GOOGLE_ADS_API_VERSION = 'v23';
 
 // Get fresh access token from refresh token
 async function getAccessToken() {
