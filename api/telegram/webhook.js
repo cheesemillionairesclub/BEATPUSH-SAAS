@@ -307,7 +307,8 @@ export default async function handler(req, res) {
 
   try {
     const update = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-    const message = update?.message;
+    // Support both private/group messages AND channel posts
+    const message = update?.message || update?.channel_post;
 
     if (!message?.text) {
       return res.status(200).json({ ok: true });
