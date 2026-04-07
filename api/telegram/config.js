@@ -26,21 +26,69 @@ export const CONFIG = {
   // Meta Ads configuration
   meta: {
     pixelId: '1297686318926626',
-    // Campaign IDs to track (fill in when you have API access)
-    campaigns: {},
+    // Default targeting for new campaigns
+    defaultTargeting: {
+      countries: ['US', 'GB', 'DE', 'FR', 'NL', 'ES', 'BR', 'MX', 'CO', 'AR', 'CL'],
+      ageMin: 18,
+      ageMax: 55,
+      // Music producer interests (Meta audience IDs)
+      interests: [
+        { id: '6003246649498', name: 'Electronic dance music' },
+        { id: '6003013067741', name: 'Beatport' },
+        { id: '6003347032806', name: 'Music production' },
+        { id: '6003107902433', name: 'DJ' },
+        { id: '6003017809555', name: 'Ableton Live' },
+        { id: '6003389062498', name: 'FL Studio' },
+      ],
+    },
+    // Campaign naming convention
+    namingTemplate: 'BP-{objective}-{genre}-{date}',
   },
 
   // Google Ads configuration
   google: {
     conversionTag: 'AW-18044938875',
-    // Campaign IDs to track (fill in when you have API access)
-    campaigns: {},
+    // Default keywords for music promo campaigns
+    defaultKeywords: [
+      'beatport promotion',
+      'music promotion service',
+      'beatport chart promotion',
+      'edm promotion',
+      'techno promotion',
+      'house music promotion',
+      'beatport top 100',
+      'music marketing service',
+      'dj promo pool',
+      'electronic music promotion',
+    ],
+    // Negative keywords to exclude
+    negativeKeywords: [
+      'free',
+      'download',
+      'torrent',
+      'pirate',
+      'crack',
+    ],
   },
 
   // Telegram
   telegram: {
     reportTime: '20:00', // Paris time
     timezone: 'Europe/Paris',
+    commands: [
+      { command: 'ads', description: 'Vue globale des campagnes' },
+      { command: 'spend', description: 'Dépenses temps réel' },
+      { command: 'ca', description: 'Chiffre d\'affaires' },
+      { command: 'clients', description: 'Nouveaux clients et funnel' },
+      { command: 'status', description: 'Statut des campagnes' },
+      { command: 'report', description: 'Rapport complet + IA' },
+      { command: 'create', description: 'Créer une campagne' },
+      { command: 'pause', description: 'Pauser une campagne' },
+      { command: 'resume', description: 'Relancer une campagne' },
+      { command: 'budget', description: 'Modifier un budget' },
+      { command: 'check', description: 'Diagnostic connexions' },
+      { command: 'help', description: 'Aide' },
+    ],
   },
 
   // ROAS thresholds
@@ -50,6 +98,7 @@ export const CONFIG = {
     roasBad: 1.0,
     minSpendBeforeJudging: 50, // $ minimum spent before judging a campaign
     alertBudgetPct: 120, // Alert if spend > 120% of daily budget
+    maxDailyBudget: 500, // Safety: max daily budget allowed via Telegram
   },
 
   // Reporting periods

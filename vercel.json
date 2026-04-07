@@ -12,6 +12,7 @@
         { "source": "/api/admin/send-receipt-email", "destination": "/api/admin/send-receipt-email" },
         { "source": "/api/telegram/daily-report", "destination": "/api/telegram/daily-report" },
         { "source": "/api/telegram/webhook", "destination": "/api/telegram/webhook" },
+        { "source": "/api/telegram/setup", "destination": "/api/telegram/setup" },
         { "source": "/termsofuse", "destination": "/termsofuse.html" },
         { "source": "/admin", "destination": "/admin.html" },
         { "source": "/dashboard", "destination": "/dashboard.html" }
