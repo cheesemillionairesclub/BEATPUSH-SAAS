@@ -56,8 +56,14 @@ export default async function handler(req, res) {
         const { order_id, order_status, receipt_url } = body;
         if (!order_id) return res.status(400).json({ error: 'Missing order_id' });
 
+        const validStatuses = ['in_progress', 'completed', 'cancelled'];
         const updates = { updated_at: new Date().toISOString() };
-        if (order_status) updates.order_status = order_status;
+        if (order_status) {
+            if (!validStatuses.includes(order_status)) {
+                return res.status(400).json({ error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` });
+            }
+            updates.order_status = order_status;
+        }
         if (receipt_url !== undefined) updates.receipt_url = receipt_url;
 
         const updateRes = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${order_id}`, {

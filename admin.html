@@ -103,7 +103,7 @@
         }
         .admin-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 16px;
             margin-bottom: 30px;
         }
@@ -169,6 +169,28 @@
         .status-completed {
             background: rgba(0, 230, 118, 0.15);
             color: var(--green-primary);
+        }
+        .status-active {
+            background: rgba(0, 176, 255, 0.15);
+            color: #00b0ff;
+        }
+        .status-cancelled {
+            background: rgba(255, 82, 82, 0.15);
+            color: #ff5252;
+        }
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 30px 0 14px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title:first-of-type { margin-top: 0; }
+        .sub-revenue {
+            font-size: 0.75rem;
+            color: var(--white-50);
+            margin-top: 2px;
         }
         .admin-actions {
             display: flex;
@@ -248,6 +270,7 @@
 
             <div class="admin-stats" id="adminStats"></div>
 
+            <div class="section-title">📦 Commandes</div>
             <div class="admin-table-wrap">
                 <table>
                     <thead>
@@ -264,6 +287,28 @@
                     </thead>
                     <tbody id="adminOrdersBody">
                         <tr><td colspan="8" class="admin-loading">Loading orders...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section-title">🔄 Abonnements Daily Push <span style="font-weight:400;font-size:0.85rem;color:var(--white-50)">($55/jour)</span></div>
+            <div class="admin-table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Depuis</th>
+                            <th>Track</th>
+                            <th>Customer</th>
+                            <th>Genre</th>
+                            <th>Jours actifs</th>
+                            <th>Revenu cumulé</th>
+                            <th>Statut</th>
+                            <th>Receipt</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminSubsBody">
+                        <tr><td colspan="9" class="admin-loading">Loading subscriptions...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -344,60 +389,143 @@
             }
         }
 
+        const DAILY_PUSH_RATE = 5500; // $55 in cents
+
+        function getDailyPushDays(order) {
+            const start = new Date(order.created_at);
+            const end = (order.order_status === 'cancelled' || order.order_status === 'completed')
+                ? new Date(order.updated_at || order.created_at)
+                : new Date();
+            const diffMs = end - start;
+            return Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+        }
+
+        function getDailyPushRevenue(order) {
+            return getDailyPushDays(order) * DAILY_PUSH_RATE;
+        }
+
+        function calcRevenue(orders) {
+            let total = 0;
+            for (const o of orders) {
+                if (o.pack === 'daily-push') {
+                    total += getDailyPushRevenue(o);
+                } else {
+                    total += (o.amount || 0);
+                }
+            }
+            return total;
+        }
+
         function renderStats(orders) {
-            const total = orders.length;
-            const completed = orders.filter(o => o.order_status === 'completed').length;
-            const inProgress = orders.filter(o => o.order_status === 'in_progress').length;
-            const revenue = orders.reduce((sum, o) => sum + (o.amount || 0), 0);
+            const oneTimeOrders = orders.filter(o => o.pack !== 'daily-push');
+            const subs = orders.filter(o => o.pack === 'daily-push');
+            const activeSubs = subs.filter(o => o.order_status === 'in_progress');
+            const cancelledSubs = subs.filter(o => o.order_status === 'cancelled');
+
+            const totalOrders = oneTimeOrders.length;
+            const inProgress = oneTimeOrders.filter(o => o.order_status === 'in_progress').length;
+            const completed = oneTimeOrders.filter(o => o.order_status === 'completed').length;
+
+            const oneTimeRevenue = oneTimeOrders.reduce((sum, o) => sum + (o.amount || 0), 0);
+            const subsRevenue = subs.reduce((sum, o) => sum + getDailyPushRevenue(o), 0);
+            const totalRevenue = oneTimeRevenue + subsRevenue;
 
             document.getElementById('adminStats').innerHTML = `
-                <div class="admin-stat"><div class="admin-stat-label">Total Orders</div><div class="admin-stat-value">${total}</div></div>
+                <div class="admin-stat"><div class="admin-stat-label">Commandes</div><div class="admin-stat-value">${totalOrders}</div></div>
                 <div class="admin-stat"><div class="admin-stat-label">In Progress</div><div class="admin-stat-value">${inProgress}</div></div>
                 <div class="admin-stat"><div class="admin-stat-label">Completed</div><div class="admin-stat-value">${completed}</div></div>
-                <div class="admin-stat"><div class="admin-stat-label">Revenue</div><div class="admin-stat-value">$${(revenue / 100).toLocaleString()}</div></div>
+                <div class="admin-stat"><div class="admin-stat-label">Abonnements actifs</div><div class="admin-stat-value" style="color:#00b0ff">${activeSubs.length}</div></div>
+                <div class="admin-stat"><div class="admin-stat-label">Revenue</div><div class="admin-stat-value">$${(totalRevenue / 100).toLocaleString()}<div class="sub-revenue">Commandes: $${(oneTimeRevenue / 100).toLocaleString()} | Subs: $${(subsRevenue / 100).toLocaleString()}</div></div></div>
             `;
         }
 
         function renderOrders(orders) {
+            const oneTimeOrders = orders.filter(o => o.pack !== 'daily-push');
+            const subs = orders.filter(o => o.pack === 'daily-push');
+
+            // Render one-time orders
             const tbody = document.getElementById('adminOrdersBody');
-            if (!orders.length) {
-                tbody.innerHTML = '<tr><td colspan="8" class="admin-loading">No orders yet.</td></tr>';
-                return;
+            if (!oneTimeOrders.length) {
+                tbody.innerHTML = '<tr><td colspan="8" class="admin-loading">Aucune commande.</td></tr>';
+            } else {
+                tbody.innerHTML = oneTimeOrders.map(order => {
+                    const packLabel = `${order.pack} Copies`;
+                    const statusClass = `status-${order.order_status}`;
+                    const statusText = order.order_status === 'completed' ? 'Completed' : 'In Progress';
+                    const hasReceipt = !!order.receipt_url;
+
+                    return `<tr data-order-id="${order.id}">
+                        <td>${new Date(order.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <div class="order-track">
+                                ${order.track_artwork ? `<img src="${esc(order.track_artwork)}" alt="" onerror="this.style.display='none'">` : ''}
+                                <div>
+                                    <div class="order-track-title">${esc(order.track_title || '-')}</div>
+                                    <div class="order-track-artist">${esc(order.track_artist || '-')}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${esc(order.customer_email || '-')}</td>
+                        <td>${esc(packLabel)}</td>
+                        <td>${esc(order.genre || '-')}</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>${hasReceipt ? `<a href="${esc(order.receipt_url)}" target="_blank" class="admin-btn" style="text-decoration:none;">View PDF</a>` : '<span style="color:var(--white-30)">-</span>'}</td>
+                        <td>
+                            <div class="admin-actions">
+                                ${order.order_status === 'in_progress' ? `<button class="admin-btn btn-green" onclick="toggleStatus('${order.id}', 'completed')">Mark Complete</button>` : `<button class="admin-btn" onclick="toggleStatus('${order.id}', 'in_progress')">Mark In Progress</button>`}
+                                <label class="admin-btn">
+                                    Upload PDF
+                                    <input type="file" accept=".pdf" onchange="uploadReceipt('${order.id}', this)">
+                                </label>
+                            </div>
+                        </td>
+                    </tr>`;
+                }).join('');
             }
 
-            tbody.innerHTML = orders.map(order => {
-                const packLabel = order.pack === 'daily-push' ? 'Daily Push' : `${order.pack} Copies`;
-                const statusClass = `status-${order.order_status}`;
-                const statusText = order.order_status === 'completed' ? 'Completed' : 'In Progress';
-                const hasReceipt = !!order.receipt_url;
+            // Render Daily Push subscriptions
+            const subsBody = document.getElementById('adminSubsBody');
+            if (!subs.length) {
+                subsBody.innerHTML = '<tr><td colspan="9" class="admin-loading">Aucun abonnement Daily Push.</td></tr>';
+            } else {
+                subsBody.innerHTML = subs.map(order => {
+                    const days = getDailyPushDays(order);
+                    const revenue = getDailyPushRevenue(order) / 100;
+                    const isActive = order.order_status === 'in_progress';
+                    const isCancelled = order.order_status === 'cancelled';
+                    const statusClass = isActive ? 'status-active' : (isCancelled ? 'status-cancelled' : 'status-completed');
+                    const statusText = isActive ? 'Active' : (isCancelled ? 'Cancelled' : 'Completed');
+                    const hasReceipt = !!order.receipt_url;
 
-                return `<tr data-order-id="${order.id}">
-                    <td>${new Date(order.created_at).toLocaleDateString()}</td>
-                    <td>
-                        <div class="order-track">
-                            ${order.track_artwork ? `<img src="${esc(order.track_artwork)}" alt="" onerror="this.style.display='none'">` : ''}
-                            <div>
-                                <div class="order-track-title">${esc(order.track_title || '-')}</div>
-                                <div class="order-track-artist">${esc(order.track_artist || '-')}</div>
+                    return `<tr data-order-id="${order.id}">
+                        <td>${new Date(order.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <div class="order-track">
+                                ${order.track_artwork ? `<img src="${esc(order.track_artwork)}" alt="" onerror="this.style.display='none'">` : ''}
+                                <div>
+                                    <div class="order-track-title">${esc(order.track_title || '-')}</div>
+                                    <div class="order-track-artist">${esc(order.track_artist || '-')}</div>
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                    <td>${esc(order.customer_email || '-')}</td>
-                    <td>${esc(packLabel)}</td>
-                    <td>${esc(order.genre || '-')}</td>
-                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                    <td>${hasReceipt ? `<a href="${esc(order.receipt_url)}" target="_blank" class="admin-btn" style="text-decoration:none;">View PDF</a>` : '<span style="color:var(--white-30)">-</span>'}</td>
-                    <td>
-                        <div class="admin-actions">
-                            ${order.order_status === 'in_progress' ? `<button class="admin-btn btn-green" onclick="toggleStatus('${order.id}', 'completed')">Mark Complete</button>` : `<button class="admin-btn" onclick="toggleStatus('${order.id}', 'in_progress')">Mark In Progress</button>`}
-                            <label class="admin-btn">
-                                Upload PDF
-                                <input type="file" accept=".pdf" onchange="uploadReceipt('${order.id}', this)">
-                            </label>
-                        </div>
-                    </td>
-                </tr>`;
-            }).join('');
+                        </td>
+                        <td>${esc(order.customer_email || '-')}</td>
+                        <td>${esc(order.genre || '-')}</td>
+                        <td><strong>${days}</strong> jour${days > 1 ? 's' : ''}</td>
+                        <td><strong style="color:var(--green-primary)">$${revenue.toLocaleString()}</strong></td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>${hasReceipt ? `<a href="${esc(order.receipt_url)}" target="_blank" class="admin-btn" style="text-decoration:none;">View PDF</a>` : '<span style="color:var(--white-30)">-</span>'}</td>
+                        <td>
+                            <div class="admin-actions">
+                                ${isActive ? `<button class="admin-btn" style="border-color:#ff5252;color:#ff5252;" onclick="toggleStatus('${order.id}', 'cancelled')">Cancel</button>` : `<button class="admin-btn" style="border-color:#00b0ff;color:#00b0ff;" onclick="toggleStatus('${order.id}', 'in_progress')">Reactivate</button>`}
+                                <label class="admin-btn">
+                                    Upload PDF
+                                    <input type="file" accept=".pdf" onchange="uploadReceipt('${order.id}', this)">
+                                </label>
+                            </div>
+                        </td>
+                    </tr>`;
+                }).join('');
+            }
         }
 
         async function toggleStatus(orderId, newStatus) {

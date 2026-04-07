@@ -35,13 +35,39 @@ function getMonthStart() {
   return new Date(paris.toISOString()).toISOString();
 }
 
+const DAILY_PUSH_RATE_CENTS = 5500; // $55 per day in cents
+
+// Calculate revenue for a Daily Push subscription
+// Active subs: $55 × days from created_at to now
+// Cancelled/completed subs: $55 × days from created_at to updated_at
+function getDailyPushRevenueCents(order) {
+  const start = new Date(order.created_at);
+  const end = (order.order_status === 'cancelled' || order.order_status === 'completed')
+    ? new Date(order.updated_at || order.created_at)
+    : new Date();
+  const diffMs = end - start;
+  const days = Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+  return days * DAILY_PUSH_RATE_CENTS;
+}
+
+// Calculate how many days a Daily Push subscription has been active today
+// Returns 1 if subscription was active during today, 0 otherwise
+function isDailyPushActiveOnDate(order, dateStart, dateEnd) {
+  const orderStart = new Date(order.created_at);
+  const orderEnd = (order.order_status === 'cancelled' || order.order_status === 'completed')
+    ? new Date(order.updated_at || order.created_at)
+    : new Date();
+  // Check if subscription period overlaps with the given date range
+  return orderStart <= new Date(dateEnd) && orderEnd >= new Date(dateStart);
+}
+
 export async function collectSupabaseData(serviceKey) {
   const today = getDayRange(0);
   const yesterday = getDayRange(1);
   const monthStart = getMonthStart();
 
-  // Fetch all data in parallel
-  const [todayOrders, yesterdayOrders, monthOrders, allProfiles, recentActivity] = await Promise.all([
+  // Fetch all data in parallel — include active Daily Push subs that started before today
+  const [todayOrders, yesterdayOrders, monthOrders, activeDailyPushSubs, allProfiles, recentActivity] = await Promise.all([
     // Today's orders
     supabaseFetch(
       `orders?created_at=gte.${today.start}&created_at=lte.${today.end}&select=*&order=created_at.desc`,
@@ -57,6 +83,11 @@ export async function collectSupabaseData(serviceKey) {
       `orders?created_at=gte.${monthStart}&select=*&order=created_at.desc`,
       serviceKey
     ),
+    // All Daily Push subscriptions (active or recently cancelled) — needed for recurring revenue
+    supabaseFetch(
+      `orders?pack=eq.daily-push&select=*&order=created_at.desc`,
+      serviceKey
+    ),
     // User profiles (for stats)
     supabaseFetch(
       `profiles?select=id,country,device_type,created_at&order=created_at.desc`,
@@ -69,12 +100,34 @@ export async function collectSupabaseData(serviceKey) {
     ),
   ]);
 
-  // Process orders into stats
-  const processOrders = (orders) => {
-    const totalRevenue = orders.reduce((sum, o) => sum + (o.amount || 0), 0) / 100;
+  // Process orders into stats — with proper Daily Push revenue calculation
+  const processOrders = (orders, periodStart, periodEnd) => {
+    // One-time orders: use stored amount
+    const oneTimeRevenue = orders
+      .filter(o => o.pack !== 'daily-push')
+      .reduce((sum, o) => sum + (o.amount || 0), 0) / 100;
+
+    // Daily Push revenue for this period: count $55 for each active sub day within the period
+    let dailyPushRevenue = 0;
+    for (const sub of activeDailyPushSubs) {
+      if (isDailyPushActiveOnDate(sub, periodStart, periodEnd)) {
+        // Count days within this period
+        const subStart = new Date(sub.created_at);
+        const subEnd = (sub.order_status === 'cancelled' || sub.order_status === 'completed')
+          ? new Date(sub.updated_at || sub.created_at)
+          : new Date();
+        const effectiveStart = new Date(Math.max(subStart, new Date(periodStart)));
+        const effectiveEnd = new Date(Math.min(subEnd, new Date(periodEnd)));
+        const days = Math.max(1, Math.ceil((effectiveEnd - effectiveStart) / (1000 * 60 * 60 * 24)));
+        dailyPushRevenue += (days * DAILY_PUSH_RATE_CENTS) / 100;
+      }
+    }
+
+    const totalRevenue = oneTimeRevenue + dailyPushRevenue;
+
     const byPack = {};
     const byGenre = {};
-    const byStatus = { in_progress: 0, completed: 0 };
+    const byStatus = { in_progress: 0, completed: 0, cancelled: 0 };
 
     for (const order of orders) {
       const pack = order.pack || 'unknown';
@@ -87,13 +140,25 @@ export async function collectSupabaseData(serviceKey) {
       byStatus[status] = (byStatus[status] || 0) + 1;
     }
 
+    // Add active Daily Push subs that started before this period to the count
+    const activeDPInPeriod = activeDailyPushSubs.filter(s =>
+      isDailyPushActiveOnDate(s, periodStart, periodEnd) &&
+      !orders.some(o => o.id === s.id)
+    );
+    for (const sub of activeDPInPeriod) {
+      byPack['daily-push'] = (byPack['daily-push'] || 0) + 1;
+    }
+
     return {
       count: orders.length,
       revenue: totalRevenue,
+      oneTimeRevenue,
+      dailyPushRevenue,
       byPack,
       byGenre,
       byStatus,
       orders,
+      activeDailyPushSubs: activeDailyPushSubs.filter(s => s.order_status === 'in_progress').length,
     };
   };
 
@@ -122,9 +187,9 @@ export async function collectSupabaseData(serviceKey) {
   }
 
   return {
-    today: processOrders(todayOrders),
-    yesterday: processOrders(yesterdayOrders),
-    month: processOrders(monthOrders),
+    today: processOrders(todayOrders, today.start, today.end),
+    yesterday: processOrders(yesterdayOrders, yesterday.start, yesterday.end),
+    month: processOrders(monthOrders, monthStart, new Date().toISOString()),
     funnel: {
       searches,
       selections,

@@ -156,6 +156,14 @@ export function buildDailyReport(data) {
   report += `📦 Hier : ${s.yesterday.count} commande(s) — ${formatCurrency(s.yesterday.revenue)}\n`;
   report += `📅 Ce mois : ${s.month.count} commande(s) — ${formatCurrency(s.month.revenue)}\n`;
 
+  // Daily Push subscriptions recurring revenue
+  if (s.today.activeDailyPushSubs > 0 || s.today.dailyPushRevenue > 0) {
+    report += `\n   🔄 <b>Abonnements Daily Push ($55/j)</b>\n`;
+    report += `   ✅ Actifs : ${s.today.activeDailyPushSubs}\n`;
+    report += `   💰 Revenu récurrent aujourd'hui : ${formatCurrency(s.today.dailyPushRevenue)}\n`;
+    report += `   💰 Revenu récurrent ce mois : ${formatCurrency(s.month.dailyPushRevenue)}\n`;
+  }
+
   // Breakdown by pack
   if (Object.keys(s.today.byPack).length > 0 || Object.keys(s.month.byPack).length > 0) {
     report += `\n   📋 Répartition mois par pack :\n`;
@@ -265,10 +273,28 @@ export function buildRevenueResponse(supabase) {
   msg += `📦 Hier : ${supabase.yesterday.count} commandes — ${formatCurrency(supabase.yesterday.revenue)}\n`;
   msg += `📅 Ce mois : ${supabase.month.count} commandes — ${formatCurrency(supabase.month.revenue)}\n`;
 
+  // Daily Push recurring revenue breakdown
+  if (supabase.today.activeDailyPushSubs > 0 || supabase.today.dailyPushRevenue > 0) {
+    msg += `\n🔄 <b>Abonnements Daily Push ($55/j)</b>\n`;
+    msg += `   ✅ Actifs : ${supabase.today.activeDailyPushSubs}\n`;
+    msg += `   💰 Récurrent aujourd'hui : ${formatCurrency(supabase.today.dailyPushRevenue)}\n`;
+    msg += `   💰 Récurrent ce mois : ${formatCurrency(supabase.month.dailyPushRevenue)}\n`;
+  }
+
   if (Object.keys(supabase.month.byPack).length > 0) {
     msg += `\n📋 <b>Par pack (mois) :</b>\n`;
+    const packLabels = {
+      '50': '50 Copies',
+      '100': '100 Copies',
+      '200': '200 Copies',
+      '500': '500 Copies',
+      '1000': '1000 Copies',
+      'daily-push': 'Daily Push ($55/j)',
+      'exclusive-800': 'Top 10',
+      'promo-430': 'Top 100',
+    };
     for (const [pack, count] of Object.entries(supabase.month.byPack).sort((a, b) => b[1] - a[1])) {
-      msg += `   • ${pack}: ${count}x\n`;
+      msg += `   • ${packLabels[pack] || pack}: ${count}x\n`;
     }
   }
 
