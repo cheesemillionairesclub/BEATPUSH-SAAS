@@ -53,18 +53,35 @@ export default async function handler(req, res) {
         return res.status(200).json(enrichedOrders);
     }
 
-    // PATCH: update order receipt only (no manual status changes)
+    // PATCH: update order (receipt, status)
     if (req.method === 'PATCH') {
         let body = req.body;
         if (typeof body === 'string') {
             try { body = JSON.parse(body); } catch (e) { body = {}; }
         }
 
-        const { order_id, receipt_url } = body;
+        const { order_id, receipt_url, order_status } = body;
         if (!order_id) return res.status(400).json({ error: 'Missing order_id' });
 
         const updates = { updated_at: new Date().toISOString() };
         if (receipt_url !== undefined) updates.receipt_url = receipt_url;
+
+        // Allow admin to mark classic orders as completed
+        if (order_status !== undefined) {
+            // Verify the order is a classic order before allowing status change
+            const orderCheckRes = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${order_id}&select=pack`, {
+                headers: {
+                    'apikey': SUPABASE_SERVICE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+                },
+            });
+            const orderCheck = await orderCheckRes.json();
+            const isClassicOrder = orderCheck[0] && orderCheck[0].pack !== 'daily-push';
+
+            if (isClassicOrder && order_status === 'completed') {
+                updates.order_status = 'completed';
+            }
+        }
 
         const updateRes = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${order_id}`, {
             method: 'PATCH',

@@ -47,7 +47,9 @@ export default async function handler(req, res) {
 
     try {
         const rawBody = await getRawBody(req);
-        const storagePath = `${orderId}/${fileName}`;
+        // Use timestamp in filename to avoid collisions for multiple receipts
+        const timestamp = Date.now();
+        const storagePath = `${orderId}/${timestamp}_${fileName}`;
 
         // Upload to Supabase Storage
         const uploadRes = await fetch(`${SUPABASE_URL}/storage/v1/object/receipts/${storagePath}`, {
@@ -69,8 +71,8 @@ export default async function handler(req, res) {
         // Get public URL
         const receiptUrl = `${SUPABASE_URL}/storage/v1/object/public/receipts/${storagePath}`;
 
-        // Fetch order to determine type (one-time vs daily push)
-        const orderRes = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}&select=pack`, {
+        // Fetch order to determine type and current receipt_url
+        const orderRes = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}&select=pack,receipt_url,order_status`, {
             headers: {
                 'apikey': SUPABASE_SERVICE_KEY,
                 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
@@ -78,10 +80,34 @@ export default async function handler(req, res) {
         });
         const orderData = await orderRes.json();
         const isDailyPush = orderData[0]?.pack === 'daily-push';
+        const currentReceiptUrl = orderData[0]?.receipt_url || null;
 
-        // For orders: mark as "completed"
+        // Build receipt_urls array: parse existing value (could be JSON array or single URL string)
+        let receiptUrls = [];
+        if (currentReceiptUrl) {
+            try {
+                const parsed = JSON.parse(currentReceiptUrl);
+                if (Array.isArray(parsed)) {
+                    receiptUrls = parsed;
+                } else {
+                    receiptUrls = [currentReceiptUrl];
+                }
+            } catch (e) {
+                // It's a plain URL string
+                receiptUrls = [currentReceiptUrl];
+            }
+        }
+        receiptUrls.push(receiptUrl);
+
+        // For classic orders: do NOT change order_status (admin uses "Mark as completed")
         // For daily push: mark as "complete_for_day"
-        const newStatus = isDailyPush ? 'complete_for_day' : 'completed';
+        const updatePayload = {
+            receipt_url: JSON.stringify(receiptUrls),
+            updated_at: new Date().toISOString(),
+        };
+        if (isDailyPush) {
+            updatePayload.order_status = 'complete_for_day';
+        }
 
         await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`, {
             method: 'PATCH',
@@ -90,14 +116,11 @@ export default async function handler(req, res) {
                 'apikey': SUPABASE_SERVICE_KEY,
                 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
             },
-            body: JSON.stringify({
-                receipt_url: receiptUrl,
-                order_status: newStatus,
-                updated_at: new Date().toISOString(),
-            }),
+            body: JSON.stringify(updatePayload),
         });
 
-        return res.status(200).json({ success: true, receipt_url: receiptUrl, status: newStatus });
+        const newStatus = isDailyPush ? 'complete_for_day' : orderData[0]?.order_status || 'in_progress';
+        return res.status(200).json({ success: true, receipt_url: receiptUrl, receipt_urls: receiptUrls, status: newStatus });
     } catch (error) {
         console.error('Upload error:', error.message);
         return res.status(500).json({ error: 'Upload failed', details: error.message });

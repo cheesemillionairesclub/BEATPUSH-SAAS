@@ -448,6 +448,26 @@
             }
         }
 
+        function parseReceiptUrls(receiptUrl) {
+            if (!receiptUrl) return [];
+            try {
+                const parsed = JSON.parse(receiptUrl);
+                if (Array.isArray(parsed)) return parsed;
+                return [receiptUrl];
+            } catch (e) {
+                return [receiptUrl];
+            }
+        }
+
+        function renderReceiptLinks(receiptUrl) {
+            const urls = parseReceiptUrls(receiptUrl);
+            if (!urls.length) return '<span style="color:var(--white-30)">-</span>';
+            if (urls.length === 1) {
+                return `<a href="${esc(urls[0])}" target="_blank" class="admin-btn" style="text-decoration:none;">View PDF</a>`;
+            }
+            return urls.map((url, i) => `<a href="${esc(url)}" target="_blank" class="admin-btn" style="text-decoration:none;margin:2px 0;display:inline-block;">PDF ${i + 1}</a>`).join(' ');
+        }
+
         function renderOrders(orders) {
             const oneTimeOrders = orders.filter(o => o.pack !== 'daily-push');
             const subs = orders.filter(o => o.pack === 'daily-push');
@@ -460,8 +480,8 @@
                 tbody.innerHTML = oneTimeOrders.map(order => {
                     const packLabel = `${order.pack} Copies`;
                     const status = getStatusDisplay(order);
-                    const hasReceipt = !!order.receipt_url;
                     const stripeAmount = order.stripe_amount_received || order.amount || 0;
+                    const isInProgress = order.order_status === 'in_progress';
 
                     return `<tr data-order-id="${order.id}">
                         <td>${new Date(order.created_at).toLocaleDateString()}</td>
@@ -479,13 +499,14 @@
                         <td><span class="stripe-amount">$${(stripeAmount / 100).toLocaleString()}</span></td>
                         <td>${esc(order.genre || '-')}</td>
                         <td><span class="status-badge ${status.class}">${status.text}</span></td>
-                        <td>${hasReceipt ? `<a href="${esc(order.receipt_url)}" target="_blank" class="admin-btn" style="text-decoration:none;">View PDF</a>` : '<span style="color:var(--white-30)">-</span>'}</td>
+                        <td>${renderReceiptLinks(order.receipt_url)}</td>
                         <td>
                             <div class="admin-actions">
                                 <label class="admin-btn">
                                     Upload PDF
                                     <input type="file" accept=".pdf" onchange="uploadReceipt('${order.id}', this)">
                                 </label>
+                                ${isInProgress ? `<button class="admin-btn btn-green" onclick="markAsCompleted('${order.id}')">Mark as completed</button>` : ''}
                             </div>
                         </td>
                     </tr>`;
@@ -501,7 +522,6 @@
                     const daysPaid = order.stripe_days_paid || '-';
                     const stripeRevenue = order.stripe_amount_received || 0;
                     const status = getStatusDisplay(order);
-                    const hasReceipt = !!order.receipt_url;
 
                     return `<tr data-order-id="${order.id}">
                         <td>${new Date(order.created_at).toLocaleDateString()}</td>
@@ -519,7 +539,7 @@
                         <td><strong>${daysPaid}</strong> jour${daysPaid > 1 ? 's' : ''}</td>
                         <td><strong class="stripe-amount">$${(stripeRevenue / 100).toLocaleString()}</strong></td>
                         <td><span class="status-badge ${status.class}">${status.text}</span></td>
-                        <td>${hasReceipt ? `<a href="${esc(order.receipt_url)}" target="_blank" class="admin-btn" style="text-decoration:none;">View PDF</a>` : '<span style="color:var(--white-30)">-</span>'}</td>
+                        <td>${renderReceiptLinks(order.receipt_url)}</td>
                         <td>
                             <div class="admin-actions">
                                 <label class="admin-btn">
@@ -551,7 +571,8 @@
                 });
                 if (res.ok) {
                     const data = await res.json();
-                    const statusMsg = data.status === 'complete_for_day' ? 'Complete for the day' : 'Completed';
+                    const isDailyPush = data.status === 'complete_for_day';
+                    const statusMsg = isDailyPush ? 'Complete for the day' : 'Uploaded';
 
                     // Auto-send receipt notification email
                     try {
@@ -586,6 +607,33 @@
                 alert('Upload failed: ' + e.message);
             }
             input.value = '';
+        }
+
+        async function markAsCompleted(orderId) {
+            const token = BeatpushAuth.getToken();
+            try {
+                const res = await fetch('/api/admin/orders', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ order_id: orderId, order_status: 'completed' }),
+                });
+                if (res.ok) {
+                    showNotification('Order marked as completed', 'success');
+                    // Reload orders
+                    const listRes = await fetch('/api/admin/orders', { headers: { 'Authorization': `Bearer ${token}` } });
+                    const orders = await listRes.json();
+                    renderStats(orders);
+                    renderOrders(orders);
+                } else {
+                    const err = await res.json();
+                    alert('Failed: ' + (err.details || err.error));
+                }
+            } catch (e) {
+                alert('Failed: ' + e.message);
+            }
         }
 
         function showNotification(message, type) {

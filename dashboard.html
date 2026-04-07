@@ -157,6 +157,17 @@
             return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         }
 
+        function parseReceiptUrls(receiptUrl) {
+            if (!receiptUrl) return [];
+            try {
+                const parsed = JSON.parse(receiptUrl);
+                if (Array.isArray(parsed)) return parsed;
+                return [receiptUrl];
+            } catch (e) {
+                return [receiptUrl];
+            }
+        }
+
         function createOrderCard(order) {
             const t = getT();
             const card = document.createElement('div');
@@ -179,7 +190,37 @@
                 ? (order.pack === 'daily-push' ? (t.dashboard_status_complete_day || 'Complete for the day') : (t.dashboard_status_completed || 'Completed'))
                 : (isCancelled ? (t.dashboard_status_cancelled || 'Cancelled') : (t.dashboard_status_progress || 'In Progress'));
             const packLabel = order.pack === 'daily-push' ? 'Daily Push' : `${order.pack} Copies`;
-            const receiptDisabled = !order.receipt_url;
+
+            const receiptUrls = parseReceiptUrls(order.receipt_url);
+            const hasReceipts = receiptUrls.length > 0;
+
+            let receiptsHtml = '';
+            if (!hasReceipts) {
+                receiptsHtml = `
+                    <div class="dash-receipt-wrapper">
+                        <button class="dash-receipt-btn disabled" disabled>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                            ${t.dashboard_label_receipt || 'Receipt'}
+                        </button>
+                        <div class="dash-receipt-tooltip">You will be able to download your PDF receipt here once your campaign is completed!</div>
+                    </div>`;
+            } else if (receiptUrls.length === 1) {
+                receiptsHtml = `
+                    <div class="dash-receipt-wrapper">
+                        <button class="dash-receipt-btn" onclick="window.open('${escapeHtmlAttr(receiptUrls[0])}', '_blank')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                            ${t.dashboard_label_receipt || 'Receipt'}
+                        </button>
+                    </div>`;
+            } else {
+                receiptsHtml = receiptUrls.map((url, i) => `
+                    <div class="dash-receipt-wrapper">
+                        <button class="dash-receipt-btn" onclick="window.open('${escapeHtmlAttr(url)}', '_blank')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                            ${t.dashboard_label_receipt || 'Receipt'} ${i + 1}
+                        </button>
+                    </div>`).join('');
+            }
 
             card.innerHTML = `
                 <div class="dash-order-header">
@@ -212,13 +253,7 @@
                     <div class="dash-artist-chips">${artistsHtml}</div>
                 </div>` : ''}
                 <div class="dash-order-footer">
-                    <div class="dash-receipt-wrapper">
-                        <button class="dash-receipt-btn ${receiptDisabled ? 'disabled' : ''}" ${receiptDisabled ? 'disabled' : ''} onclick="${receiptDisabled ? '' : `window.open('${escapeHtmlAttr(order.receipt_url)}', '_blank')`}">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                            ${t.dashboard_label_receipt || 'Receipt'}
-                        </button>
-                        ${receiptDisabled ? '<div class="dash-receipt-tooltip">You will be able to download your PDF receipt here once your campaign is completed!</div>' : ''}
-                    </div>
+                    ${receiptsHtml}
                 </div>
             `;
             return card;
