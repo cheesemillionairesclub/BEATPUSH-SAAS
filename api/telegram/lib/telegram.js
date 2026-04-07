@@ -74,9 +74,57 @@ function formatCurrency(amount, currency = '$') {
   return `${currency}${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 }
 
+// Calculate Stripe-based revenue for a set of orders
+function calcStripeRevenue(orders, stripeData) {
+  if (!stripeData?.available) return null;
+
+  let oneTimeTotal = 0;
+  let subsTotal = 0;
+
+  for (const order of orders) {
+    if (order.pack === 'daily-push') {
+      const subData = stripeData.subscriptions?.[order.id];
+      if (subData) {
+        subsTotal += subData.totalPaid;
+      }
+    } else {
+      const amountData = stripeData.oneTimeAmounts?.[order.id];
+      if (amountData) {
+        oneTimeTotal += amountData.amountReceived;
+      } else {
+        oneTimeTotal += order.amount || 0;
+      }
+    }
+  }
+
+  return { oneTimeTotal, subsTotal, total: oneTimeTotal + subsTotal };
+}
+
+// Get subscription status label for Telegram
+function getSubStatusLabel(order, stripeData) {
+  if (stripeData?.available) {
+    const subData = stripeData.subscriptions?.[order.id];
+    if (subData) {
+      if (subData.status === 'canceled' || subData.status === 'unpaid') return '❌ Cancelled';
+      if (subData.status === 'active' || subData.status === 'trialing') {
+        if (order.order_status === 'complete_for_day') return '✅ Complete for the day';
+        if (order.order_status === 'active_missing_receipt') return '⚠️ Missing receipt';
+        return '✅ Active';
+      }
+      if (subData.status === 'past_due') return '⚠️ Past due';
+      return `❓ ${subData.status}`;
+    }
+  }
+  // Fallback to Supabase status
+  if (order.order_status === 'cancelled') return '❌ Cancelled';
+  if (order.order_status === 'complete_for_day') return '✅ Complete for the day';
+  if (order.order_status === 'active_missing_receipt') return '⚠️ Missing receipt';
+  return '✅ Active';
+}
+
 // Build the daily report message
 export function buildDailyReport(data) {
-  const { supabase, meta, google, analysis } = data;
+  const { supabase, meta, google, analysis, stripe } = data;
   const now = new Date();
   const dateStr = now.toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris' });
 
@@ -152,16 +200,43 @@ export function buildDailyReport(data) {
   // ━━ COMMANDES / CA ━━━━━━━━━━━━
   report += `\n━━ 💰 COMMANDES / CA ━━━━━━━━━━━\n`;
   const s = supabase;
-  report += `📦 Aujourd'hui : ${s.today.count} commande(s) — ${formatCurrency(s.today.revenue)}\n`;
-  report += `📦 Hier : ${s.yesterday.count} commande(s) — ${formatCurrency(s.yesterday.revenue)}\n`;
-  report += `📅 Ce mois : ${s.month.count} commande(s) — ${formatCurrency(s.month.revenue)}\n`;
 
-  // Daily Push subscriptions recurring revenue
-  if (s.today.activeDailyPushSubs > 0 || s.today.dailyPushRevenue > 0) {
+  // Calculate Stripe-based revenue if available
+  const monthStripeRevenue = calcStripeRevenue(s.allOrders || [], stripe);
+
+  if (monthStripeRevenue && stripe?.available) {
+    report += `💳 <b>Données Stripe (montants réels)</b>\n`;
+    report += `📦 Commandes : ${formatCurrency(monthStripeRevenue.oneTimeTotal / 100)}\n`;
+    report += `🔄 Abonnements : ${formatCurrency(monthStripeRevenue.subsTotal / 100)}\n`;
+    report += `💰 Total reçu : <b>${formatCurrency(monthStripeRevenue.total / 100)}</b>\n`;
+  } else {
+    report += `📦 Aujourd'hui : ${s.today.count} commande(s) — ${formatCurrency(s.today.revenue)}\n`;
+    report += `📦 Hier : ${s.yesterday.count} commande(s) — ${formatCurrency(s.yesterday.revenue)}\n`;
+    report += `📅 Ce mois : ${s.month.count} commande(s) — ${formatCurrency(s.month.revenue)}\n`;
+  }
+
+  // Daily Push subscriptions detail
+  const dailyPushSubs = (s.allDailyPushSubs || []);
+  if (dailyPushSubs.length > 0) {
+    const activeSubs = dailyPushSubs.filter(o => o.order_status !== 'cancelled');
+    const missingSubs = dailyPushSubs.filter(o => o.order_status === 'active_missing_receipt');
+
     report += `\n   🔄 <b>Abonnements Daily Push ($55/j)</b>\n`;
-    report += `   ✅ Actifs : ${s.today.activeDailyPushSubs}\n`;
-    report += `   💰 Revenu récurrent aujourd'hui : ${formatCurrency(s.today.dailyPushRevenue)}\n`;
-    report += `   💰 Revenu récurrent ce mois : ${formatCurrency(s.month.dailyPushRevenue)}\n`;
+    report += `   ✅ Actifs : ${activeSubs.length}\n`;
+    if (missingSubs.length > 0) {
+      report += `   ⚠️ Receipts manquants : ${missingSubs.length}\n`;
+    }
+
+    // Per-subscription detail with Stripe data
+    for (const sub of dailyPushSubs) {
+      const statusLabel = getSubStatusLabel(sub, stripe);
+      const subStripe = stripe?.subscriptions?.[sub.id];
+      const daysPaid = subStripe?.daysPaid || '-';
+      const totalPaid = subStripe ? formatCurrency(subStripe.totalPaid / 100) : '-';
+      const trackName = sub.track_title ? `${sub.track_title}` : 'N/A';
+      report += `\n   🎵 <b>${escapeHtml(trackName)}</b>\n`;
+      report += `   ${statusLabel} | ${daysPaid} jours payés | ${totalPaid} reçu\n`;
+    }
   }
 
   // Breakdown by pack
@@ -266,19 +341,44 @@ export function buildAdsResponse(data) {
   return msg;
 }
 
-// Build response for /ca command
-export function buildRevenueResponse(supabase) {
+// Build response for /ca command — now with Stripe data
+export function buildRevenueResponse(supabase, stripeData) {
   let msg = `💰 <b>CHIFFRE D'AFFAIRES</b>\n\n`;
-  msg += `📦 Aujourd'hui : ${supabase.today.count} commandes — ${formatCurrency(supabase.today.revenue)}\n`;
-  msg += `📦 Hier : ${supabase.yesterday.count} commandes — ${formatCurrency(supabase.yesterday.revenue)}\n`;
-  msg += `📅 Ce mois : ${supabase.month.count} commandes — ${formatCurrency(supabase.month.revenue)}\n`;
 
-  // Daily Push recurring revenue breakdown
-  if (supabase.today.activeDailyPushSubs > 0 || supabase.today.dailyPushRevenue > 0) {
+  // Stripe-based revenue
+  const stripeRevenue = calcStripeRevenue(supabase.allOrders || [], stripeData);
+  if (stripeRevenue && stripeData?.available) {
+    msg += `💳 <b>Montants Stripe (réels)</b>\n`;
+    msg += `📦 Commandes : ${formatCurrency(stripeRevenue.oneTimeTotal / 100)}\n`;
+    msg += `🔄 Abonnements : ${formatCurrency(stripeRevenue.subsTotal / 100)}\n`;
+    msg += `💰 Total reçu : <b>${formatCurrency(stripeRevenue.total / 100)}</b>\n`;
+  } else {
+    msg += `📦 Aujourd'hui : ${supabase.today.count} commandes — ${formatCurrency(supabase.today.revenue)}\n`;
+    msg += `📦 Hier : ${supabase.yesterday.count} commandes — ${formatCurrency(supabase.yesterday.revenue)}\n`;
+    msg += `📅 Ce mois : ${supabase.month.count} commandes — ${formatCurrency(supabase.month.revenue)}\n`;
+  }
+
+  // Daily Push detail
+  const dailyPushSubs = supabase.allDailyPushSubs || [];
+  if (dailyPushSubs.length > 0) {
+    const activeSubs = dailyPushSubs.filter(o => o.order_status !== 'cancelled');
+    const missingSubs = dailyPushSubs.filter(o => o.order_status === 'active_missing_receipt');
+
     msg += `\n🔄 <b>Abonnements Daily Push ($55/j)</b>\n`;
-    msg += `   ✅ Actifs : ${supabase.today.activeDailyPushSubs}\n`;
-    msg += `   💰 Récurrent aujourd'hui : ${formatCurrency(supabase.today.dailyPushRevenue)}\n`;
-    msg += `   💰 Récurrent ce mois : ${formatCurrency(supabase.month.dailyPushRevenue)}\n`;
+    msg += `   ✅ Actifs : ${activeSubs.length}\n`;
+    if (missingSubs.length > 0) {
+      msg += `   ⚠️ Receipts manquants : ${missingSubs.length}\n`;
+    }
+
+    for (const sub of dailyPushSubs) {
+      const statusLabel = getSubStatusLabel(sub, stripeData);
+      const subStripe = stripeData?.subscriptions?.[sub.id];
+      const daysPaid = subStripe?.daysPaid || '-';
+      const totalPaid = subStripe ? formatCurrency(subStripe.totalPaid / 100) : '-';
+      const trackName = sub.track_title || 'N/A';
+      msg += `\n   🎵 <b>${escapeHtml(trackName)}</b>\n`;
+      msg += `   ${statusLabel} | ${daysPaid} jours | ${totalPaid} reçu\n`;
+    }
   }
 
   if (Object.keys(supabase.month.byPack).length > 0) {

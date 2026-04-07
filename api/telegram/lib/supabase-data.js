@@ -186,10 +186,18 @@ export async function collectSupabaseData(serviceKey) {
     deviceStats[device] = (deviceStats[device] || 0) + 1;
   }
 
+  // Collect all unique orders for Stripe enrichment
+  const allOrdersMap = new Map();
+  for (const o of [...todayOrders, ...yesterdayOrders, ...monthOrders, ...activeDailyPushSubs]) {
+    allOrdersMap.set(o.id, o);
+  }
+
   return {
     today: processOrders(todayOrders, today.start, today.end),
     yesterday: processOrders(yesterdayOrders, yesterday.start, yesterday.end),
     month: processOrders(monthOrders, monthStart, new Date().toISOString()),
+    allOrders: Array.from(allOrdersMap.values()),
+    allDailyPushSubs: activeDailyPushSubs,
     funnel: {
       searches,
       selections,

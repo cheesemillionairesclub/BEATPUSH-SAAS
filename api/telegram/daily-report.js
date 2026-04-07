@@ -5,6 +5,7 @@
 import { collectSupabaseData } from './lib/supabase-data.js';
 import { collectMetaAdsData } from './lib/meta-ads.js';
 import { collectGoogleAdsData } from './lib/google-ads.js';
+import { collectStripeData } from './lib/stripe-data.js';
 import { analyzeWithClaude } from './lib/brain.js';
 import { buildDailyReport, sendReport } from './lib/telegram.js';
 
@@ -37,11 +38,14 @@ export default async function handler(req, res) {
       collectGoogleAdsData(),
     ]);
 
+    // Enrich with Stripe data (real amounts and subscription statuses)
+    const stripeData = await collectStripeData(supabase.allOrders || []);
+
     // Analyze with Claude AI
     const analysis = await analyzeWithClaude({ supabase, meta, google });
 
     // Build the report
-    const report = buildDailyReport({ supabase, meta, google, analysis });
+    const report = buildDailyReport({ supabase, meta, google, analysis, stripe: stripeData });
 
     // Send to Telegram
     await sendReport(report);

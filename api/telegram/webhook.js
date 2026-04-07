@@ -4,6 +4,7 @@
 import { collectSupabaseData } from './lib/supabase-data.js';
 import { collectMetaAdsData } from './lib/meta-ads.js';
 import { collectGoogleAdsData } from './lib/google-ads.js';
+import { collectStripeData } from './lib/stripe-data.js';
 import { analyzeWithClaude } from './lib/brain.js';
 import {
   buildDailyReport,
@@ -350,7 +351,8 @@ export default async function handler(req, res) {
 
       case '/ca': {
         const supabase = await collectSupabaseData(serviceKey);
-        responseText = buildRevenueResponse(supabase);
+        const stripeData = await collectStripeData(supabase.allOrders || []);
+        responseText = buildRevenueResponse(supabase, stripeData);
         break;
       }
 
@@ -360,8 +362,9 @@ export default async function handler(req, res) {
           collectMetaAdsData(),
           collectGoogleAdsData(),
         ]);
+        const stripeData = await collectStripeData(supabase.allOrders || []);
         const analysis = await analyzeWithClaude({ supabase, meta, google });
-        responseText = buildDailyReport({ supabase, meta, google, analysis });
+        responseText = buildDailyReport({ supabase, meta, google, analysis, stripe: stripeData });
         break;
       }
 
