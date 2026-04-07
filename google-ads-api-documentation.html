@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
+h1 { color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 10px; }
+h2 { color: #333; margin-top: 30px; }
+h3 { color: #555; }
+table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+th { background: #f5f5f5; }
+pre { background: #f5f5f5; padding: 15px; border-radius: 5px; overflow-x: auto; }
+code { background: #f5f5f5; padding: 2px 5px; border-radius: 3px; }
+</style></head><body><h1>BeatPush — Google Ads API Integration Design Document</h1>
+<h2>1. Company Overview</h2>
+<p><strong>Company:</strong> BeatPush<br />
+<strong>Website:</strong> https://www.beatpush.app<br />
+<strong>Industry:</strong> Music Promotion SaaS  </p>
+<p>BeatPush is a SaaS platform that helps electronic music producers and record labels promote their tracks on Beatport. Our platform connects artists with DJs and curators to increase track visibility and chart positioning.</p>
+<h2>2. Purpose of Google Ads API Integration</h2>
+<p>We integrate with the Google Ads API for <strong>internal campaign management and reporting</strong>. The API is used exclusively by our internal team to:</p>
+<ul>
+<li><strong>Monitor campaign performance</strong> in real-time (spend, conversions, ROAS)</li>
+<li><strong>Generate automated daily reports</strong> sent via Telegram to our marketing team</li>
+<li><strong>Manage campaigns</strong> (create, pause, resume, adjust budgets) without logging into the Google Ads UI</li>
+<li><strong>Analyze search terms</strong> to optimize keyword targeting</li>
+</ul>
+<h2>3. Architecture Overview</h2>
+<p><code>┌─────────────────────┐
+│   BeatPush SaaS     │
+│  (Vercel Serverless) │
+├─────────────────────┤
+│                     │
+│  Telegram Bot ──────┼──► Google Ads API (v23)
+│  (Webhook)          │        - Read campaign data
+│                     │        - Manage campaigns
+│  Cron Job ──────────┼──► Daily automated reports
+│  (Daily at 20:00)   │
+│                     │
+│  Internal Dashboard ┼──► Campaign analytics
+│                     │
+└─────────────────────┘</code></p>
+<h2>4. API Usage Details</h2>
+<h3>4.1 Authentication</h3>
+<ul>
+<li>OAuth 2.0 with refresh token</li>
+<li>System user with restricted access</li>
+<li>Tokens stored securely in environment variables (Vercel)</li>
+</ul>
+<h3>4.2 API Operations Used</h3>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Endpoint</th>
+<th>Frequency</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read Campaigns</td>
+<td><code>campaigns:searchStream</code></td>
+<td>On-demand + daily</td>
+<td>List campaigns, status, budgets</td>
+</tr>
+<tr>
+<td>Read Metrics</td>
+<td><code>campaigns:searchStream</code></td>
+<td>On-demand + daily</td>
+<td>Spend, impressions, clicks, conversions</td>
+</tr>
+<tr>
+<td>Read Search Terms</td>
+<td><code>search_term_view</code></td>
+<td>Daily</td>
+<td>Keyword optimization</td>
+</tr>
+<tr>
+<td>Mutate Campaigns</td>
+<td><code>campaigns:mutate</code></td>
+<td>Rare</td>
+<td>Pause/resume campaigns</td>
+</tr>
+<tr>
+<td>Mutate Budgets</td>
+<td><code>campaignBudgets:mutate</code></td>
+<td>Rare</td>
+<td>Adjust daily budgets</td>
+</tr>
+<tr>
+<td>Create Campaigns</td>
+<td><code>campaigns:mutate</code></td>
+<td>Rare</td>
+<td>New campaign creation</td>
+</tr>
+<tr>
+<td>Create Budgets</td>
+<td><code>campaignBudgets:mutate</code></td>
+<td>Rare</td>
+<td>Budget for new campaigns</td>
+</tr>
+</tbody>
+</table>
+<h3>4.3 Rate &amp; Volume</h3>
+<ul>
+<li><strong>Daily report:</strong> 3 API calls (campaigns, metrics, search terms) — once per day at 20:00 CET</li>
+<li><strong>On-demand commands:</strong> ~5-10 calls per day via Telegram bot</li>
+<li><strong>Campaign management:</strong> ~1-2 mutations per week</li>
+<li><strong>Total estimated:</strong> &lt; 50 API calls per day</li>
+</ul>
+<h2>5. Data Handling</h2>
+<ul>
+<li>No Google Ads data is stored permanently</li>
+<li>Data is fetched in real-time and displayed via Telegram messages</li>
+<li>No data is shared with third parties</li>
+<li>No PII is collected or processed through the API</li>
+</ul>
+<h2>6. Access Control</h2>
+<ul>
+<li>Only authorized team members can interact with the Telegram bot</li>
+<li>Campaign mutations (create, pause, budget changes) require explicit commands</li>
+<li>All new campaigns are created in PAUSED state for safety</li>
+<li>Environment variables are encrypted and managed via Vercel</li>
+</ul>
+<h2>7. Compliance</h2>
+<ul>
+<li>We comply with Google Ads API Terms of Service</li>
+<li>We comply with Google Ads policies</li>
+<li>We do not use the API for automated bidding or ad creation without human oversight</li>
+<li>We do not scrape or redistribute Google Ads data</li>
+</ul>
+<h2>8. Contact</h2>
+<p><strong>Email:</strong> contact@beatpush.app<br />
+<strong>Website:</strong> https://www.beatpush.app</p></body></html>
