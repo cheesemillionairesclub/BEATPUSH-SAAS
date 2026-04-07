@@ -69,7 +69,20 @@ export default async function handler(req, res) {
         // Get public URL
         const receiptUrl = `${SUPABASE_URL}/storage/v1/object/public/receipts/${storagePath}`;
 
-        // Update order with receipt URL and mark as completed
+        // Fetch order to determine type (one-time vs daily push)
+        const orderRes = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}&select=pack`, {
+            headers: {
+                'apikey': SUPABASE_SERVICE_KEY,
+                'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            },
+        });
+        const orderData = await orderRes.json();
+        const isDailyPush = orderData[0]?.pack === 'daily-push';
+
+        // For orders: mark as "completed"
+        // For daily push: mark as "complete_for_day"
+        const newStatus = isDailyPush ? 'complete_for_day' : 'completed';
+
         await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`, {
             method: 'PATCH',
             headers: {
@@ -79,12 +92,12 @@ export default async function handler(req, res) {
             },
             body: JSON.stringify({
                 receipt_url: receiptUrl,
-                order_status: 'completed',
+                order_status: newStatus,
                 updated_at: new Date().toISOString(),
             }),
         });
 
-        return res.status(200).json({ success: true, receipt_url: receiptUrl });
+        return res.status(200).json({ success: true, receipt_url: receiptUrl, status: newStatus });
     } catch (error) {
         console.error('Upload error:', error.message);
         return res.status(500).json({ error: 'Upload failed', details: error.message });

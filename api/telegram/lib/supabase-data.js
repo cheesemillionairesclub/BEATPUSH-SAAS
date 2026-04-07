@@ -127,7 +127,7 @@ export async function collectSupabaseData(serviceKey) {
 
     const byPack = {};
     const byGenre = {};
-    const byStatus = { in_progress: 0, completed: 0, cancelled: 0 };
+    const byStatus = { in_progress: 0, completed: 0, cancelled: 0, active_missing_receipt: 0, complete_for_day: 0 };
 
     for (const order of orders) {
       const pack = order.pack || 'unknown';

@@ -1,4 +1,6 @@
-// Admin API: List all orders, update status, upload receipt
+// Admin API: List all orders (with Stripe sync), update receipt
+import Stripe from 'stripe';
+
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, PATCH, OPTIONS');
@@ -34,7 +36,7 @@ export default async function handler(req, res) {
     const profiles = await profileRes.json();
     if (!profiles[0]?.is_admin) return res.status(403).json({ error: 'Not admin' });
 
-    // GET: list all orders
+    // GET: list all orders enriched with Stripe data
     if (req.method === 'GET') {
         const ordersRes = await fetch(`${SUPABASE_URL}/rest/v1/orders?order=created_at.desc&select=*`, {
             headers: {
@@ -43,27 +45,25 @@ export default async function handler(req, res) {
             },
         });
         const orders = await ordersRes.json();
-        return res.status(200).json(orders);
+
+        // Enrich with Stripe data
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+        const enrichedOrders = await enrichWithStripeData(stripe, orders, SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+        return res.status(200).json(enrichedOrders);
     }
 
-    // PATCH: update order status or receipt
+    // PATCH: update order receipt only (no manual status changes)
     if (req.method === 'PATCH') {
         let body = req.body;
         if (typeof body === 'string') {
             try { body = JSON.parse(body); } catch (e) { body = {}; }
         }
 
-        const { order_id, order_status, receipt_url } = body;
+        const { order_id, receipt_url } = body;
         if (!order_id) return res.status(400).json({ error: 'Missing order_id' });
 
-        const validStatuses = ['in_progress', 'completed', 'cancelled'];
         const updates = { updated_at: new Date().toISOString() };
-        if (order_status) {
-            if (!validStatuses.includes(order_status)) {
-                return res.status(400).json({ error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` });
-            }
-            updates.order_status = order_status;
-        }
         if (receipt_url !== undefined) updates.receipt_url = receipt_url;
 
         const updateRes = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${order_id}`, {
@@ -87,4 +87,157 @@ export default async function handler(req, res) {
     }
 
     return res.status(405).json({ error: 'Method not allowed' });
+}
+
+async function enrichWithStripeData(stripe, orders, supabaseUrl, supabaseKey) {
+    const today = new Date().toISOString().split('T')[0];
+
+    const enriched = await Promise.all(orders.map(async (order) => {
+        try {
+            if (order.pack === 'daily-push') {
+                return await enrichDailyPush(stripe, order, today, supabaseUrl, supabaseKey);
+            } else {
+                return await enrichOneTimeOrder(stripe, order);
+            }
+        } catch (err) {
+            console.error(`Error enriching order ${order.id}:`, err.message);
+            return order; // Return original if Stripe fetch fails
+        }
+    }));
+
+    return enriched;
+}
+
+async function enrichOneTimeOrder(stripe, order) {
+    // Fetch exact amount from Stripe via payment intent
+    if (order.stripe_payment_intent) {
+        try {
+            const pi = await stripe.paymentIntents.retrieve(order.stripe_payment_intent);
+            order.stripe_amount_received = pi.amount_received || 0;
+            order.stripe_currency = pi.currency || 'usd';
+        } catch (err) {
+            // Payment intent might not exist (old orders), use stored amount
+            order.stripe_amount_received = order.amount || 0;
+            order.stripe_currency = order.currency || 'usd';
+        }
+    } else {
+        order.stripe_amount_received = order.amount || 0;
+        order.stripe_currency = order.currency || 'usd';
+    }
+
+    return order;
+}
+
+async function enrichDailyPush(stripe, order, today, supabaseUrl, supabaseKey) {
+    const subscriptionId = order.stripe_payment_intent; // We stored subscription ID here
+
+    if (!subscriptionId) {
+        // Try to find subscription ID from checkout session
+        if (order.stripe_session_id) {
+            try {
+                const session = await stripe.checkout.sessions.retrieve(order.stripe_session_id);
+                if (session.subscription) {
+                    // Update the order with the subscription ID for future use
+                    await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${order.id}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': supabaseKey,
+                            'Authorization': `Bearer ${supabaseKey}`,
+                        },
+                        body: JSON.stringify({ stripe_payment_intent: session.subscription }),
+                    });
+                    return await enrichDailyPushWithSubscription(stripe, order, session.subscription, today, supabaseUrl, supabaseKey);
+                }
+            } catch (err) {
+                console.error('Error retrieving session for subscription:', err.message);
+            }
+        }
+        order.stripe_amount_received = order.amount || 0;
+        order.stripe_subscription_status = 'unknown';
+        return order;
+    }
+
+    return await enrichDailyPushWithSubscription(stripe, order, subscriptionId, today, supabaseUrl, supabaseKey);
+}
+
+async function enrichDailyPushWithSubscription(stripe, order, subscriptionId, today, supabaseUrl, supabaseKey) {
+    // Fetch subscription status from Stripe
+    let subscription;
+    try {
+        subscription = await stripe.subscriptions.retrieve(subscriptionId);
+    } catch (err) {
+        // Subscription might be deleted
+        if (err.code === 'resource_missing') {
+            order.stripe_subscription_status = 'canceled';
+            order.stripe_amount_received = 0;
+            if (order.order_status !== 'cancelled') {
+                await updateOrderStatus(supabaseUrl, supabaseKey, order.id, 'cancelled');
+                order.order_status = 'cancelled';
+            }
+            // Still try to get invoices total
+            try {
+                const invoices = await stripe.invoices.list({
+                    subscription: subscriptionId,
+                    status: 'paid',
+                    limit: 100,
+                });
+                order.stripe_amount_received = invoices.data.reduce((sum, inv) => sum + inv.amount_paid, 0);
+            } catch (_) {}
+            return order;
+        }
+        throw err;
+    }
+
+    order.stripe_subscription_status = subscription.status;
+
+    // Determine correct order_status based on Stripe
+    if (subscription.status === 'canceled' || subscription.status === 'unpaid' || subscription.status === 'incomplete_expired') {
+        if (order.order_status !== 'cancelled') {
+            await updateOrderStatus(supabaseUrl, supabaseKey, order.id, 'cancelled');
+            order.order_status = 'cancelled';
+        }
+    } else if (subscription.status === 'active' || subscription.status === 'trialing') {
+        // Check if receipt was uploaded today
+        const lastUpdate = order.updated_at ? order.updated_at.split('T')[0] : null;
+        const hasReceiptToday = order.receipt_url && lastUpdate === today && order.order_status === 'complete_for_day';
+
+        if (hasReceiptToday) {
+            // Keep complete_for_day
+        } else if (order.order_status !== 'active_missing_receipt') {
+            await updateOrderStatus(supabaseUrl, supabaseKey, order.id, 'active_missing_receipt');
+            order.order_status = 'active_missing_receipt';
+        }
+    }
+
+    // Get total amount paid from Stripe invoices
+    try {
+        const invoices = await stripe.invoices.list({
+            subscription: subscriptionId,
+            status: 'paid',
+            limit: 100,
+        });
+        order.stripe_amount_received = invoices.data.reduce((sum, inv) => sum + inv.amount_paid, 0);
+        order.stripe_days_paid = invoices.data.length;
+    } catch (err) {
+        console.error('Error fetching invoices:', err.message);
+        order.stripe_amount_received = order.amount || 0;
+    }
+
+    return order;
+}
+
+async function updateOrderStatus(supabaseUrl, supabaseKey, orderId, status) {
+    await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+        },
+        body: JSON.stringify({
+            order_status: status,
+            updated_at: new Date().toISOString(),
+        }),
+    });
 }

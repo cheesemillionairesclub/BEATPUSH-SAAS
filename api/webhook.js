@@ -4,6 +4,8 @@ export const config = {
     api: { bodyParser: false },
 };
 
+const SUPABASE_URL = 'https://wrdbhyypbpppzrtyacvw.supabase.co';
+
 async function getRawBody(req) {
     return new Promise((resolve, reject) => {
         const chunks = [];
@@ -13,8 +15,19 @@ async function getRawBody(req) {
     });
 }
 
+async function supabaseFetch(path, serviceKey, options = {}) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+        ...options,
+        headers: {
+            'apikey': serviceKey,
+            'Authorization': `Bearer ${serviceKey}`,
+            ...(options.headers || {}),
+        },
+    });
+    return res;
+}
+
 async function saveOrderToSupabase(session, metadata) {
-    const SUPABASE_URL = 'https://wrdbhyypbpppzrtyacvw.supabase.co';
     const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!SUPABASE_SERVICE_KEY) {
@@ -26,14 +39,9 @@ async function saveOrderToSupabase(session, metadata) {
 
     // Check if order already exists (idempotency)
     try {
-        const checkRes = await fetch(
-            `${SUPABASE_URL}/rest/v1/orders?stripe_session_id=eq.${session.id}&select=id`,
-            {
-                headers: {
-                    'apikey': SUPABASE_SERVICE_KEY,
-                    'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
-                },
-            }
+        const checkRes = await supabaseFetch(
+            `orders?stripe_session_id=eq.${session.id}&select=id`,
+            SUPABASE_SERVICE_KEY
         );
         const existing = await checkRes.json();
         if (existing && existing.length > 0) {
@@ -44,19 +52,21 @@ async function saveOrderToSupabase(session, metadata) {
         console.error('Error checking existing order:', err.message);
     }
 
+    // For subscriptions, store the subscription ID in stripe_payment_intent
+    // (this field is null for subscription sessions, so we reuse it)
+    const stripeRef = session.payment_intent || session.subscription || null;
+
     // Insert new order
     try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+        const response = await supabaseFetch('orders', SUPABASE_SERVICE_KEY, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'apikey': SUPABASE_SERVICE_KEY,
-                'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
                 'Prefer': 'return=representation',
             },
             body: JSON.stringify({
                 stripe_session_id: session.id,
-                stripe_payment_intent: session.payment_intent || null,
+                stripe_payment_intent: stripeRef,
                 customer_email: customerEmail || null,
                 pack: metadata.pack || '',
                 amount: session.amount_total || 0,
@@ -68,7 +78,7 @@ async function saveOrderToSupabase(session, metadata) {
                 genre: metadata.genre || '',
                 similar_artists: metadata.similar_artists ? metadata.similar_artists.split(',').map(s => s.trim()) : [],
                 release_status: metadata.release_status || '',
-                order_status: 'in_progress',
+                order_status: metadata.pack === 'daily-push' ? 'active_missing_receipt' : 'in_progress',
             }),
         });
 
@@ -84,6 +94,98 @@ async function saveOrderToSupabase(session, metadata) {
     } catch (err) {
         console.error('Failed to save order to Supabase:', err.message);
         return null;
+    }
+}
+
+// Handle recurring invoice payment for a subscription
+async function handleInvoicePaid(invoice) {
+    const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!SUPABASE_SERVICE_KEY) return;
+
+    const subscriptionId = invoice.subscription;
+    if (!subscriptionId) return;
+
+    // Skip the first invoice (already handled by checkout.session.completed)
+    if (invoice.billing_reason === 'subscription_create') {
+        console.log('Skipping first invoice for subscription:', subscriptionId);
+        return;
+    }
+
+    console.log('=== SUBSCRIPTION RENEWAL PAYMENT ===');
+    console.log('Subscription ID:', subscriptionId);
+    console.log('Amount:', invoice.amount_paid);
+    console.log('====================================');
+
+    // Find the order by stripe_payment_intent (which stores subscription ID for daily push)
+    try {
+        const checkRes = await supabaseFetch(
+            `orders?stripe_payment_intent=eq.${subscriptionId}&pack=eq.daily-push&select=*`,
+            SUPABASE_SERVICE_KEY
+        );
+        const orders = await checkRes.json();
+        if (!orders || !orders.length) {
+            console.log('No order found for subscription:', subscriptionId);
+            return;
+        }
+
+        const order = orders[0];
+        const today = new Date().toISOString().split('T')[0];
+        const lastUpdate = order.updated_at ? order.updated_at.split('T')[0] : null;
+
+        // If receipt was already uploaded today, keep complete_for_day status
+        if (order.order_status === 'complete_for_day' && lastUpdate === today) {
+            console.log('Receipt already uploaded today for subscription:', subscriptionId);
+            return;
+        }
+
+        // New payment day, receipt not yet sent -> mark as missing receipt
+        await supabaseFetch(`orders?id=eq.${order.id}`, SUPABASE_SERVICE_KEY, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                order_status: 'active_missing_receipt',
+                updated_at: new Date().toISOString(),
+            }),
+        });
+        console.log('Order marked as active_missing_receipt:', order.id);
+    } catch (err) {
+        console.error('Error handling invoice.paid:', err.message);
+    }
+}
+
+// Handle subscription cancellation
+async function handleSubscriptionDeleted(subscription) {
+    const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!SUPABASE_SERVICE_KEY) return;
+
+    const subscriptionId = subscription.id;
+
+    console.log('=== SUBSCRIPTION CANCELLED ===');
+    console.log('Subscription ID:', subscriptionId);
+    console.log('==============================');
+
+    try {
+        const checkRes = await supabaseFetch(
+            `orders?stripe_payment_intent=eq.${subscriptionId}&pack=eq.daily-push&select=id`,
+            SUPABASE_SERVICE_KEY
+        );
+        const orders = await checkRes.json();
+        if (!orders || !orders.length) {
+            console.log('No order found for cancelled subscription:', subscriptionId);
+            return;
+        }
+
+        await supabaseFetch(`orders?id=eq.${orders[0].id}`, SUPABASE_SERVICE_KEY, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                order_status: 'cancelled',
+                updated_at: new Date().toISOString(),
+            }),
+        });
+        console.log('Order marked as cancelled:', orders[0].id);
+    } catch (err) {
+        console.error('Error handling subscription.deleted:', err.message);
     }
 }
 
@@ -122,6 +224,9 @@ export default async function handler(req, res) {
         console.log('Amount:', session.amount_total, session.currency);
         console.log('Pack:', metadata.pack);
         console.log('Track:', metadata.track_title, '-', metadata.track_artist);
+        if (session.subscription) {
+            console.log('Subscription ID:', session.subscription);
+        }
         console.log('=======================');
 
         // Save order to Supabase
@@ -138,6 +243,10 @@ export default async function handler(req, res) {
                 console.error('Failed to set receipt_email:', err.message);
             }
         }
+    } else if (event.type === 'invoice.paid') {
+        await handleInvoicePaid(event.data.object);
+    } else if (event.type === 'customer.subscription.deleted') {
+        await handleSubscriptionDeleted(event.data.object);
     }
 
     res.status(200).json({ received: true });
