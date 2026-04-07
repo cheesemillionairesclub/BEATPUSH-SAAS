@@ -317,8 +317,8 @@ export default async function handler(req, res) {
     const chatId = message.chat.id;
     const allowedChatId = process.env.TELEGRAM_CHAT_ID;
 
-    // Log incoming chat for debugging
-    console.log(`Telegram webhook: chat_id=${chatId}, command=${message.text?.split(' ')[0]}, allowed=${allowedChatId}`);
+    // Log incoming update for debugging
+    console.log(`Telegram webhook: type=${update?.message ? 'message' : 'channel_post'}, chat_id=${chatId}, text="${message.text}", allowed=${allowedChatId}`);
 
     const text = message.text.trim();
     // Strip @botname suffix from commands (e.g. /help@BeatPushBot → /help)
@@ -403,6 +403,11 @@ export default async function handler(req, res) {
       }
 
       default: {
+        // If it looks like a command but wasn't matched, reply with help
+        if (text.startsWith('/')) {
+          responseText = `❓ Commande inconnue: <b>${command}</b>\n\nTape /help pour voir les commandes disponibles.`;
+          break;
+        }
         // Ignore non-command messages
         return res.status(200).json({ ok: true });
       }
