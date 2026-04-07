@@ -3,6 +3,14 @@
 
 const TELEGRAM_API = 'https://api.telegram.org/bot';
 
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .substring(0, 200);
+}
+
 async function sendTelegramMessage(text, chatId, botToken, parseMode = 'HTML') {
   // Telegram max message length is 4096
   const chunks = splitMessage(text, 4096);
@@ -104,7 +112,7 @@ export function buildDailyReport(data) {
       report += `\n   📅 Mois : ${formatCurrency(mm.totalSpend)} dépensé | ${formatCurrency(mm.totalRevenue)} CA | ${mm.totalConversions} conv\n`;
     }
   } else {
-    report += `⚠️ ${meta?.message || meta?.error || 'Non connecté'}\n`;
+    report += `⚠️ ${escapeHtml(meta?.message || meta?.error || 'Non connecté')}\n`;
   }
 
   // ━━ GOOGLE ADS ━━━━━━━━━━━━━━
@@ -138,7 +146,7 @@ export function buildDailyReport(data) {
       report += `\n   📅 Mois : ${formatCurrency(gm.totalSpend)} dépensé | ${formatCurrency(gm.totalRevenue)} CA | ${gm.totalConversions} conv\n`;
     }
   } else {
-    report += `⚠️ ${google?.message || google?.error || 'Non connecté'}\n`;
+    report += `⚠️ ${escapeHtml(google?.message || google?.error || 'Non connecté')}\n`;
   }
 
   // ━━ COMMANDES / CA ━━━━━━━━━━━━
@@ -236,7 +244,7 @@ export function buildAdsResponse(data) {
     msg += `📘 <b>Meta Ads (hier)</b>\n`;
     msg += `   Dépensé: ${formatCurrency(mt?.totalSpend || 0)} | Conv: ${mt?.totalConversions || 0} | ROAS: ${mt?.totalSpend > 0 ? ((mt?.totalRevenue || 0) / mt.totalSpend).toFixed(1) : '0'}x\n\n`;
   } else {
-    msg += `📘 Meta Ads: Non connecté\n\n`;
+    msg += `📘 Meta Ads: ${meta?.error ? escapeHtml(meta.error) : 'Non connecté'}\n\n`;
   }
 
   if (google?.available) {
@@ -244,7 +252,7 @@ export function buildAdsResponse(data) {
     msg += `🔍 <b>Google Ads (hier)</b>\n`;
     msg += `   Dépensé: ${formatCurrency(gt?.totalSpend || 0)} | Conv: ${gt?.totalConversions || 0} | ROAS: ${gt?.totalSpend > 0 ? ((gt?.totalRevenue || 0) / gt.totalSpend).toFixed(1) : '0'}x\n`;
   } else {
-    msg += `🔍 Google Ads: Non connecté\n`;
+    msg += `🔍 Google Ads: ${google?.error ? escapeHtml(google.error) : 'Non connecté'}\n`;
   }
 
   return msg;
