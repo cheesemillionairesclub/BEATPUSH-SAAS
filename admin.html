@@ -406,11 +406,9 @@
             const oneTimeOrders = orders.filter(o => o.pack !== 'daily-push');
             const subs = orders.filter(o => o.pack === 'daily-push');
             const activeSubs = subs.filter(o => o.order_status !== 'cancelled');
-            const missingSubs = subs.filter(o => o.order_status === 'active_missing_receipt');
 
             const totalOrders = oneTimeOrders.length;
             const inProgress = oneTimeOrders.filter(o => o.order_status === 'in_progress').length;
-            const completed = oneTimeOrders.filter(o => o.order_status === 'completed').length;
 
             // Use Stripe amounts
             const oneTimeRevenue = oneTimeOrders.reduce((sum, o) => sum + (o.stripe_amount_received || o.amount || 0), 0);
@@ -420,9 +418,7 @@
             document.getElementById('adminStats').innerHTML = `
                 <div class="admin-stat"><div class="admin-stat-label">Commandes</div><div class="admin-stat-value">${totalOrders}</div></div>
                 <div class="admin-stat"><div class="admin-stat-label">In Progress</div><div class="admin-stat-value">${inProgress}</div></div>
-                <div class="admin-stat"><div class="admin-stat-label">Completed</div><div class="admin-stat-value">${completed}</div></div>
                 <div class="admin-stat"><div class="admin-stat-label">Abonnements actifs</div><div class="admin-stat-value" style="color:#00b0ff">${activeSubs.length}</div></div>
-                <div class="admin-stat"><div class="admin-stat-label">Receipts manquants</div><div class="admin-stat-value" style="color:#ff9800">${missingSubs.length}</div></div>
                 <div class="admin-stat"><div class="admin-stat-label">Revenue (Stripe)</div><div class="admin-stat-value">$${(totalRevenue / 100).toLocaleString()}<div class="sub-revenue">Commandes: $${(oneTimeRevenue / 100).toLocaleString()} | Subs: $${(subsRevenue / 100).toLocaleString()}</div></div></div>
             `;
         }
