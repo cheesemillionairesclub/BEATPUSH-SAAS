@@ -408,15 +408,19 @@ export default async function handler(req, res) {
     }
 
     if (responseText) {
-      await sendReport(responseText, chatId);
+      // Always send to the configured channel
+      await sendReport(responseText);
+      // Also reply in the sender's chat if it's different from the configured channel
+      if (allowedChatId && String(chatId) !== String(allowedChatId)) {
+        await sendReport(responseText, chatId);
+      }
     }
 
     return res.status(200).json({ ok: true });
   } catch (error) {
     console.error('Telegram webhook error:', error);
     try {
-      const errorChatId = update?.message?.chat?.id;
-      await sendReport(`🚨 <b>Erreur commande</b>\n\n${error.message}`, errorChatId);
+      await sendReport(`🚨 <b>Erreur commande</b>\n\n${error.message}`);
     } catch (e) {
       console.error('Failed to send error:', e);
     }
