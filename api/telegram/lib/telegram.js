@@ -281,9 +281,9 @@ Commandes disponibles :
 📊 Rapport automatique quotidien à 20h00 (Paris).`;
 }
 
-export async function sendReport(text) {
+export async function sendReport(text, overrideChatId) {
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
+  const chatId = overrideChatId || process.env.TELEGRAM_CHAT_ID;
 
   if (!botToken || !chatId) {
     throw new Error('TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID are required');

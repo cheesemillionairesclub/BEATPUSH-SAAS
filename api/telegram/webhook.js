@@ -316,14 +316,14 @@ export default async function handler(req, res) {
     const chatId = message.chat.id;
     const allowedChatId = process.env.TELEGRAM_CHAT_ID;
 
-    // Only respond to the configured chat/channel
-    if (allowedChatId && String(chatId) !== String(allowedChatId)) {
-      return res.status(200).json({ ok: true });
-    }
+    // Log incoming chat for debugging
+    console.log(`Telegram webhook: chat_id=${chatId}, command=${message.text?.split(' ')[0]}, allowed=${allowedChatId}`);
 
     const text = message.text.trim();
-    const command = text.toLowerCase().split(' ')[0];
-    const args = text.substring(command.length).trim();
+    // Strip @botname suffix from commands (e.g. /help@BeatPushBot → /help)
+    const rawCommand = text.toLowerCase().split(' ')[0];
+    const command = rawCommand.split('@')[0];
+    const args = text.substring(rawCommand.length).trim();
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     let responseText = '';
@@ -408,14 +408,15 @@ export default async function handler(req, res) {
     }
 
     if (responseText) {
-      await sendReport(responseText);
+      await sendReport(responseText, chatId);
     }
 
     return res.status(200).json({ ok: true });
   } catch (error) {
     console.error('Telegram webhook error:', error);
     try {
-      await sendReport(`🚨 <b>Erreur commande</b>\n\n${error.message}`);
+      const errorChatId = update?.message?.chat?.id;
+      await sendReport(`🚨 <b>Erreur commande</b>\n\n${error.message}`, errorChatId);
     } catch (e) {
       console.error('Failed to send error:', e);
     }
