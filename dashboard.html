@@ -172,9 +172,12 @@
                 </div>`;
             }).join('');
 
-            const isCompleted = order.order_status === 'completed';
-            const statusClass = isCompleted ? 'status-completed' : 'status-progress';
-            const statusText = isCompleted ? (t.dashboard_status_completed || 'Completed') : (t.dashboard_status_progress || 'In Progress');
+            const isCompleted = order.order_status === 'completed' || order.order_status === 'complete_for_day';
+            const isCancelled = order.order_status === 'cancelled';
+            const statusClass = isCompleted ? 'status-completed' : (isCancelled ? 'status-cancelled' : 'status-progress');
+            const statusText = isCompleted
+                ? (order.pack === 'daily-push' ? (t.dashboard_status_complete_day || 'Complete for the day') : (t.dashboard_status_completed || 'Completed'))
+                : (isCancelled ? (t.dashboard_status_cancelled || 'Cancelled') : (t.dashboard_status_progress || 'In Progress'));
             const packLabel = order.pack === 'daily-push' ? 'Daily Push' : `${order.pack} Copies`;
             const receiptDisabled = !order.receipt_url;
 
