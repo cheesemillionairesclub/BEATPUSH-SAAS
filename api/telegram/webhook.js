@@ -20,6 +20,15 @@ function formatCurrency(amount) {
   return `$${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 }
 
+// Escape HTML entities to prevent Telegram parse errors
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .substring(0, 200); // Truncate long error messages
+}
+
 // Build /status response — all campaigns from both platforms
 async function buildStatusResponse() {
   const [metaCampaigns, googleCampaigns] = await Promise.all([
@@ -32,7 +41,7 @@ async function buildStatusResponse() {
   // Meta
   msg += `📘 <b>Meta Ads</b>\n`;
   if (metaCampaigns.error) {
-    msg += `   ⚠️ ${metaCampaigns.error}\n`;
+    msg += `   ⚠️ ${escapeHtml(metaCampaigns.error)}\n`;
   } else if (Array.isArray(metaCampaigns) && metaCampaigns.length > 0) {
     for (const c of metaCampaigns) {
       const statusIcon = c.status === 'ACTIVE' ? '🟢' : c.status === 'PAUSED' ? '🟡' : '⚪';
@@ -47,7 +56,7 @@ async function buildStatusResponse() {
   // Google
   msg += `\n🔍 <b>Google Ads</b>\n`;
   if (googleCampaigns.error) {
-    msg += `   ⚠️ ${googleCampaigns.error}\n`;
+    msg += `   ⚠️ ${escapeHtml(googleCampaigns.error)}\n`;
   } else if (Array.isArray(googleCampaigns) && googleCampaigns.length > 0) {
     for (const c of googleCampaigns) {
       const statusIcon = c.status === 'ENABLED' ? '🟢' : c.status === 'PAUSED' ? '🟡' : '⚪';
@@ -78,7 +87,7 @@ async function buildSpendResponse() {
   // Meta
   msg += `📘 <b>Meta Ads</b>\n`;
   if (metaSpend.error) {
-    msg += `   ⚠️ ${metaSpend.error}\n`;
+    msg += `   ⚠️ ${escapeHtml(metaSpend.error)}\n`;
   } else {
     grandTotalSpend += metaSpend.totalSpend || 0;
     grandTotalRevenue += metaSpend.totalRevenue || 0;
@@ -97,7 +106,7 @@ async function buildSpendResponse() {
   // Google
   msg += `\n🔍 <b>Google Ads</b>\n`;
   if (googleSpend.error) {
-    msg += `   ⚠️ ${googleSpend.error}\n`;
+    msg += `   ⚠️ ${escapeHtml(googleSpend.error)}\n`;
   } else {
     grandTotalSpend += googleSpend.totalSpend || 0;
     grandTotalRevenue += googleSpend.totalRevenue || 0;
@@ -426,7 +435,7 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('Telegram webhook error:', error);
     try {
-      await sendReport(`🚨 <b>Erreur commande</b>\n\n${error.message}`);
+      await sendReport(`🚨 <b>Erreur commande</b>\n\n${escapeHtml(error.message)}`);
     } catch (e) {
       console.error('Failed to send error:', e);
     }
