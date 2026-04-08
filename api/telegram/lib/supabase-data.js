@@ -158,7 +158,7 @@ export async function collectSupabaseData(serviceKey) {
       byGenre,
       byStatus,
       orders,
-      activeDailyPushSubs: activeDailyPushSubs.filter(s => s.order_status === 'in_progress').length,
+      activeDailyPushSubs: activeDailyPushSubs.filter(s => s.order_status === 'active_missing_receipt' || s.order_status === 'complete_for_day').length,
     };
   };
 

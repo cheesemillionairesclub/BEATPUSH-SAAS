@@ -405,7 +405,13 @@
         function renderStats(orders) {
             const oneTimeOrders = orders.filter(o => o.pack !== 'daily-push');
             const subs = orders.filter(o => o.pack === 'daily-push');
-            const activeSubs = subs.filter(o => o.order_status !== 'cancelled');
+            const activeSubs = subs.filter(o => {
+                // Use Stripe status when available, fallback to DB status
+                if (o.stripe_subscription_status) {
+                    return o.stripe_subscription_status === 'active' || o.stripe_subscription_status === 'trialing';
+                }
+                return o.order_status !== 'cancelled' && o.order_status !== 'completed';
+            });
 
             const totalOrders = oneTimeOrders.length;
             const inProgress = oneTimeOrders.filter(o => o.order_status === 'in_progress').length;

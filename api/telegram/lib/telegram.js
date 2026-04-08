@@ -100,6 +100,18 @@ function calcStripeRevenue(orders, stripeData) {
   return { oneTimeTotal, subsTotal, total: oneTimeTotal + subsTotal };
 }
 
+// Check if a subscription is truly active (using Stripe data when available)
+function isSubActive(order, stripeData) {
+  if (stripeData?.available) {
+    const subData = stripeData.subscriptions?.[order.id];
+    if (subData) {
+      return subData.status === 'active' || subData.status === 'trialing';
+    }
+  }
+  // Fallback to DB status
+  return order.order_status !== 'cancelled' && order.order_status !== 'completed';
+}
+
 // Get subscription status label for Telegram
 function getSubStatusLabel(order, stripeData) {
   if (stripeData?.available) {
@@ -227,7 +239,7 @@ export function buildDailyReport(data) {
   // Daily Push subscriptions detail
   const dailyPushSubs = (s.allDailyPushSubs || []);
   if (dailyPushSubs.length > 0) {
-    const activeSubs = dailyPushSubs.filter(o => o.order_status !== 'cancelled');
+    const activeSubs = dailyPushSubs.filter(o => isSubActive(o, stripe));
     const missingSubs = dailyPushSubs.filter(o => o.order_status === 'active_missing_receipt');
 
     report += `\n   🔄 <b>Abonnements Daily Push ($55/j)</b>\n`;
@@ -370,7 +382,7 @@ export function buildRevenueResponse(supabase, stripeData) {
   // Daily Push detail
   const dailyPushSubs = supabase.allDailyPushSubs || [];
   if (dailyPushSubs.length > 0) {
-    const activeSubs = dailyPushSubs.filter(o => o.order_status !== 'cancelled');
+    const activeSubs = dailyPushSubs.filter(o => isSubActive(o, stripeData));
     const missingSubs = dailyPushSubs.filter(o => o.order_status === 'active_missing_receipt');
 
     msg += `\n🔄 <b>Abonnements Daily Push ($55/j)</b>\n`;
