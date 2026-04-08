@@ -4,12 +4,14 @@
 import { collectSupabaseData } from './lib/supabase-data.js';
 import { collectMetaAdsData } from './lib/meta-ads.js';
 import { collectGoogleAdsData } from './lib/google-ads.js';
+import { collectGA4Data } from './lib/google-analytics.js';
 import { collectStripeData } from './lib/stripe-data.js';
 import { analyzeWithClaude } from './lib/brain.js';
 import {
   buildDailyReport,
   buildAdsResponse,
   buildRevenueResponse,
+  buildSiteResponse,
   buildHelpResponse,
   sendReport,
 } from './lib/telegram.js';
@@ -290,6 +292,7 @@ function buildExtendedHelpResponse() {
 
 ━━ 📊 RAPPORTS ━━━━━━━━━━━━━━
 /ads — Vue globale campagnes (Meta + Google)
+/site — Analytics site (visiteurs, pays, rebond)
 /spend — Dépenses en temps réel aujourd'hui
 /ca — Chiffre d'affaires et commandes
 /clients — Nouveaux clients, funnel, activité
@@ -356,15 +359,22 @@ export default async function handler(req, res) {
         break;
       }
 
+      case '/site': {
+        const ga4 = await collectGA4Data();
+        responseText = buildSiteResponse(ga4);
+        break;
+      }
+
       case '/report': {
-        const [supabase, meta, google] = await Promise.all([
+        const [supabase, meta, google, ga4] = await Promise.all([
           collectSupabaseData(serviceKey),
           collectMetaAdsData(),
           collectGoogleAdsData(),
+          collectGA4Data(),
         ]);
         const stripeData = await collectStripeData(supabase.allOrders || []);
-        const analysis = await analyzeWithClaude({ supabase, meta, google });
-        responseText = buildDailyReport({ supabase, meta, google, analysis, stripe: stripeData });
+        const analysis = await analyzeWithClaude({ supabase, meta, google, ga4 });
+        responseText = buildDailyReport({ supabase, meta, google, ga4, analysis, stripe: stripeData });
         break;
       }
 

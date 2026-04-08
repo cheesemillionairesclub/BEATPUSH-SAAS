@@ -77,6 +77,7 @@ export const CONFIG = {
     timezone: 'Europe/Paris',
     commands: [
       { command: 'ads', description: 'Vue globale des campagnes' },
+      { command: 'site', description: 'Analytics site (visiteurs, pays, rebond)' },
       { command: 'spend', description: 'Dépenses temps réel' },
       { command: 'ca', description: 'Chiffre d\'affaires' },
       { command: 'clients', description: 'Nouveaux clients et funnel' },

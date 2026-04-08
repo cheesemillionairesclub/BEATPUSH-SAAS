@@ -36,6 +36,14 @@ export function checkEnvironment() {
         SUPABASE_SERVICE_ROLE_KEY: { required: true, hint: 'Supabase Dashboard > Settings > API > service_role' },
       },
     },
+    ga4: {
+      label: 'Google Analytics 4',
+      vars: {
+        GA4_PROPERTY_ID: { required: true, hint: 'GA4 Property ID (ex: 123456789) — analytics.google.com > Admin > Property Settings' },
+        GA4_CLIENT_EMAIL: { required: true, hint: 'Service account email — Google Cloud Console > IAM > Service Accounts' },
+        GA4_PRIVATE_KEY: { required: true, hint: 'Service account private key (PEM) — téléchargé en JSON lors de la création' },
+      },
+    },
     claude: {
       label: 'Claude AI (analyse)',
       vars: {

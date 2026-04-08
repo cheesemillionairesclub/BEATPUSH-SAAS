@@ -24,6 +24,9 @@ RÈGLES D'ANALYSE :
 4. Priorise les insights actionnables, pas les évidences
 5. Si les données Ads ne sont pas disponibles, analyse les données Supabase (commandes, tendances)
 6. Sois direct et concret — pas de blabla
+7. Si les données GA4 sont disponibles, analyse le trafic site (visiteurs, pays, rebond, sources) et corrèle avec les campagnes Ads
+8. Un taux de rebond > 70% est préoccupant, < 40% est excellent
+9. Identifie les pays à fort trafic mais faible conversion (opportunité ou gaspillage)
 
 RÉPONSE FORMAT JSON :
 {
@@ -35,6 +38,7 @@ RÉPONSE FORMAT JSON :
   "recommendations": ["Action recommandée 1", "Action recommandée 2"],
   "meta_analysis": "Analyse spécifique Meta Ads (ou 'Non disponible')",
   "google_analysis": "Analyse spécifique Google Ads (ou 'Non disponible')",
+  "site_analysis": "Analyse trafic site — visiteurs, pays, rebond, sources (ou 'Non disponible')",
   "revenue_analysis": "Analyse CA et tendances commandes"
 }`;
 
@@ -85,7 +89,7 @@ Réponds UNIQUEMENT en JSON valide.`;
 
 // Fallback when Claude API is not available
 function generateFallbackAnalysis(data) {
-  const { supabase, meta, google } = data;
+  const { supabase, meta, google, ga4 } = data;
   const todayRevenue = supabase?.today?.revenue || 0;
   const yesterdayRevenue = supabase?.yesterday?.revenue || 0;
   const monthRevenue = supabase?.month?.revenue || 0;
@@ -101,6 +105,7 @@ function generateFallbackAnalysis(data) {
   if (monthOrders > 10) score += 10;
   if (meta?.available && meta.yesterday?.totals?.totalConversions > 0) score += 10;
   if (google?.available && google.yesterday?.totals?.totalConversions > 0) score += 10;
+  if (ga4?.available && ga4.yesterday?.users > 0) score += 5;
   score = Math.min(score, 100);
 
   const highlights = [];
@@ -108,9 +113,11 @@ function generateFallbackAnalysis(data) {
 
   if (todayOrders > 0) highlights.push(`${todayOrders} commande(s) aujourd'hui ($${todayRevenue})`);
   if (monthRevenue > 0) highlights.push(`$${monthRevenue} CA ce mois (${monthOrders} commandes)`);
+  if (ga4?.available && ga4.yesterday) highlights.push(`${ga4.yesterday.users} visiteurs hier sur le site`);
   if (todayOrders === 0) warnings.push('Aucune commande aujourd\'hui');
   if (!meta?.available) warnings.push('Meta Ads non connecté');
   if (!google?.available) warnings.push('Google Ads non connecté');
+  if (ga4?.available && ga4.yesterday?.bounceRate > 0.7) warnings.push(`Taux de rebond élevé : ${(ga4.yesterday.bounceRate * 100).toFixed(0)}%`);
 
   return {
     health_score: score,
@@ -121,10 +128,12 @@ function generateFallbackAnalysis(data) {
     recommendations: [
       !meta?.available ? 'Connecter Meta Ads API pour le suivi des campagnes' : null,
       !google?.available ? 'Connecter Google Ads API pour le suivi des campagnes' : null,
+      !ga4?.available ? 'Connecter GA4 pour le suivi du trafic site' : null,
       todayOrders === 0 ? 'Vérifier les campagnes actives et le budget' : null,
     ].filter(Boolean),
     meta_analysis: meta?.available ? 'Données disponibles' : 'Non connecté — configurer META_ADS_ACCESS_TOKEN et META_ADS_ACCOUNT_ID',
     google_analysis: google?.available ? 'Données disponibles' : 'Non connecté — configurer les credentials Google Ads',
+    site_analysis: ga4?.available ? `${ga4.yesterday?.users || 0} visiteurs hier, ${(ga4.yesterday?.bounceRate * 100 || 0).toFixed(0)}% rebond` : 'Non connecté — configurer GA4_PROPERTY_ID, GA4_CLIENT_EMAIL, GA4_PRIVATE_KEY',
     revenue_analysis: `CA jour: $${todayRevenue} | CA mois: $${monthRevenue}`,
   };
 }

@@ -5,6 +5,7 @@
 import { collectSupabaseData } from './lib/supabase-data.js';
 import { collectMetaAdsData } from './lib/meta-ads.js';
 import { collectGoogleAdsData } from './lib/google-ads.js';
+import { collectGA4Data } from './lib/google-analytics.js';
 import { collectStripeData } from './lib/stripe-data.js';
 import { analyzeWithClaude } from './lib/brain.js';
 import { buildDailyReport, sendReport } from './lib/telegram.js';
@@ -32,20 +33,21 @@ export default async function handler(req, res) {
     }
 
     // Collect all data in parallel
-    const [supabase, meta, google] = await Promise.all([
+    const [supabase, meta, google, ga4] = await Promise.all([
       collectSupabaseData(serviceKey),
       collectMetaAdsData(),
       collectGoogleAdsData(),
+      collectGA4Data(),
     ]);
 
     // Enrich with Stripe data (real amounts and subscription statuses)
     const stripeData = await collectStripeData(supabase.allOrders || []);
 
     // Analyze with Claude AI
-    const analysis = await analyzeWithClaude({ supabase, meta, google });
+    const analysis = await analyzeWithClaude({ supabase, meta, google, ga4 });
 
     // Build the report
-    const report = buildDailyReport({ supabase, meta, google, analysis, stripe: stripeData });
+    const report = buildDailyReport({ supabase, meta, google, ga4, analysis, stripe: stripeData });
 
     // Send to Telegram
     await sendReport(report);
@@ -58,6 +60,7 @@ export default async function handler(req, res) {
       revenue_today: supabase.today.revenue,
       meta_available: meta.available || false,
       google_available: google.available || false,
+      ga4_available: ga4.available || false,
     });
   } catch (error) {
     console.error('Daily report error:', error);
