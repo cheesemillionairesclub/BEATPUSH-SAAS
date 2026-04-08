@@ -227,16 +227,12 @@ export function buildDailyReport(data) {
     report += `👥 Visiteurs hier : <b>${y.users}</b> (${y.newUsers} nouveaux)\n`;
     report += `📄 Sessions : ${y.sessions} | Pages vues : ${y.pageViews}\n`;
     report += `📊 Rebond : ${bounceStr}% | Durée moy : ${avgDuration}s\n`;
-    if (y.conversions > 0) {
-      report += `🎯 Conversions : ${y.conversions}\n`;
-    }
 
     // Top countries
     if (ga4.countries?.length > 0) {
       report += `\n   🌍 <b>Top pays :</b>\n`;
       for (const c of ga4.countries.slice(0, 5)) {
-        const convStr = c.conversions > 0 ? ` | ${c.conversions} conv` : '';
-        report += `   • ${c.country} — ${c.users} visiteurs, ${c.sessions} sessions${convStr}\n`;
+        report += `   • ${c.country} — ${c.users} visiteurs, ${c.sessions} sessions\n`;
       }
     }
 
@@ -244,9 +240,8 @@ export function buildDailyReport(data) {
     if (ga4.sources?.length > 0) {
       report += `\n   📡 <b>Sources trafic :</b>\n`;
       for (const s of ga4.sources.slice(0, 5)) {
-        const bounce = (s.bounceRate * 100).toFixed(0);
-        const convStr = s.conversions > 0 ? ` | ${s.conversions} conv` : '';
-        report += `   • ${s.channel} — ${s.sessions} sessions (${bounce}% rebond)${convStr}\n`;
+        const bounce = ((s.bounceRate || 0) * 100).toFixed(0);
+        report += `   • ${s.channel} — ${s.sessions} sessions (${bounce}% rebond)\n`;
       }
     }
 
@@ -433,17 +428,13 @@ export function buildSiteResponse(ga4) {
     msg += `📊 Taux de rebond : ${bounceStr}%\n`;
     msg += `⏱️ Durée moyenne : ${avgDuration}s\n`;
     msg += `🎯 Sessions engagées : ${y.engagedSessions}\n`;
-    if (y.conversions > 0) {
-      msg += `🛒 Conversions : ${y.conversions}\n`;
-    }
   }
 
   // Top countries
   if (ga4.countries?.length > 0) {
     msg += `\n🌍 <b>Top pays (hier)</b>\n`;
     for (const c of ga4.countries.slice(0, 8)) {
-      const convStr = c.conversions > 0 ? ` | ${c.conversions} conv` : '';
-      msg += `   • ${c.country} — ${c.users} visiteurs, ${c.sessions} sessions${convStr}\n`;
+      msg += `   • ${c.country} — ${c.users} visiteurs, ${c.sessions} sessions\n`;
     }
   }
 
@@ -451,9 +442,8 @@ export function buildSiteResponse(ga4) {
   if (ga4.sources?.length > 0) {
     msg += `\n📡 <b>Sources de trafic (hier)</b>\n`;
     for (const s of ga4.sources) {
-      const bounce = (s.bounceRate * 100).toFixed(0);
-      const convStr = s.conversions > 0 ? ` | ${s.conversions} conv` : '';
-      msg += `   • ${s.channel} — ${s.sessions} sessions (${bounce}% rebond)${convStr}\n`;
+      const bounce = ((s.bounceRate || 0) * 100).toFixed(0);
+      msg += `   • ${s.channel} — ${s.sessions} sessions (${bounce}% rebond)\n`;
     }
   }
 
@@ -461,7 +451,7 @@ export function buildSiteResponse(ga4) {
   if (ga4.pages?.length > 0) {
     msg += `\n📄 <b>Top pages (hier)</b>\n`;
     for (const p of ga4.pages.slice(0, 8)) {
-      const bounce = (p.bounceRate * 100).toFixed(0);
+      const bounce = ((p.bounceRate || 0) * 100).toFixed(0);
       msg += `   • ${escapeHtml(p.pagePath)} — ${p.pageViews} vues (${bounce}% rebond)\n`;
     }
   }
@@ -469,13 +459,10 @@ export function buildSiteResponse(ga4) {
   // Month summary
   if (ga4.month) {
     const m = ga4.month;
-    const monthBounce = (m.bounceRate * 100).toFixed(1);
+    const monthBounce = ((m.bounceRate || 0) * 100).toFixed(1);
     msg += `\n📅 <b>Ce mois</b>\n`;
     msg += `👥 ${m.users} visiteurs (${m.newUsers} nouveaux) | ${m.sessions} sessions\n`;
     msg += `📄 ${m.pageViews} pages vues | ${monthBounce}% rebond\n`;
-    if (m.conversions > 0) {
-      msg += `🛒 ${m.conversions} conversions\n`;
-    }
   }
 
   return msg;
