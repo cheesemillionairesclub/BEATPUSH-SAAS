@@ -361,7 +361,9 @@ export default async function handler(req, res) {
 
       case '/site': {
         const ga4 = await collectGA4Data();
+        console.log('GA4 result:', JSON.stringify(ga4).substring(0, 500));
         responseText = buildSiteResponse(ga4);
+        console.log('Site response length:', responseText.length);
         break;
       }
 

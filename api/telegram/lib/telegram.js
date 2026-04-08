@@ -222,8 +222,8 @@ export function buildDailyReport(data) {
   report += `\n━━ 🌐 SITE (GA4) ━━━━━━━━━━━━━━━━\n`;
   if (ga4?.available && ga4.yesterday) {
     const y = ga4.yesterday;
-    const bounceStr = (y.bounceRate * 100).toFixed(1);
-    const avgDuration = Math.round(y.avgSessionDuration);
+    const bounceStr = ((y.bounceRate || 0) * 100).toFixed(1);
+    const avgDuration = Math.round(y.avgSessionDuration || 0);
     report += `👥 Visiteurs hier : <b>${y.users}</b> (${y.newUsers} nouveaux)\n`;
     report += `📄 Sessions : ${y.sessions} | Pages vues : ${y.pageViews}\n`;
     report += `📊 Rebond : ${bounceStr}% | Durée moy : ${avgDuration}s\n`;
@@ -255,6 +255,8 @@ export function buildDailyReport(data) {
       const m = ga4.month;
       report += `\n   📅 Mois : ${m.users} visiteurs | ${m.sessions} sessions | ${m.pageViews} pages vues\n`;
     }
+  } else if (ga4?.available) {
+    report += `📊 Connecté — données sous 24-48h\n`;
   } else {
     report += `⚠️ ${escapeHtml(ga4?.message || ga4?.error || 'Non connecté')}\n`;
   }
@@ -413,11 +415,18 @@ export function buildSiteResponse(ga4) {
     return msg;
   }
 
+  // Check if there's any data at all
+  if (!ga4.yesterday && !ga4.month) {
+    msg += `📊 GA4 connecté mais aucune donnée disponible.\n`;
+    msg += `\n💡 GA4 vient d'être activé — les premières données apparaîtront sous 24-48h.`;
+    return msg;
+  }
+
   // Yesterday overview
   if (ga4.yesterday) {
     const y = ga4.yesterday;
-    const bounceStr = (y.bounceRate * 100).toFixed(1);
-    const avgDuration = Math.round(y.avgSessionDuration);
+    const bounceStr = ((y.bounceRate || 0) * 100).toFixed(1);
+    const avgDuration = Math.round(y.avgSessionDuration || 0);
     msg += `📅 <b>Hier</b>\n`;
     msg += `👥 Visiteurs : <b>${y.users}</b> (${y.newUsers} nouveaux)\n`;
     msg += `📄 Sessions : ${y.sessions} | Pages vues : ${y.pageViews}\n`;
