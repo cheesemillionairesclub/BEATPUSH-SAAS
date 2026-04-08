@@ -77,7 +77,7 @@ export default async function handler(req, res) {
         const { error: emailError } = await resend.emails.send({
             from: process.env.RESEND_FROM_EMAIL || 'BeatPush <noreply@beatpush.com>',
             to: [recipientEmail],
-            subject: `Your BeatPush Campaign is Complete! 🎵`,
+            subject: `Your BeatPush Campaign has been updated! 🎵`,
             html: buildEmailHtml({ greeting, packLabel, order }),
         });
 
@@ -113,7 +113,7 @@ function buildEmailHtml({ greeting, packLabel, order }) {
 
         <!-- Content -->
         <div style="padding:40px 0;text-align:center;">
-            <h1 style="color:#fff;font-size:24px;font-weight:700;margin:0 0 10px;">Campaign Completed!</h1>
+            <h1 style="color:#fff;font-size:24px;font-weight:700;margin:0 0 10px;">New Receipt Available!</h1>
             <p style="color:rgba(255,255,255,0.6);font-size:16px;margin:0 0 30px;line-height:1.5;">
                 Hey ${escapeHtml(greeting)}, great news!<br>
                 Your campaign receipt is ready to download.
