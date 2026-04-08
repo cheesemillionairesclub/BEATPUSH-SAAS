@@ -159,6 +159,13 @@ export function buildDailyReport(data) {
       const mm = meta.month.totals;
       report += `\n   📅 Mois : ${formatCurrency(mm.totalSpend)} dépensé | ${formatCurrency(mm.totalRevenue)} CA | ${mm.totalConversions} conv\n`;
     }
+  } else if (meta?.available) {
+    report += `✅ Connecté | Aucune campagne active hier\n`;
+    if (meta.activeCampaigns?.length > 0) {
+      const paused = meta.activeCampaigns.filter(c => c.status === 'PAUSED').length;
+      const active = meta.activeCampaigns.filter(c => c.status === 'ACTIVE').length;
+      report += `   📋 ${active} active${active > 1 ? 's' : ''}, ${paused} en pause\n`;
+    }
   } else {
     report += `⚠️ ${escapeHtml(meta?.message || meta?.error || 'Non connecté')}\n`;
   }
@@ -193,6 +200,8 @@ export function buildDailyReport(data) {
       const gm = google.month.totals;
       report += `\n   📅 Mois : ${formatCurrency(gm.totalSpend)} dépensé | ${formatCurrency(gm.totalRevenue)} CA | ${gm.totalConversions} conv\n`;
     }
+  } else if (google?.available) {
+    report += `✅ Connecté | Aucune campagne active hier\n`;
   } else {
     report += `⚠️ ${escapeHtml(google?.message || google?.error || 'Non connecté')}\n`;
   }
