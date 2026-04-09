@@ -94,11 +94,11 @@ body {
     background: transparent;
     color: var(--green-primary);
     border: 2px solid var(--green-primary);
-    padding: 6px 18px;
+    padding: 4px 14px;
     border-radius: 6px;
     font-size: 0.95rem;
-    font-weight: 800;
-    letter-spacing: 2px;
+    font-weight: 600;
+    letter-spacing: 1px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-family: 'Inter', monospace;
