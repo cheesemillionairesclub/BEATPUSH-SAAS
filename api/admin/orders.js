@@ -60,11 +60,19 @@ export default async function handler(req, res) {
             try { body = JSON.parse(body); } catch (e) { body = {}; }
         }
 
-        const { order_id, receipt_url, order_status } = body;
+        const { order_id, receipt_url, order_status, copies_delivered } = body;
         if (!order_id) return res.status(400).json({ error: 'Missing order_id' });
 
         const updates = { updated_at: new Date().toISOString() };
         if (receipt_url !== undefined) updates.receipt_url = receipt_url;
+
+        // Allow admin to update copies_delivered for partial delivery tracking
+        if (copies_delivered !== undefined) {
+            const deliveredNum = parseInt(copies_delivered, 10);
+            if (!isNaN(deliveredNum) && deliveredNum >= 0) {
+                updates.copies_delivered = deliveredNum;
+            }
+        }
 
         // Allow admin to mark classic orders as completed
         if (order_status !== undefined) {

@@ -251,6 +251,109 @@
             font-weight: 600;
             color: var(--green-primary);
         }
+        .delivery-tracker {
+            min-width: 160px;
+        }
+        .delivery-summary {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+        }
+        .delivery-done {
+            font-weight: 700;
+            color: var(--green-primary);
+        }
+        .delivery-total {
+            color: var(--white-50);
+        }
+        .delivery-remaining {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .delivery-remaining.remaining-zero {
+            background: rgba(0, 230, 118, 0.15);
+            color: var(--green-primary);
+        }
+        .delivery-remaining.remaining-some {
+            background: rgba(255, 152, 0, 0.15);
+            color: #ff9800;
+        }
+        .delivery-remaining.remaining-all {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--white-50);
+        }
+        .delivery-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--white-10);
+            border-radius: 2px;
+            margin-bottom: 6px;
+            overflow: hidden;
+        }
+        .delivery-bar-fill {
+            height: 100%;
+            background: var(--green-primary);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        .delivery-input-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .delivery-input {
+            width: 50px;
+            padding: 4px 6px;
+            background: var(--white-05);
+            border: 1px solid var(--white-15);
+            border-radius: 4px;
+            color: var(--white);
+            font-size: 0.8rem;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+        }
+        .delivery-input:focus {
+            outline: none;
+            border-color: var(--green-primary);
+        }
+        .delivery-input::placeholder {
+            color: var(--white-30);
+        }
+        .delivery-add-btn {
+            padding: 4px 8px;
+            background: var(--green-primary);
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .delivery-add-btn:hover {
+            background: var(--green-dark);
+        }
+        .delivery-add-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .delivery-reset-btn {
+            padding: 4px 6px;
+            background: none;
+            border: 1px solid var(--white-10);
+            border-radius: 4px;
+            color: var(--white-30);
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+        .delivery-reset-btn:hover {
+            border-color: #ff5252;
+            color: #ff5252;
+        }
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
@@ -293,6 +396,7 @@
                             <th>Track</th>
                             <th>Customer</th>
                             <th>Pack</th>
+                            <th>Portage</th>
                             <th>Montant Stripe</th>
                             <th>Genre</th>
                             <th>Status</th>
@@ -301,7 +405,7 @@
                         </tr>
                     </thead>
                     <tbody id="adminOrdersBody">
-                        <tr><td colspan="9" class="admin-loading">Loading orders...</td></tr>
+                        <tr><td colspan="10" class="admin-loading">Loading orders...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -483,13 +587,18 @@
             // Render one-time orders
             const tbody = document.getElementById('adminOrdersBody');
             if (!oneTimeOrders.length) {
-                tbody.innerHTML = '<tr><td colspan="9" class="admin-loading">Aucune commande.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="10" class="admin-loading">Aucune commande.</td></tr>';
             } else {
                 tbody.innerHTML = oneTimeOrders.map(order => {
                     const packLabel = `${order.pack} Copies`;
                     const status = getStatusDisplay(order);
                     const stripeAmount = order.stripe_amount_received || order.amount || 0;
                     const isInProgress = order.order_status === 'in_progress';
+                    const totalCopies = parseInt(order.pack, 10) || 0;
+                    const delivered = order.copies_delivered || 0;
+                    const remaining = Math.max(0, totalCopies - delivered);
+                    const pct = totalCopies > 0 ? Math.min(100, Math.round((delivered / totalCopies) * 100)) : 0;
+                    const remainClass = remaining === 0 ? 'remaining-zero' : (delivered > 0 ? 'remaining-some' : 'remaining-all');
 
                     return `<tr data-order-id="${order.id}">
                         <td>${new Date(order.created_at).toLocaleDateString()}</td>
@@ -504,6 +613,23 @@
                         </td>
                         <td>${esc(order.customer_email || '-')}</td>
                         <td>${esc(packLabel)}</td>
+                        <td>
+                            <div class="delivery-tracker">
+                                <div class="delivery-summary">
+                                    <span class="delivery-done">${delivered}</span>
+                                    <span class="delivery-total">/ ${totalCopies}</span>
+                                    <span class="delivery-remaining ${remainClass}">
+                                        ${remaining === 0 ? 'Complet' : `Reste ${remaining}`}
+                                    </span>
+                                </div>
+                                <div class="delivery-bar"><div class="delivery-bar-fill" style="width:${pct}%"></div></div>
+                                <div class="delivery-input-row">
+                                    <input type="number" class="delivery-input" id="delInput_${order.id}" min="1" placeholder="+N" onkeydown="if(event.key==='Enter')addDelivery('${order.id}',${delivered},${totalCopies})">
+                                    <button class="delivery-add-btn" onclick="addDelivery('${order.id}',${delivered},${totalCopies})">+ Ajouter</button>
+                                    ${delivered > 0 ? `<button class="delivery-reset-btn" onclick="resetDelivery('${order.id}')" title="Remettre a zero">0</button>` : ''}
+                                </div>
+                            </div>
+                        </td>
                         <td><span class="stripe-amount">$${(stripeAmount / 100).toLocaleString()}</span></td>
                         <td>${esc(order.genre || '-')}</td>
                         <td><span class="status-badge ${status.class}">${status.text}</span></td>
@@ -641,6 +767,71 @@
                 }
             } catch (e) {
                 alert('Failed: ' + e.message);
+            }
+        }
+
+        async function addDelivery(orderId, currentDelivered, totalCopies) {
+            const input = document.getElementById('delInput_' + orderId);
+            const val = parseInt(input.value, 10);
+            if (!val || val <= 0) { input.focus(); return; }
+
+            const newTotal = currentDelivered + val;
+            if (newTotal > totalCopies) {
+                if (!confirm(`Attention: ${newTotal} depasse le total de ${totalCopies} copies. Continuer quand meme ?`)) return;
+            }
+
+            const token = BeatpushAuth.getToken();
+            try {
+                const res = await fetch('/api/admin/orders', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ order_id: orderId, copies_delivered: newTotal }),
+                });
+                if (res.ok) {
+                    const remaining = Math.max(0, totalCopies - newTotal);
+                    showNotification(`+${val} portage(s) ajoute(s). Total: ${newTotal}/${totalCopies} — Reste: ${remaining}`, 'success');
+                    // Reload orders
+                    const listRes = await fetch('/api/admin/orders', { headers: { 'Authorization': `Bearer ${token}` } });
+                    const orders = await listRes.json();
+                    renderStats(orders);
+                    renderOrders(orders);
+                } else {
+                    const err = await res.json();
+                    alert('Erreur: ' + (err.details || err.error));
+                }
+            } catch (e) {
+                alert('Erreur: ' + e.message);
+            }
+        }
+
+        async function resetDelivery(orderId) {
+            if (!confirm('Remettre le compteur de portage a zero ?')) return;
+
+            const token = BeatpushAuth.getToken();
+            try {
+                const res = await fetch('/api/admin/orders', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ order_id: orderId, copies_delivered: 0 }),
+                });
+                if (res.ok) {
+                    showNotification('Compteur de portage remis a zero', 'success');
+                    const listRes = await fetch('/api/admin/orders', { headers: { 'Authorization': `Bearer ${token}` } });
+                    const orders = await listRes.json();
+                    renderStats(orders);
+                    renderOrders(orders);
+                } else {
+                    const err = await res.json();
+                    alert('Erreur: ' + (err.details || err.error));
+                }
+            } catch (e) {
+                alert('Erreur: ' + e.message);
             }
         }
 
