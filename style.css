@@ -138,6 +138,10 @@ body.has-promo .navbar {
     top: 46px;
 }
 
+body.has-promo .nav-links {
+    top: 46px;
+}
+
 body.has-promo .hero,
 body.has-promo .terms-page,
 body.has-promo .dashboard-page {
@@ -167,6 +171,10 @@ body.has-promo .dashboard-page {
     }
 
     body.has-promo .navbar {
+        top: 56px;
+    }
+
+    body.has-promo .nav-links {
         top: 56px;
     }
 
