@@ -94,6 +94,8 @@
                     <a href="mailto:contact@beatpush.app">contact@beatpush.app</a>
                     <a href="https://api.whatsapp.com/send/?phone=13046603890&text=Hello!&type=phone_number&app_absent=0" target="_blank" rel="noopener">Customer Care (WhatsApp): +1 (304) 660‑3890</a>
                     <a href="termsofuse.html" id="footerTerms">Terms of Use</a>
+                    <a href="privacypolicy.html" id="footerPrivacy">Privacy Policy</a>
+                    <a href="aboutus.html" id="footerAbout">About Us</a>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -184,6 +186,8 @@ const termsTranslations = {
         footer_pricing: 'Pricing',
         footer_how: 'How it works',
         footer_terms: 'Terms of Use',
+        footer_privacy: 'Privacy Policy',
+        footer_about: 'About Us',
         footer_copy: '&copy; 2026 BeatPush. All rights reserved.',
         footer_disclaimer: 'Beatpush is an independent promotional service. Beatpush is not affiliated with Beatport.',
     },
@@ -266,6 +270,8 @@ const termsTranslations = {
         footer_pricing: 'Tarifs',
         footer_how: 'Comment ça marche',
         footer_terms: 'Conditions d\'utilisation',
+        footer_privacy: 'Politique de confidentialité',
+        footer_about: 'À propos',
         footer_copy: '&copy; 2026 BeatPush. Tous droits réservés.',
         footer_disclaimer: 'Beatpush est un service promotionnel indépendant. Beatpush n\'est pas affilié à Beatport.',
     },
@@ -348,6 +354,8 @@ const termsTranslations = {
         footer_pricing: 'Preços',
         footer_how: 'Como funciona',
         footer_terms: 'Termos de Uso',
+        footer_privacy: 'Política de Privacidade',
+        footer_about: 'Sobre Nós',
         footer_copy: '&copy; 2026 BeatPush. Todos os direitos reservados.',
         footer_disclaimer: 'Beatpush é um serviço promocional independente. Beatpush não é afiliado ao Beatport.',
     },
@@ -430,6 +438,8 @@ const termsTranslations = {
         footer_pricing: 'Precios',
         footer_how: 'Cómo funciona',
         footer_terms: 'Términos de Uso',
+        footer_privacy: 'Política de Privacidad',
+        footer_about: 'Sobre Nosotros',
         footer_copy: '&copy; 2026 BeatPush. Todos los derechos reservados.',
         footer_disclaimer: 'Beatpush es un servicio promocional independiente. Beatpush no está afiliado a Beatport.',
     },
@@ -512,6 +522,8 @@ const termsTranslations = {
         footer_pricing: 'Preise',
         footer_how: 'So funktioniert es',
         footer_terms: 'Nutzungsbedingungen',
+        footer_privacy: 'Datenschutzrichtlinie',
+        footer_about: 'Über uns',
         footer_copy: '&copy; 2026 BeatPush. Alle Rechte vorbehalten.',
         footer_disclaimer: 'Beatpush ist ein unabhängiger Promotionservice. Beatpush ist nicht mit Beatport verbunden.',
     }
@@ -530,6 +542,8 @@ function renderTerms(lang) {
     document.getElementById('footerPricing').textContent = t.footer_pricing;
     document.getElementById('footerHow').textContent = t.footer_how;
     document.getElementById('footerTerms').textContent = t.footer_terms;
+    document.getElementById('footerPrivacy').textContent = t.footer_privacy;
+    document.getElementById('footerAbout').textContent = t.footer_about;
     document.getElementById('footerCopy').innerHTML = t.footer_copy;
     document.getElementById('footerDisclaimer').textContent = t.footer_disclaimer;
 

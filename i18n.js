@@ -160,6 +160,8 @@ const translations = {
         footer_copy: '&copy; 2026 BeatPush. All rights reserved.',
         footer_disclaimer: 'Beatpush is an independent promotional service. Beatpush is not affiliated with Beatport.',
         footer_terms: 'Terms of Use',
+        footer_privacy: 'Privacy Policy',
+        footer_about: 'About Us',
     },
     fr: {
         page_title: 'Beatpush - Promotion Beatport pour DJs, producteurs et labels',
@@ -321,6 +323,8 @@ const translations = {
         footer_copy: '&copy; 2026 BeatPush. Tous droits r\u00e9serv\u00e9s.',
         footer_disclaimer: 'Beatpush est un service promotionnel indépendant. Beatpush n\'est pas affilié à Beatport.',
         footer_terms: 'Conditions d\'utilisation',
+        footer_privacy: 'Politique de confidentialité',
+        footer_about: 'À propos',
     },
     pt: {
         page_title: 'Beatpush - Promoção Beatport para DJs, produtores e gravadoras',
@@ -482,6 +486,8 @@ const translations = {
         footer_copy: '&copy; 2026 BeatPush. Todos os direitos reservados.',
         footer_disclaimer: 'Beatpush é um serviço promocional independente. Beatpush não é afiliado ao Beatport.',
         footer_terms: 'Termos de Uso',
+        footer_privacy: 'Política de Privacidade',
+        footer_about: 'Sobre Nós',
     },
     es: {
         page_title: 'Beatpush - Promoción Beatport para DJs, productores y sellos',
@@ -643,6 +649,8 @@ const translations = {
         footer_copy: '&copy; 2026 BeatPush. Todos los derechos reservados.',
         footer_disclaimer: 'Beatpush es un servicio promocional independiente. Beatpush no está afiliado a Beatport.',
         footer_terms: 'Términos de Uso',
+        footer_privacy: 'Política de Privacidad',
+        footer_about: 'Sobre Nosotros',
     },
     de: {
         page_title: 'Beatpush - Beatport Promotion für DJs, Produzenten und Labels',
@@ -804,6 +812,8 @@ const translations = {
         footer_copy: '&copy; 2026 BeatPush. Alle Rechte vorbehalten.',
         footer_disclaimer: 'Beatpush ist ein unabhängiger Promotionservice. Beatpush ist nicht mit Beatport verbunden.',
         footer_terms: 'Nutzungsbedingungen',
+        footer_privacy: 'Datenschutzrichtlinie',
+        footer_about: 'Über uns',
     }
 };
 

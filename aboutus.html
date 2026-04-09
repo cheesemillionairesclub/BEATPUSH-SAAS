@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Beatpush</title>
+    <link rel="icon" type="image/png" href="/images/icon.png">
+    <meta name="description" content="About Beatpush - Learn about our team, mission, and professional promotion services for electronic music on Beatport.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=2">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18044938875"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-18044938875');
+      // GA4 — Replace G-XXXXXXXXXX with your GA4 Measurement ID
+      gtag('config', 'G-GPV0PQ7WW3');
+    </script>
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1297686318926626');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1297686318926626&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="logo">
+                <img src="/images/logo.png" alt="BeatPush" class="logo-img">
+            </a>
+            <div class="nav-actions">
+                <div class="lang-selector" id="langSelector">
+                    <button class="lang-btn" id="langBtn" aria-label="Language">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        <span id="currentLang">EN</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <button class="lang-option" data-lang="fr">FR</button>
+                        <button class="lang-option" data-lang="en">EN</button>
+                        <button class="lang-option" data-lang="pt">PT</button>
+                        <button class="lang-option" data-lang="es">ES</button>
+                        <button class="lang-option" data-lang="de">DE</button>
+                    </div>
+                </div>
+                <a href="index.html" class="terms-back-btn" id="backBtn">← Back to site</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- About Us Content -->
+    <section class="terms-page">
+        <div class="container">
+            <div class="terms-content" id="aboutContent"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-col">
+                    <h4>Beatpush, Inc.</h4>
+                    <span class="footer-address-line">888 Prospect Street, Suite 200</span>
+                    <span class="footer-address-line">La Jolla, CA 92037</span>
+                </div>
+                <div class="footer-col">
+                    <h4 id="footerNav">Navigation</h4>
+                    <a href="index.html" id="footerHome">Home</a>
+                    <a href="index.html#pricing" id="footerPricing">Pricing</a>
+                    <a href="index.html#how-it-works" id="footerHow">How it works</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <a href="index.html#faq">FAQ</a>
+                    <a href="mailto:contact@beatpush.app">contact@beatpush.app</a>
+                    <a href="https://api.whatsapp.com/send/?phone=13046603890&text=Hello!&type=phone_number&app_absent=0" target="_blank" rel="noopener">Customer Care (WhatsApp): +1 (304) 660&#8209;3890</a>
+                    <a href="termsofuse.html" id="footerTerms">Terms of Use</a>
+                    <a href="privacypolicy.html" id="footerPrivacy">Privacy Policy</a>
+                    <a href="aboutus.html" id="footerAbout">About Us</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p id="footerCopy">&copy; 2026 BeatPush. All rights reserved.</p>
+                <p class="footer-disclaimer" id="footerDisclaimer">Beatpush is an independent promotional service. Beatpush is not affiliated with Beatport.</p>
+            </div>
+        </div>
+    </footer>
+
+<script>
+const aboutTranslations = {
+    en: {
+        page_title: 'About Us - Beatpush',
+        back_btn: '← Back to site',
+        title: 'About Us',
+        s1_title: '1. Our Story',
+        s1_p1: 'BeatPush was founded by a team of passionate electronic music professionals with over 10 years of experience in the industry.',
+        s1_p2: 'We understand the challenges independent artists and labels face in gaining visibility on digital music platforms.',
+        s1_p3: 'Our mission is to bridge the gap between talented producers and the audience they deserve.',
+        s2_title: '2. What We Do',
+        s2_p1: 'We provide professional promotion services for electronic music releases on Beatport.',
+        s2_p2: 'Our campaigns leverage a curated network of DJs, curators, and industry professionals to deliver measurable results:',
+        s2_li1: 'Chart positioning on Beatport',
+        s2_li2: 'Increased plays and genuine audience growth',
+        s2_li3: 'Every campaign is tailored to the specific genre and goals of the artist',
+        s3_title: '3. Our Values',
+        s3_v1_title: 'Transparency',
+        s3_v1_desc: 'Clear pricing, honest expectations, real results.',
+        s3_v2_title: 'Integrity',
+        s3_v2_desc: '100% organic promotion through real industry connections. No bots or fake accounts.',
+        s3_v3_title: 'Results-Driven',
+        s3_v3_desc: 'Performance-backed campaigns with refund guarantee if objectives are not met.',
+        s3_v4_title: 'Artist-First',
+        s3_v4_desc: 'We succeed when our artists succeed.',
+        s4_title: '4. Our Team',
+        s4_p1: 'Our team is composed of music industry veterans, digital marketing experts, and technology professionals.',
+        s4_p2: 'Based in La Jolla, California, we serve artists and labels worldwide across all electronic music genres.',
+        s5_title: '5. Contact Us',
+        s5_p1: 'We would love to hear from you. Reach out to us through any of the following channels:',
+        s5_email: 'Email',
+        s5_whatsapp: 'WhatsApp',
+        s5_address: 'Address',
+        footer_nav: 'Navigation',
+        footer_home: 'Home',
+        footer_pricing: 'Pricing',
+        footer_how: 'How it works',
+        footer_terms: 'Terms of Use',
+        footer_privacy: 'Privacy Policy',
+        footer_about: 'About Us',
+        footer_copy: '&copy; 2026 BeatPush. All rights reserved.',
+        footer_disclaimer: 'Beatpush is an independent promotional service. Beatpush is not affiliated with Beatport.',
+    },
+    fr: {
+        page_title: 'A propos - Beatpush',
+        back_btn: '← Retour au site',
+        title: 'A propos',
+        s1_title: '1. Notre histoire',
+        s1_p1: 'BeatPush a ete fonde par une equipe de professionnels passionnes de musique electronique avec plus de 10 ans d\'experience dans l\'industrie.',
+        s1_p2: 'Nous comprenons les defis auxquels les artistes independants et les labels font face pour gagner en visibilite sur les plateformes de musique numerique.',
+        s1_p3: 'Notre mission est de combler le fosse entre les producteurs talentueux et le public qu\'ils meritent.',
+        s2_title: '2. Ce que nous faisons',
+        s2_p1: 'Nous fournissons des services de promotion professionnels pour les sorties de musique electronique sur Beatport.',
+        s2_p2: 'Nos campagnes s\'appuient sur un reseau selectionne de DJs, de curateurs et de professionnels de l\'industrie pour fournir des resultats mesurables :',
+        s2_li1: 'Positionnement dans les classements Beatport',
+        s2_li2: 'Augmentation des ecoutes et croissance authentique de l\'audience',
+        s2_li3: 'Chaque campagne est adaptee au genre specifique et aux objectifs de l\'artiste',
+        s3_title: '3. Nos valeurs',
+        s3_v1_title: 'Transparence',
+        s3_v1_desc: 'Des prix clairs, des attentes honnetes, des resultats reels.',
+        s3_v2_title: 'Integrite',
+        s3_v2_desc: 'Promotion 100% organique via de vraies connexions dans l\'industrie. Aucun bot ni faux compte.',
+        s3_v3_title: 'Oriente resultats',
+        s3_v3_desc: 'Des campagnes soutenues par la performance avec garantie de remboursement si les objectifs ne sont pas atteints.',
+        s3_v4_title: 'L\'artiste d\'abord',
+        s3_v4_desc: 'Nous reussissons quand nos artistes reussissent.',
+        s4_title: '4. Notre equipe',
+        s4_p1: 'Notre equipe est composee de veterans de l\'industrie musicale, d\'experts en marketing digital et de professionnels de la technologie.',
+        s4_p2: 'Bases a La Jolla, en Californie, nous servons des artistes et des labels du monde entier dans tous les genres de musique electronique.',
+        s5_title: '5. Contactez-nous',
+        s5_p1: 'Nous serions ravis de vous entendre. Contactez-nous par l\'un des canaux suivants :',
+        s5_email: 'Email',
+        s5_whatsapp: 'WhatsApp',
+        s5_address: 'Adresse',
+        footer_nav: 'Navigation',
+        footer_home: 'Accueil',
+        footer_pricing: 'Tarifs',
+        footer_how: 'Comment ca marche',
+        footer_terms: 'Conditions d\'utilisation',
+        footer_privacy: 'Politique de confidentialite',
+        footer_about: 'A propos',
+        footer_copy: '&copy; 2026 BeatPush. Tous droits reserves.',
+        footer_disclaimer: 'Beatpush est un service promotionnel independant. Beatpush n\'est pas affilie a Beatport.',
+    },
+    pt: {
+        page_title: 'Sobre Nos - Beatpush',
+        back_btn: '← Voltar ao site',
+        title: 'Sobre Nos',
+        s1_title: '1. Nossa Historia',
+        s1_p1: 'O BeatPush foi fundado por uma equipe de profissionais apaixonados por musica eletronica com mais de 10 anos de experiencia na industria.',
+        s1_p2: 'Entendemos os desafios que artistas independentes e gravadoras enfrentam para ganhar visibilidade em plataformas de musica digital.',
+        s1_p3: 'Nossa missao e preencher a lacuna entre produtores talentosos e o publico que eles merecem.',
+        s2_title: '2. O que fazemos',
+        s2_p1: 'Fornecemos servicos de promocao profissional para lancamentos de musica eletronica no Beatport.',
+        s2_p2: 'Nossas campanhas utilizam uma rede selecionada de DJs, curadores e profissionais da industria para entregar resultados mensuraveis:',
+        s2_li1: 'Posicionamento nos rankings do Beatport',
+        s2_li2: 'Aumento de reproducoes e crescimento genuino de audiencia',
+        s2_li3: 'Cada campanha e adaptada ao genero especifico e aos objetivos do artista',
+        s3_title: '3. Nossos Valores',
+        s3_v1_title: 'Transparencia',
+        s3_v1_desc: 'Precos claros, expectativas honestas, resultados reais.',
+        s3_v2_title: 'Integridade',
+        s3_v2_desc: 'Promocao 100% organica atraves de conexoes reais na industria. Sem bots ou contas falsas.',
+        s3_v3_title: 'Orientado a resultados',
+        s3_v3_desc: 'Campanhas respaldadas por performance com garantia de reembolso se os objetivos nao forem atingidos.',
+        s3_v4_title: 'O artista em primeiro lugar',
+        s3_v4_desc: 'Nos temos sucesso quando nossos artistas tem sucesso.',
+        s4_title: '4. Nossa Equipe',
+        s4_p1: 'Nossa equipe e composta por veteranos da industria musical, especialistas em marketing digital e profissionais de tecnologia.',
+        s4_p2: 'Sediados em La Jolla, California, atendemos artistas e gravadoras em todo o mundo em todos os generos de musica eletronica.',
+        s5_title: '5. Fale Conosco',
+        s5_p1: 'Adorariamos ouvir de voce. Entre em contato conosco por qualquer um dos canais abaixo:',
+        s5_email: 'Email',
+        s5_whatsapp: 'WhatsApp',
+        s5_address: 'Endereco',
+        footer_nav: 'Navegacao',
+        footer_home: 'Inicio',
+        footer_pricing: 'Precos',
+        footer_how: 'Como funciona',
+        footer_terms: 'Termos de Uso',
+        footer_privacy: 'Politica de Privacidade',
+        footer_about: 'Sobre Nos',
+        footer_copy: '&copy; 2026 BeatPush. Todos os direitos reservados.',
+        footer_disclaimer: 'Beatpush e um servico promocional independente. Beatpush nao e afiliado ao Beatport.',
+    },
+    es: {
+        page_title: 'Sobre Nosotros - Beatpush',
+        back_btn: '← Volver al sitio',
+        title: 'Sobre Nosotros',
+        s1_title: '1. Nuestra Historia',
+        s1_p1: 'BeatPush fue fundado por un equipo de profesionales apasionados por la musica electronica con mas de 10 anos de experiencia en la industria.',
+        s1_p2: 'Entendemos los desafios que enfrentan los artistas independientes y los sellos discograficos para ganar visibilidad en las plataformas de musica digital.',
+        s1_p3: 'Nuestra mision es cerrar la brecha entre los productores talentosos y la audiencia que merecen.',
+        s2_title: '2. Lo que hacemos',
+        s2_p1: 'Proporcionamos servicios de promocion profesional para lanzamientos de musica electronica en Beatport.',
+        s2_p2: 'Nuestras campanas aprovechan una red seleccionada de DJs, curadores y profesionales de la industria para ofrecer resultados medibles:',
+        s2_li1: 'Posicionamiento en los rankings de Beatport',
+        s2_li2: 'Aumento de reproducciones y crecimiento genuino de audiencia',
+        s2_li3: 'Cada campana se adapta al genero especifico y a los objetivos del artista',
+        s3_title: '3. Nuestros Valores',
+        s3_v1_title: 'Transparencia',
+        s3_v1_desc: 'Precios claros, expectativas honestas, resultados reales.',
+        s3_v2_title: 'Integridad',
+        s3_v2_desc: 'Promocion 100% organica a traves de conexiones reales en la industria. Sin bots ni cuentas falsas.',
+        s3_v3_title: 'Orientado a resultados',
+        s3_v3_desc: 'Campanas respaldadas por rendimiento con garantia de reembolso si los objetivos no se cumplen.',
+        s3_v4_title: 'El artista primero',
+        s3_v4_desc: 'Nosotros tenemos exito cuando nuestros artistas tienen exito.',
+        s4_title: '4. Nuestro Equipo',
+        s4_p1: 'Nuestro equipo esta compuesto por veteranos de la industria musical, expertos en marketing digital y profesionales de la tecnologia.',
+        s4_p2: 'Con sede en La Jolla, California, atendemos a artistas y sellos discograficos de todo el mundo en todos los generos de musica electronica.',
+        s5_title: '5. Contactenos',
+        s5_p1: 'Nos encantaria saber de usted. Contactenos a traves de cualquiera de los siguientes canales:',
+        s5_email: 'Correo electronico',
+        s5_whatsapp: 'WhatsApp',
+        s5_address: 'Direccion',
+        footer_nav: 'Navegacion',
+        footer_home: 'Inicio',
+        footer_pricing: 'Precios',
+        footer_how: 'Como funciona',
+        footer_terms: 'Terminos de Uso',
+        footer_privacy: 'Politica de Privacidad',
+        footer_about: 'Sobre Nosotros',
+        footer_copy: '&copy; 2026 BeatPush. Todos los derechos reservados.',
+        footer_disclaimer: 'Beatpush es un servicio promocional independiente. Beatpush no esta afiliado a Beatport.',
+    },
+    de: {
+        page_title: 'Uber uns - Beatpush',
+        back_btn: '← Zuruck zur Seite',
+        title: 'Uber uns',
+        s1_title: '1. Unsere Geschichte',
+        s1_p1: 'BeatPush wurde von einem Team leidenschaftlicher Fachleute fur elektronische Musik mit uber 10 Jahren Erfahrung in der Branche gegrundet.',
+        s1_p2: 'Wir verstehen die Herausforderungen, denen unabhangige Kunstler und Labels gegenuber stehen, um auf digitalen Musikplattformen Sichtbarkeit zu erlangen.',
+        s1_p3: 'Unsere Mission ist es, die Lucke zwischen talentierten Produzenten und dem Publikum, das sie verdienen, zu schliessen.',
+        s2_title: '2. Was wir tun',
+        s2_p1: 'Wir bieten professionelle Promotion-Dienste fur Veroffentlichungen elektronischer Musik auf Beatport.',
+        s2_p2: 'Unsere Kampagnen nutzen ein ausgewahltes Netzwerk von DJs, Kuratoren und Branchenprofis, um messbare Ergebnisse zu liefern:',
+        s2_li1: 'Chart-Positionierung auf Beatport',
+        s2_li2: 'Erhohte Wiedergaben und echtes Publikumswachstum',
+        s2_li3: 'Jede Kampagne wird auf das spezifische Genre und die Ziele des Kunstlers zugeschnitten',
+        s3_title: '3. Unsere Werte',
+        s3_v1_title: 'Transparenz',
+        s3_v1_desc: 'Klare Preise, ehrliche Erwartungen, echte Ergebnisse.',
+        s3_v2_title: 'Integritat',
+        s3_v2_desc: '100% organische Promotion durch echte Branchenverbindungen. Keine Bots oder gefalschte Konten.',
+        s3_v3_title: 'Ergebnisorientiert',
+        s3_v3_desc: 'Leistungsgestutzte Kampagnen mit Ruckerstattungsgarantie, wenn die Ziele nicht erreicht werden.',
+        s3_v4_title: 'Der Kunstler zuerst',
+        s3_v4_desc: 'Wir haben Erfolg, wenn unsere Kunstler Erfolg haben.',
+        s4_title: '4. Unser Team',
+        s4_p1: 'Unser Team besteht aus Veteranen der Musikbranche, Experten fur digitales Marketing und Technologiefachleuten.',
+        s4_p2: 'Mit Sitz in La Jolla, Kalifornien, betreuen wir Kunstler und Labels weltweit in allen Genres der elektronischen Musik.',
+        s5_title: '5. Kontaktieren Sie uns',
+        s5_p1: 'Wir wurden gerne von Ihnen horen. Erreichen Sie uns uber einen der folgenden Kanale:',
+        s5_email: 'E-Mail',
+        s5_whatsapp: 'WhatsApp',
+        s5_address: 'Adresse',
+        footer_nav: 'Navigation',
+        footer_home: 'Startseite',
+        footer_pricing: 'Preise',
+        footer_how: 'So funktioniert es',
+        footer_terms: 'Nutzungsbedingungen',
+        footer_privacy: 'Datenschutzrichtlinie',
+        footer_about: 'Uber uns',
+        footer_copy: '&copy; 2026 BeatPush. Alle Rechte vorbehalten.',
+        footer_disclaimer: 'Beatpush ist ein unabhangiger Promotionservice. Beatpush ist nicht mit Beatport verbunden.',
+    }
+};
+
+function renderAbout(lang) {
+    const t = aboutTranslations[lang] || aboutTranslations.en;
+
+    document.title = t.page_title;
+    document.getElementById('currentLang').textContent = lang.toUpperCase();
+    document.getElementById('backBtn').textContent = t.back_btn;
+
+    // Footer
+    document.getElementById('footerNav').textContent = t.footer_nav;
+    document.getElementById('footerHome').textContent = t.footer_home;
+    document.getElementById('footerPricing').textContent = t.footer_pricing;
+    document.getElementById('footerHow').textContent = t.footer_how;
+    document.getElementById('footerTerms').textContent = t.footer_terms;
+    document.getElementById('footerPrivacy').textContent = t.footer_privacy;
+    document.getElementById('footerAbout').textContent = t.footer_about;
+    document.getElementById('footerCopy').innerHTML = t.footer_copy;
+    document.getElementById('footerDisclaimer').textContent = t.footer_disclaimer;
+
+    // About content
+    let html = `
+        <h1 class="terms-main-title">${t.title}</h1>
+    `;
+
+    // Section 1 - Our Story
+    html += `<div class="terms-section"><h2>${t.s1_title}</h2><p>${t.s1_p1}</p><p>${t.s1_p2}</p><p>${t.s1_p3}</p></div>`;
+
+    // Section 2 - What We Do
+    html += `<div class="terms-section"><h2>${t.s2_title}</h2><p>${t.s2_p1}</p><p>${t.s2_p2}</p><ul><li>${t.s2_li1}</li><li>${t.s2_li2}</li><li>${t.s2_li3}</li></ul></div>`;
+
+    // Section 3 - Our Values
+    html += `<div class="terms-section"><h2>${t.s3_title}</h2><ul><li><strong>${t.s3_v1_title}:</strong> ${t.s3_v1_desc}</li><li><strong>${t.s3_v2_title}:</strong> ${t.s3_v2_desc}</li><li><strong>${t.s3_v3_title}:</strong> ${t.s3_v3_desc}</li><li><strong>${t.s3_v4_title}:</strong> ${t.s3_v4_desc}</li></ul></div>`;
+
+    // Section 4 - Our Team
+    html += `<div class="terms-section"><h2>${t.s4_title}</h2><p>${t.s4_p1}</p><p>${t.s4_p2}</p></div>`;
+
+    // Section 5 - Contact Us
+    html += `<div class="terms-section"><h2>${t.s5_title}</h2><p>${t.s5_p1}</p><ul><li><strong>${t.s5_email}:</strong> <a href="mailto:contact@beatpush.app">contact@beatpush.app</a></li><li><strong>${t.s5_whatsapp}:</strong> <a href="https://api.whatsapp.com/send/?phone=13046603890&text=Hello!&type=phone_number&app_absent=0" target="_blank" rel="noopener">+1 (304) 660-3890</a></li><li><strong>${t.s5_address}:</strong> 888 Prospect Street, Suite 200, La Jolla, CA 92037</li></ul></div>`;
+
+    document.getElementById('aboutContent').innerHTML = html;
+}
+
+// Init
+(function() {
+    const saved = localStorage.getItem('beatpush_lang');
+    const lang = saved || 'en';
+    renderAbout(lang);
+
+    // Language selector
+    const langBtn = document.getElementById('langBtn');
+    const langDropdown = document.getElementById('langDropdown');
+
+    langBtn.addEventListener('click', () => {
+        langDropdown.classList.toggle('open');
+    });
+
+    document.querySelectorAll('.lang-option').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const newLang = btn.getAttribute('data-lang');
+            localStorage.setItem('beatpush_lang', newLang);
+            renderAbout(newLang);
+            langDropdown.classList.remove('open');
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.lang-selector')) {
+            langDropdown.classList.remove('open');
+        }
+    });
+})();
+</script>
+
+</body>
+</html>
