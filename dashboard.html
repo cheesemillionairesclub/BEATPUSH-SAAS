@@ -240,6 +240,10 @@
                         <span class="dash-detail-label">${t.dashboard_label_campaign || 'Campaign'}</span>
                         <span class="dash-detail-value">${escapeHtmlAttr(packLabel)}</span>
                     </div>
+                    ${(!isCompleted && !isCancelled && order.pack !== 'daily-push' && order.copies_delivered > 0) ? `<div class="dash-detail-row">
+                        <span class="dash-detail-label">${t.dashboard_label_delivered || 'Delivered'}</span>
+                        <span class="dash-detail-value"><strong>${order.copies_delivered}</strong> / ${order.pack}</span>
+                    </div>` : ''}
                     ${order.genre ? `<div class="dash-detail-row">
                         <span class="dash-detail-label">${t.dashboard_label_genre || 'Genre'}</span>
                         <span class="dash-detail-value">${escapeHtmlAttr(order.genre)}</span>
