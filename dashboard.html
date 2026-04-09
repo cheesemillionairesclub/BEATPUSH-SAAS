@@ -37,7 +37,28 @@
     /></noscript>
     <!-- End Meta Pixel Code -->
 </head>
-<body>
+<body class="has-promo">
+
+    <!-- Promo Banner -->
+    <div class="promo-banner" id="promoBanner">
+        <span class="promo-banner-text"><span class="promo-highlight">10% OFF</span> Discount. Use Code</span>
+        <button class="promo-code-btn" id="promoCodeBtn" onclick="copyPromoCode()">BEAT10</button>
+        <button class="promo-close-btn" onclick="closePromoBanner()" aria-label="Close">&times;</button>
+    </div>
+    <script>
+    function copyPromoCode() {
+        navigator.clipboard.writeText('BEAT10').then(function() {
+            var btn = document.getElementById('promoCodeBtn');
+            btn.textContent = 'Copied!';
+            btn.classList.add('copied');
+            setTimeout(function() { btn.textContent = 'BEAT10'; btn.classList.remove('copied'); }, 2000);
+        });
+    }
+    function closePromoBanner() {
+        document.getElementById('promoBanner').classList.add('promo-hidden');
+        document.body.classList.remove('has-promo');
+    }
+    </script>
 
     <!-- Navigation -->
     <nav class="navbar">

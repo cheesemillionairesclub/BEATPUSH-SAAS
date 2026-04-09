@@ -58,6 +58,125 @@ body {
     color: var(--green-primary);
 }
 
+/* ===== Promo Banner ===== */
+.promo-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1100;
+    background: #000000;
+    border-bottom: 1px solid var(--green-primary);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: transform 0.3s ease;
+}
+
+.promo-banner.promo-hidden {
+    transform: translateY(-100%);
+}
+
+.promo-banner-text {
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.promo-banner-text .promo-highlight {
+    color: var(--green-primary);
+}
+
+.promo-code-btn {
+    background: transparent;
+    color: var(--green-primary);
+    border: 2px solid var(--green-primary);
+    padding: 6px 18px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Inter', monospace;
+}
+
+.promo-code-btn:hover {
+    background: var(--green-primary);
+    color: #000000;
+}
+
+.promo-code-btn.copied {
+    border-color: var(--green-primary);
+    background: rgba(0, 230, 118, 0.15);
+    color: var(--green-primary);
+}
+
+.promo-close-btn {
+    background: none;
+    border: none;
+    color: var(--white-50);
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+    transition: color 0.2s ease;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.promo-close-btn:hover {
+    color: #ffffff;
+}
+
+body.has-promo .navbar {
+    top: 46px;
+}
+
+body.has-promo .hero,
+body.has-promo .terms-page,
+body.has-promo .dashboard-page {
+    padding-top: 160px;
+}
+
+@media (max-width: 768px) {
+    .promo-banner {
+        padding: 8px 40px 8px 12px;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .promo-banner-text {
+        font-size: 0.8rem;
+        text-align: center;
+    }
+
+    .promo-code-btn {
+        font-size: 0.8rem;
+        padding: 4px 14px;
+    }
+
+    .promo-close-btn {
+        right: 8px;
+    }
+
+    body.has-promo .navbar {
+        top: 56px;
+    }
+
+    body.has-promo .hero,
+    body.has-promo .terms-page,
+    body.has-promo .dashboard-page {
+        padding-top: 180px;
+    }
+}
+
 /* ===== Navbar ===== */
 .navbar {
     position: fixed;

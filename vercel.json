@@ -4,6 +4,7 @@
         { "source": "/api/create-checkout", "destination": "/api/create-checkout" },
         { "source": "/api/webhook", "destination": "/api/webhook" },
         { "source": "/api/checkout-success", "destination": "/api/checkout-success" },
+        { "source": "/api/setup-promo", "destination": "/api/setup-promo" },
         { "source": "/api/save-order", "destination": "/api/save-order" },
         { "source": "/api/update-user-meta", "destination": "/api/update-user-meta" },
         { "source": "/api/admin/orders", "destination": "/api/admin/orders" },
