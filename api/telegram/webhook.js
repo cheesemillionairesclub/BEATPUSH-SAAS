@@ -321,7 +321,7 @@ function buildExtendedHelpResponse() {
 /check — Diagnostic des connexions API
 /help — Cette aide
 
-📊 Rapport automatique quotidien à 20h00 (Paris).
+📊 Rapport automatique quotidien à 23h59 (Paris).
 💡 Les campagnes sont créées en PAUSE par sécurité.`;
 }
 

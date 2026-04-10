@@ -31,25 +31,23 @@ async function metaFetch(endpoint, accessToken, params = {}) {
   return res.json();
 }
 
-// Format date as YYYY-MM-DD
-function formatDate(date) {
-  return date.toISOString().split('T')[0];
+// Get current date in Paris timezone as YYYY-MM-DD
+function getParisDate(daysAgo = 0) {
+  const now = new Date();
+  const paris = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Paris' }));
+  paris.setDate(paris.getDate() - daysAgo);
+  const y = paris.getFullYear();
+  const m = String(paris.getMonth() + 1).padStart(2, '0');
+  const d = String(paris.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }
 
-function getToday() {
-  return new Date();
-}
-
-function getYesterday() {
-  const d = new Date();
-  d.setDate(d.getDate() - 1);
-  return d;
-}
-
-function getMonthStart() {
-  const d = new Date();
-  d.setDate(1);
-  return d;
+function getParisMonthStart() {
+  const now = new Date();
+  const paris = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Paris' }));
+  const y = paris.getFullYear();
+  const m = String(paris.getMonth() + 1).padStart(2, '0');
+  return `${y}-${m}-01`;
 }
 
 export async function collectMetaAdsData() {
@@ -64,9 +62,9 @@ export async function collectMetaAdsData() {
   }
 
   try {
-    const today = formatDate(getToday());
-    const yesterdayStr = formatDate(getYesterday());
-    const monthStart = formatDate(getMonthStart());
+    const today = getParisDate(0);
+    const yesterdayStr = getParisDate(1);
+    const monthStart = getParisMonthStart();
 
     // Fetch campaign-level insights, ad-level diagnostics, and recommendations in parallel
     const [todayInsights, yesterdayInsights, monthInsights, campaignDetails, adDiagnostics] = await Promise.all([

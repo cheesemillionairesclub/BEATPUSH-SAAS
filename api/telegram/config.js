@@ -73,7 +73,7 @@ export const CONFIG = {
 
   // Telegram
   telegram: {
-    reportTime: '20:00', // Paris time
+    reportTime: '23:59', // Paris time (21:59 UTC)
     timezone: 'Europe/Paris',
     commands: [
       { command: 'ads', description: 'Vue globale des campagnes' },

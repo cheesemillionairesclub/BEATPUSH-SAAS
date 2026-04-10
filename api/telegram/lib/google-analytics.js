@@ -70,8 +70,23 @@ async function runReport(propertyId, accessToken, body) {
   return res.json();
 }
 
-function formatDate(date) {
-  return date.toISOString().split('T')[0];
+// Get current date in Paris timezone as YYYY-MM-DD
+function getParisDate(daysAgo = 0) {
+  const now = new Date();
+  const paris = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Paris' }));
+  paris.setDate(paris.getDate() - daysAgo);
+  const y = paris.getFullYear();
+  const m = String(paris.getMonth() + 1).padStart(2, '0');
+  const d = String(paris.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+function getParisMonthStart() {
+  const now = new Date();
+  const paris = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Paris' }));
+  const y = paris.getFullYear();
+  const m = String(paris.getMonth() + 1).padStart(2, '0');
+  return `${y}-${m}-01`;
 }
 
 // Parse GA4 rows into a simpler format
@@ -103,15 +118,9 @@ export async function collectGA4Data() {
     const accessToken = await getAccessToken();
     const propertyId = process.env.GA4_PROPERTY_ID;
 
-    const todayStr = formatDate(new Date());
-
-    const yesterdayDate = new Date();
-    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
-    const yesterdayStr = formatDate(yesterdayDate);
-
-    const monthStart = new Date();
-    monthStart.setDate(1);
-    const monthStartStr = formatDate(monthStart);
+    const todayStr = getParisDate(0);
+    const yesterdayStr = getParisDate(1);
+    const monthStartStr = getParisMonthStart();
 
     // Run all reports in parallel
     const [overviewToday, overviewYesterday, overviewMonth, countriesToday, countriesYesterday, countriesMonth, sourcesToday, pagesToday] = await Promise.all([

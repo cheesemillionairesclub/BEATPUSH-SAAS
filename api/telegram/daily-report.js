@@ -1,5 +1,5 @@
 // Daily Report — Vercel Cron Job endpoint
-// Triggered daily at 20:00 Paris time (18:00 UTC)
+// Triggered daily at 23:59 Paris time (21:59 UTC)
 // Collects all data, analyzes with Claude, sends Telegram report
 
 import { collectSupabaseData } from './lib/supabase-data.js';

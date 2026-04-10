@@ -66,8 +66,23 @@ async function gaqlQuery(query, accessToken) {
   return rows;
 }
 
-function formatDate(date) {
-  return date.toISOString().split('T')[0];
+// Get current date in Paris timezone as YYYY-MM-DD
+function getParisDate(daysAgo = 0) {
+  const now = new Date();
+  const paris = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Paris' }));
+  paris.setDate(paris.getDate() - daysAgo);
+  const y = paris.getFullYear();
+  const m = String(paris.getMonth() + 1).padStart(2, '0');
+  const d = String(paris.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+function getParisMonthStart() {
+  const now = new Date();
+  const paris = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Paris' }));
+  const y = paris.getFullYear();
+  const m = String(paris.getMonth() + 1).padStart(2, '0');
+  return `${y}-${m}-01`;
 }
 
 export async function collectGoogleAdsData() {
@@ -90,11 +105,8 @@ export async function collectGoogleAdsData() {
   try {
     const accessToken = await getAccessToken();
 
-    const monthStart = new Date();
-    monthStart.setDate(1);
-
-    const todayStr = formatDate(new Date());
-    const monthStartStr = formatDate(monthStart);
+    const todayStr = getParisDate(0);
+    const monthStartStr = getParisMonthStart();
 
     // Fetch campaign performance for today and month
     const [todayRows, monthRows, searchTermRows] = await Promise.all([

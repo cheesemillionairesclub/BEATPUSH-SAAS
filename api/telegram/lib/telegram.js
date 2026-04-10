@@ -768,7 +768,7 @@ Commandes disponibles :
 /report — Forcer un rapport quotidien complet
 /help — Cette aide
 
-📊 Rapport automatique quotidien à 20h00 (Paris).`;
+📊 Rapport automatique quotidien à 23h59 (Paris).`;
 }
 
 export async function sendReport(text, overrideChatId) {
