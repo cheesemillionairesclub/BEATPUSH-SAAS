@@ -527,7 +527,8 @@ export function buildDailyReport(data) {
       if (r === 'ABOVE_AVERAGE_35' || r === 'ABOVE_AVERAGE') return '✅ bon';
       if (r === 'AVERAGE') return '➡️ correct';
       if (r?.startsWith('BELOW')) return '⚠️ faible';
-      return null;
+      if (r === 'UNKNOWN' || !r) return '— en attente';
+      return '— en attente';
     };
     const tip = (field, rank) => {
       if (!rank?.startsWith('BELOW')) return null;
@@ -537,33 +538,22 @@ export function buildDailyReport(data) {
       return null;
     };
 
-    const hasRealRankings = meta.diagnostics.some(ad =>
-      rankLabel(ad.qualityRanking) || rankLabel(ad.engagementRanking) || rankLabel(ad.conversionRanking)
-    );
+    report += `\n━━ 🔬 DIAGNOSTICS META ━━━━━━━━━\n`;
+    for (const ad of meta.diagnostics.slice(0, 5)) {
+      report += `\n📌 <b>${escapeHtml(ad.adName)}</b>\n`;
+      report += `   Qualité : ${rankLabel(ad.qualityRanking)}\n`;
+      report += `   Engagement : ${rankLabel(ad.engagementRanking)}\n`;
+      report += `   Conversion : ${rankLabel(ad.conversionRanking)}\n`;
 
-    if (hasRealRankings) {
-      report += `\n━━ 🔬 DIAGNOSTICS META ━━━━━━━━━\n`;
-      for (const ad of meta.diagnostics.slice(0, 5)) {
-        const q = rankLabel(ad.qualityRanking);
-        const e = rankLabel(ad.engagementRanking);
-        const cv = rankLabel(ad.conversionRanking);
-        if (!q && !e && !cv) continue;
-
-        report += `\n📌 <b>${escapeHtml(ad.adName)}</b>\n`;
-        if (q) report += `   Qualité : ${q}\n`;
-        if (e) report += `   Engagement : ${e}\n`;
-        if (cv) report += `   Conversion : ${cv}\n`;
-
-        const tips = [
-          tip('quality', ad.qualityRanking),
-          tip('engagement', ad.engagementRanking),
-          tip('conversion', ad.conversionRanking),
-        ].filter(Boolean);
-        if (tips.length > 0) {
-          report += `   💡 <b>Actions :</b>\n`;
-          for (const t of tips) {
-            report += `   → ${t}\n`;
-          }
+      const tips = [
+        tip('quality', ad.qualityRanking),
+        tip('engagement', ad.engagementRanking),
+        tip('conversion', ad.conversionRanking),
+      ].filter(Boolean);
+      if (tips.length > 0) {
+        report += `   💡 <b>Actions :</b>\n`;
+        for (const t of tips) {
+          report += `   → ${t}\n`;
         }
       }
     }

@@ -164,7 +164,7 @@ export async function collectMetaAdsData() {
 
     // Process ad-level relevance diagnostics
     const diagnostics = (adDiagnostics.data || [])
-      .filter(ad => parseInt(ad.impressions || 0) >= 500) // Only meaningful with 500+ impressions
+      .filter(ad => parseInt(ad.impressions || 0) >= 100)
       .map(ad => ({
         adName: ad.ad_name,
         adId: ad.ad_id,
