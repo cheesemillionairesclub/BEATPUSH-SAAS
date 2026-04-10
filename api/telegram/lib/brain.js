@@ -44,6 +44,15 @@ SOURCE DE VÉRITÉ POUR LE CA :
 - stripe.subscriptions contient le totalPaid réel par abonnement (en cents)
 - Les montants supabase sont des estimations, Stripe = montants réellement encaissés
 - Divise les montants Stripe par 100 pour avoir les dollars
+- Quand tu mentionnes le CA, utilise TOUJOURS le total (commandes + abonnements), JAMAIS un sous-total isolé
+- Exemple INTERDIT : "CA mensuel de $330 via abonnements" quand le total est $1050 → dire "$1,050 CA mensuel"
+
+CONVERSIONS — DISTINCTION CRITIQUE :
+- "Conversions Meta" = événements trackés par le pixel Meta (peut être 0 même si des ventes existent)
+- "Commandes Supabase" = vraies commandes/ventes réelles
+- JAMAIS dire "0 conversion" quand il y a des commandes réelles — c'est FAUX et trompeur
+- Si Meta track 0 conversion mais qu'il y a 4 commandes réelles, dire "Meta ne track aucune conversion (pixel mal configuré)" — ne JAMAIS laisser penser qu'il n'y a eu aucune vente
+- Le nombre de commandes Supabase est la vérité, le tracking Meta peut être cassé
 
 DIAGNOSTICS META ADS (si disponibles) :
 - quality_ranking : qualité perçue de la pub vs concurrents (ABOVE_AVERAGE_35, AVERAGE, BELOW_AVERAGE_10, etc.)
