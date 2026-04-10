@@ -352,67 +352,68 @@ export function buildDailyReport(data) {
       report += '\n';
       report += tr2('🔄 En cours', `${inProgressCount} (${inProgressToday} auj.)`) + '\n';
     }
+
+    // Daily Push subscriptions detail
+    const dailyPushSubs = (s.allDailyPushSubs || []);
+    if (dailyPushSubs.length > 0) {
+      const activeSubs = dailyPushSubs.filter(o => isSubActive(o, stripe));
+      const missingSubs = dailyPushSubs.filter(o => o.order_status === 'active_missing_receipt');
+
+      report += '\n';
+      report += tr2('🔄 Daily Push', `${activeSubs.length} actifs`) + '\n';
+      if (missingSubs.length > 0) {
+        report += tr2('  ⚠️ Receipts', `${missingSubs.length} manquants`) + '\n';
+      }
+
+      const visibleSubs = dailyPushSubs.filter(sub => {
+        const subStripeData = stripe?.subscriptions?.[sub.id];
+        if (subStripeData && (subStripeData.status === 'canceled' || subStripeData.status === 'unpaid')) return false;
+        if (sub.order_status === 'cancelled') return false;
+        return true;
+      });
+      for (const sub of visibleSubs) {
+        const statusLabel = getSubStatusLabel(sub, stripe);
+        const subStripe = stripe?.subscriptions?.[sub.id];
+        const daysPaid = subStripe?.daysPaid || '-';
+        const totalPaid = subStripe ? formatCurrency(subStripe.totalPaid / 100) : '-';
+        const trackName = sub.track_title ? escapeHtml(sub.track_title) : 'N/A';
+        report += `  🎵 ${trackName}\n`;
+        report += `     ${statusLabel} | ${daysPaid}j | ${totalPaid}\n`;
+      }
+    }
+
+    // Breakdown by pack
+    if (Object.keys(s.today.byPack).length > 0 || Object.keys(s.month.byPack).length > 0) {
+      report += '\n';
+      report += '📋 Packs ce mois\n';
+      const packLabels = {
+        '50': '50 Copies ($240)',
+        '100': '100 Copies ($480)',
+        '200': '200 Copies ($960)',
+        '500': '500 Copies ($1900)',
+        '1000': '1000 Copies ($3850)',
+        'daily-push': 'Daily Push ($55/j)',
+        'exclusive-800': 'Top 10 ($920)',
+        'promo-430': 'Top 100 ($430+)',
+      };
+      for (const [pack, count] of Object.entries(s.month.byPack).sort((a, b) => b[1] - a[1])) {
+        report += tr2(`  • ${packLabels[pack] || pack}`, `${count}x`) + '\n';
+      }
+    }
+
+    // Top genres
+    if (Object.keys(s.month.byGenre).length > 0) {
+      report += '\n';
+      report += '🎵 Top genres ce mois\n';
+      const sortedGenres = Object.entries(s.month.byGenre).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      for (const [genre, count] of sortedGenres) {
+        report += tr2(`  • ${genre}`, `${count}x`) + '\n';
+      }
+    }
+
     report += `</pre>`;
   } else {
     report += `⚠️ Stripe non disponible — données indisponibles\n`;
-  }
-
-  // Daily Push subscriptions detail
-  const dailyPushSubs = (s.allDailyPushSubs || []);
-  if (dailyPushSubs.length > 0) {
-    const activeSubs = dailyPushSubs.filter(o => isSubActive(o, stripe));
-    const missingSubs = dailyPushSubs.filter(o => o.order_status === 'active_missing_receipt');
-
-    report += `\n   🔄 <b>Abonnements Daily Push ($55/j)</b>\n`;
-    report += `   ✅ Actifs : ${activeSubs.length}\n`;
-    if (missingSubs.length > 0) {
-      report += `   ⚠️ Receipts manquants : ${missingSubs.length}\n`;
-    }
-
-    // Per-subscription detail with Stripe data (exclude cancelled)
-    const visibleSubs = dailyPushSubs.filter(sub => {
-      // Skip cancelled subscriptions (from Stripe or Supabase status)
-      const subStripeData = stripe?.subscriptions?.[sub.id];
-      if (subStripeData && (subStripeData.status === 'canceled' || subStripeData.status === 'unpaid')) return false;
-      if (sub.order_status === 'cancelled') return false;
-      return true;
-    });
-    for (const sub of visibleSubs) {
-      const statusLabel = getSubStatusLabel(sub, stripe);
-      const subStripe = stripe?.subscriptions?.[sub.id];
-      const daysPaid = subStripe?.daysPaid || '-';
-      const totalPaid = subStripe ? formatCurrency(subStripe.totalPaid / 100) : '-';
-      const trackName = sub.track_title ? `${sub.track_title}` : 'N/A';
-      report += `\n   🎵 <b>${escapeHtml(trackName)}</b>\n`;
-      report += `   ${statusLabel} | ${daysPaid} jours payés | ${totalPaid} reçu\n`;
-    }
-  }
-
-  // Breakdown by pack
-  if (Object.keys(s.today.byPack).length > 0 || Object.keys(s.month.byPack).length > 0) {
-    report += `\n   📋 Répartition mois par pack :\n`;
-    const packLabels = {
-      '50': '50 Copies ($240)',
-      '100': '100 Copies ($480)',
-      '200': '200 Copies ($960)',
-      '500': '500 Copies ($1900)',
-      '1000': '1000 Copies ($3850)',
-      'daily-push': 'Daily Push ($55/j)',
-      'exclusive-800': 'Top 10 ($920)',
-      'promo-430': 'Top 100 ($430+)',
-    };
-    for (const [pack, count] of Object.entries(s.month.byPack).sort((a, b) => b[1] - a[1])) {
-      report += `   • ${packLabels[pack] || pack} : ${count}x\n`;
-    }
-  }
-
-  // Top genres
-  if (Object.keys(s.month.byGenre).length > 0) {
-    report += `\n   🎵 Top genres ce mois :\n`;
-    const sortedGenres = Object.entries(s.month.byGenre).sort((a, b) => b[1] - a[1]).slice(0, 5);
-    for (const [genre, count] of sortedGenres) {
-      report += `   • ${genre} : ${count}x\n`;
-    }
   }
 
   // Dedup helper: extract key terms from a line to detect semantic duplicates
