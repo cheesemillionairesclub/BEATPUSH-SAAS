@@ -304,11 +304,40 @@ export function buildDailyReport(data) {
     report += `⚠️ Stripe non disponible — données indisponibles\n`;
   }
 
-  // Show in_progress orders count
-  const todayInProgress = s.today.byStatus?.in_progress || 0;
-  const monthInProgress = s.month.byStatus?.in_progress || 0;
-  if (monthInProgress > 0) {
-    report += `🔄 Commandes en cours : <b>${monthInProgress}</b> (dont ${todayInProgress} aujourd'hui)\n`;
+  // Show in_progress orders count — use real statuses (Stripe for subs, DB for one-time)
+  const allMonthOrders = s.month.orders || [];
+  let inProgressCount = 0;
+  let inProgressToday = 0;
+  const todayStart = s.today.orders?.length > 0 ? new Date(s.today.orders[s.today.orders.length - 1].created_at) : null;
+
+  for (const order of allMonthOrders) {
+    // For daily-push, check Stripe subscription status
+    if (order.pack === 'daily-push') {
+      const subData = stripe?.subscriptions?.[order.id];
+      const stripeStatus = subData?.status;
+      // Only count as in_progress if truly active in Stripe
+      if (stripeStatus === 'active' || stripeStatus === 'trialing') {
+        if (order.order_status === 'active_missing_receipt' || order.order_status === 'complete_for_day') {
+          // Active sub, not "in_progress" in the one-time sense
+          continue;
+        }
+      }
+      // Cancelled/unpaid subs are not in_progress
+      continue;
+    }
+
+    // For one-time orders: in_progress if status says so
+    const status = order.order_status || 'in_progress';
+    if (status === 'in_progress') {
+      inProgressCount++;
+      if (todayStart && new Date(order.created_at) >= todayStart) {
+        inProgressToday++;
+      }
+    }
+  }
+
+  if (inProgressCount > 0) {
+    report += `🔄 Commandes en cours : <b>${inProgressCount}</b> (dont ${inProgressToday} aujourd'hui)\n`;
   }
 
   // Daily Push subscriptions detail
