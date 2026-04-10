@@ -61,8 +61,8 @@ export async function collectMetaAdsData() {
     const today = formatDate(getToday());
     const monthStart = formatDate(getMonthStart());
 
-    // Fetch campaign-level insights for today and month-to-date in parallel
-    const [todayInsights, monthInsights, campaignDetails] = await Promise.all([
+    // Fetch campaign-level insights, ad-level diagnostics, and recommendations in parallel
+    const [todayInsights, monthInsights, campaignDetails, adDiagnostics] = await Promise.all([
       // Today's performance
       metaFetch(`/${accountId}/insights`, accessToken, {
         time_range: { since: today, until: today },
@@ -77,12 +77,19 @@ export async function collectMetaAdsData() {
         level: 'campaign',
         limit: 100,
       }),
-      // Active campaigns
+      // Active campaigns with recommendations
       metaFetch(`/${accountId}/campaigns`, accessToken, {
-        fields: 'name,status,daily_budget,lifetime_budget,objective,bid_strategy',
+        fields: 'name,status,daily_budget,lifetime_budget,objective,bid_strategy,recommendations',
         filtering: [{ field: 'effective_status', operator: 'IN', value: ['ACTIVE', 'PAUSED'] }],
         limit: 100,
       }),
+      // Ad-level relevance diagnostics (quality, engagement, conversion rankings)
+      metaFetch(`/${accountId}/insights`, accessToken, {
+        time_range: { since: monthStart, until: today },
+        fields: 'ad_name,ad_id,campaign_name,campaign_id,impressions,clicks,spend,quality_ranking,engagement_rate_ranking,conversion_rate_ranking',
+        level: 'ad',
+        limit: 50,
+      }).catch(() => ({ data: [] })),
     ]);
 
     // Process insights
@@ -142,6 +149,38 @@ export async function collectMetaAdsData() {
         : '0',
     });
 
+    // Process ad-level relevance diagnostics
+    const diagnostics = (adDiagnostics.data || [])
+      .filter(ad => parseInt(ad.impressions || 0) >= 500) // Only meaningful with 500+ impressions
+      .map(ad => ({
+        adName: ad.ad_name,
+        adId: ad.ad_id,
+        campaignName: ad.campaign_name,
+        campaignId: ad.campaign_id,
+        impressions: parseInt(ad.impressions || 0),
+        clicks: parseInt(ad.clicks || 0),
+        spend: parseFloat(ad.spend || 0),
+        qualityRanking: ad.quality_ranking || 'UNKNOWN',
+        engagementRanking: ad.engagement_rate_ranking || 'UNKNOWN',
+        conversionRanking: ad.conversion_rate_ranking || 'UNKNOWN',
+      }));
+
+    // Extract campaign-level recommendations from Meta
+    const campaignRecommendations = [];
+    for (const c of (campaignDetails.data || [])) {
+      if (c.recommendations?.length > 0) {
+        for (const rec of c.recommendations) {
+          campaignRecommendations.push({
+            campaignName: c.name,
+            campaignId: c.id,
+            title: rec.title,
+            message: rec.message,
+            importance: rec.importance,
+          });
+        }
+      }
+    }
+
     return {
       available: true,
       today: {
@@ -153,6 +192,8 @@ export async function collectMetaAdsData() {
         totals: sumCampaigns(monthCampaigns),
       },
       activeCampaigns: campaignDetails.data || [],
+      diagnostics,
+      campaignRecommendations,
     };
   } catch (error) {
     return {

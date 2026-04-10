@@ -28,6 +28,16 @@ RÈGLES D'ANALYSE :
 8. Un taux de rebond > 70% est préoccupant, < 40% est excellent
 9. Identifie les pays à fort trafic mais faible conversion (opportunité ou gaspillage)
 
+DIAGNOSTICS META ADS (si disponibles) :
+- quality_ranking : qualité perçue de la pub vs concurrents (ABOVE_AVERAGE_35, AVERAGE, BELOW_AVERAGE_10, etc.)
+- engagement_rate_ranking : taux d'engagement attendu vs concurrents
+- conversion_rate_ranking : taux de conversion attendu vs concurrents
+- Si un ranking est BELOW_AVERAGE, propose des actions concrètes :
+  * quality_ranking bas → améliorer le visuel/créatif (images, vidéos, format)
+  * engagement_rate_ranking bas → améliorer le texte/hook/CTA de la pub
+  * conversion_rate_ranking bas → améliorer le ciblage, la landing page, ou l'offre
+- meta.campaignRecommendations contient les suggestions directes de Meta
+
 RÉPONSE FORMAT JSON :
 {
   "health_score": 0-100,
@@ -37,6 +47,7 @@ RÉPONSE FORMAT JSON :
   "warnings": ["Alerte 1", "Alerte 2"],
   "recommendations": ["Action recommandée 1", "Action recommandée 2"],
   "meta_analysis": "Analyse spécifique Meta Ads (ou 'Non disponible')",
+  "meta_creative_tips": ["Conseil créatif/ciblage 1 basé sur les diagnostics", "Conseil 2"],
   "google_analysis": "Analyse spécifique Google Ads (ou 'Non disponible')",
   "site_analysis": "Analyse trafic site — visiteurs, pays, rebond, sources (ou 'Non disponible')",
   "revenue_analysis": "Analyse CA et tendances commandes"
