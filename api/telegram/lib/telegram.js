@@ -236,13 +236,6 @@ export function buildDailyReport(data) {
   if (meta?.available) {
     // 1. Campaign status (only active campaigns)
     const activeCampaigns = (meta.activeCampaigns || []).filter(c => c.status === 'ACTIVE');
-    if (activeCampaigns.length > 0) {
-      for (const c of activeCampaigns) {
-        const budget = c.daily_budget ? `${formatCurrency(c.daily_budget / 100)}/j` : (c.lifetime_budget ? `${formatCurrency(c.lifetime_budget / 100)} total` : 'N/A');
-        report += `   🟢 <b>${c.name}</b>\n`;
-        report += `   ID: ${c.id} | Budget: ${budget} | ${c.objective || ''}\n`;
-      }
-    }
 
     if (meta.today?.campaigns?.length > 0) {
       const mt = meta.today.totals;
