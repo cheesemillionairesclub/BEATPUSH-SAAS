@@ -43,8 +43,8 @@ export default async function handler(req, res) {
     // Enrich with Stripe data (real amounts and subscription statuses)
     const stripeData = await collectStripeData(supabase.allOrders || []);
 
-    // Analyze with Claude AI
-    const analysis = await analyzeWithClaude({ supabase, meta, google, ga4 });
+    // Analyze with Claude AI (include Stripe data as source of truth for revenue)
+    const analysis = await analyzeWithClaude({ supabase, meta, google, ga4, stripe: stripeData });
 
     // Build the report
     const report = buildDailyReport({ supabase, meta, google, ga4, analysis, stripe: stripeData });

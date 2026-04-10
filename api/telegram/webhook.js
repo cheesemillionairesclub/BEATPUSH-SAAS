@@ -389,7 +389,7 @@ export default async function handler(req, res) {
           collectGA4Data(),
         ]);
         const stripeData = await collectStripeData(supabase.allOrders || []);
-        const analysis = await analyzeWithClaude({ supabase, meta, google, ga4 });
+        const analysis = await analyzeWithClaude({ supabase, meta, google, ga4, stripe: stripeData });
         responseText = buildDailyReport({ supabase, meta, google, ga4, analysis, stripe: stripeData });
         break;
       }

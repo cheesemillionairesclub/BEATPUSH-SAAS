@@ -28,6 +28,13 @@ RÈGLES D'ANALYSE :
 8. Un taux de rebond > 70% est préoccupant, < 40% est excellent
 9. Identifie les pays à fort trafic mais faible conversion (opportunité ou gaspillage)
 
+SOURCE DE VÉRITÉ POUR LE CA :
+- IMPORTANT : utilise TOUJOURS les données "stripe" (si disponibles) pour les montants de CA, PAS les montants de supabase
+- stripe.oneTimeAmounts contient les montants réels reçus par commande (en cents)
+- stripe.subscriptions contient le totalPaid réel par abonnement (en cents)
+- Les montants supabase sont des estimations, Stripe = montants réellement encaissés
+- Divise les montants Stripe par 100 pour avoir les dollars
+
 DIAGNOSTICS META ADS (si disponibles) :
 - quality_ranking : qualité perçue de la pub vs concurrents (ABOVE_AVERAGE_35, AVERAGE, BELOW_AVERAGE_10, etc.)
 - engagement_rate_ranking : taux d'engagement attendu vs concurrents
@@ -98,14 +105,32 @@ Réponds UNIQUEMENT en JSON valide.`;
   }
 }
 
+// Calculate Stripe-based revenue for fallback analysis
+function calcStripeTotal(orders, stripeData) {
+  if (!stripeData?.available) return null;
+  let total = 0;
+  for (const order of (orders || [])) {
+    if (order.pack === 'daily-push') {
+      const sub = stripeData.subscriptions?.[order.id];
+      if (sub) total += sub.totalPaid;
+    } else {
+      const amt = stripeData.oneTimeAmounts?.[order.id];
+      total += amt ? amt.amountReceived : (order.amount || 0);
+    }
+  }
+  return total / 100;
+}
+
 // Fallback when Claude API is not available
 function generateFallbackAnalysis(data) {
-  const { supabase, meta, google, ga4 } = data;
-  const todayRevenue = supabase?.today?.revenue || 0;
-  const yesterdayRevenue = supabase?.yesterday?.revenue || 0;
-  const monthRevenue = supabase?.month?.revenue || 0;
+  const { supabase, meta, google, ga4, stripe } = data;
   const todayOrders = supabase?.today?.count || 0;
   const monthOrders = supabase?.month?.count || 0;
+
+  // Use Stripe revenue if available, otherwise fallback to Supabase
+  const todayRevenue = calcStripeTotal(supabase?.today?.orders, stripe) ?? supabase?.today?.revenue ?? 0;
+  const yesterdayRevenue = calcStripeTotal(supabase?.yesterday?.orders, stripe) ?? supabase?.yesterday?.revenue ?? 0;
+  const monthRevenue = calcStripeTotal(supabase?.allOrders, stripe) ?? supabase?.month?.revenue ?? 0;
 
   const trend = todayRevenue > yesterdayRevenue ? 'up' : todayRevenue < yesterdayRevenue ? 'down' : 'stable';
 
@@ -114,16 +139,17 @@ function generateFallbackAnalysis(data) {
   if (todayOrders > 0) score += 15;
   if (todayRevenue > 500) score += 15;
   if (monthOrders > 10) score += 10;
-  if (meta?.available && meta.today?.totals?.totalConversions > 0) score += 10;
-  if (google?.available && google.today?.totals?.totalConversions > 0) score += 10;
+  if (meta?.available && meta.today?.campaigns?.length > 0) score += 10;
+  if (google?.available && google.today?.campaigns?.length > 0) score += 10;
   if (ga4?.available && ga4.today?.users > 0) score += 5;
   score = Math.min(score, 100);
 
+  const revenueLabel = stripe?.available ? '(Stripe)' : '(estimé)';
   const highlights = [];
   const warnings = [];
 
-  if (todayOrders > 0) highlights.push(`${todayOrders} commande(s) aujourd'hui ($${todayRevenue})`);
-  if (monthRevenue > 0) highlights.push(`$${monthRevenue} CA ce mois (${monthOrders} commandes)`);
+  if (todayOrders > 0) highlights.push(`${todayOrders} commande(s) aujourd'hui — $${todayRevenue} ${revenueLabel}`);
+  if (monthRevenue > 0) highlights.push(`$${monthRevenue} CA ce mois ${revenueLabel} (${monthOrders} commandes)`);
   if (ga4?.available && ga4.today) highlights.push(`${ga4.today.users} visiteurs aujourd'hui sur le site`);
   if (todayOrders === 0) warnings.push('Aucune commande aujourd\'hui');
   if (!meta?.available) warnings.push('Meta Ads non connecté');
@@ -133,7 +159,7 @@ function generateFallbackAnalysis(data) {
   return {
     health_score: score,
     health_trend: trend,
-    summary: `${todayOrders} commande(s) aujourd'hui pour $${todayRevenue}. ${monthOrders} commandes ce mois ($${monthRevenue} CA).`,
+    summary: `${todayOrders} commande(s) aujourd'hui pour $${todayRevenue} ${revenueLabel}. ${monthOrders} commandes ce mois ($${monthRevenue} CA).`,
     highlights,
     warnings,
     recommendations: [
@@ -145,6 +171,6 @@ function generateFallbackAnalysis(data) {
     meta_analysis: meta?.available ? 'Données disponibles' : 'Non connecté — configurer META_ADS_ACCESS_TOKEN et META_ADS_ACCOUNT_ID',
     google_analysis: google?.available ? 'Données disponibles' : 'Non connecté — configurer les credentials Google Ads',
     site_analysis: ga4?.available ? `${ga4.today?.users || 0} visiteurs aujourd'hui, ${(ga4.today?.bounceRate * 100 || 0).toFixed(0)}% rebond` : 'Non connecté — configurer GA4_PROPERTY_ID, GA4_CLIENT_EMAIL, GA4_PRIVATE_KEY',
-    revenue_analysis: `CA jour: $${todayRevenue} | CA mois: $${monthRevenue}`,
+    revenue_analysis: `CA jour: $${todayRevenue} ${revenueLabel} | CA mois: $${monthRevenue} ${revenueLabel}`,
   };
 }
