@@ -155,26 +155,30 @@ export function buildDailyReport(data) {
   report += `🏥 Santé : <b>${analysis.health_score}/100</b> ${trendEmoji(analysis.health_trend)}\n`;
   report += `\n💬 <i>${analysis.summary}</i>\n`;
 
-  // Funnel + user stats block (reused in all branches)
+  // Funnel + new user stats block (reused in all branches)
   const funnel = supabase.funnel;
   const funnelBlock = () => {
     let f = '';
     f += `🔍 Recherches : ${funnel.searches}\n`;
     f += `🎯 Sélections : ${funnel.selections}\n`;
     f += `🛒 Conversions (Stripe) : ${stripeConvsToday}\n`;
-    f += `👥 ${funnel.uniqueUsers} utilisateur${funnel.uniqueUsers > 1 ? 's' : ''} (${funnel.newUsers} nouveau${funnel.newUsers > 1 ? 'x' : ''}) | 📱 ${funnel.devices.mobile} mobile | 💻 ${funnel.devices.desktop} desktop\n`;
+    if (funnel.newUsers > 0) {
+      f += `🆕 ${funnel.newUsers} nouveau${funnel.newUsers > 1 ? 'x' : ''} utilisateur${funnel.newUsers > 1 ? 's' : ''} | 📱 ${funnel.newDevices.mobile} mobile | 💻 ${funnel.newDevices.desktop} desktop\n`;
+    } else {
+      f += `🆕 Aucun nouvel utilisateur\n`;
+    }
     return f;
   };
 
   // ━━ META ADS + FUNNEL ━━━━━━━━━━━━━━━━
   report += `\n━━ 📘 META ADS + FUNNEL ━━━━━━━━━━\n`;
   if (meta?.available) {
-    // 1. Campaign status (active campaigns first)
-    if (meta.activeCampaigns?.length > 0) {
-      for (const c of meta.activeCampaigns) {
-        const statusIcon = c.status === 'ACTIVE' ? '🟢' : c.status === 'PAUSED' ? '🟡' : '⚪';
+    // 1. Campaign status (only active campaigns)
+    const activeCampaigns = (meta.activeCampaigns || []).filter(c => c.status === 'ACTIVE');
+    if (activeCampaigns.length > 0) {
+      for (const c of activeCampaigns) {
         const budget = c.daily_budget ? `${formatCurrency(c.daily_budget / 100)}/j` : (c.lifetime_budget ? `${formatCurrency(c.lifetime_budget / 100)} total` : 'N/A');
-        report += `   ${statusIcon} <b>${c.name}</b>\n`;
+        report += `   🟢 <b>${c.name}</b>\n`;
         report += `   ID: ${c.id} | Budget: ${budget} | ${c.objective || ''}\n`;
       }
     }
