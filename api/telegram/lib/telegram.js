@@ -153,7 +153,6 @@ export function buildDailyReport(data) {
   // Header
   report += `📊 <b>BEATPUSH</b> — ${dateStr}\n`;
   report += `🏥 Santé : <b>${analysis.health_score}/100</b> ${trendEmoji(analysis.health_trend)}\n`;
-  report += `\n💬 <i>${analysis.summary}</i>\n`;
 
   // Funnel + new user stats block (reused in all branches)
   const funnel = supabase.funnel;
