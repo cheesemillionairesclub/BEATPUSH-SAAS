@@ -24,13 +24,30 @@ function countryFlag(name) {
   return [...code].map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65)).join('');
 }
 
-// Visual width of a string accounting for emojis (2 chars wide) and flag pairs
+// Visual width of a string in monospace, accounting for emojis (2 cols),
+// flag pairs (2 regional indicators = 1 glyph = 2 cols), and variation selectors (0 cols)
 function visualWidth(str) {
+  const chars = [...str];
   let w = 0;
-  for (const ch of str) {
-    const cp = ch.codePointAt(0);
-    if (cp > 0x1F00) w += 2; // emoji / special symbol
-    else w += 1;
+  let i = 0;
+  while (i < chars.length) {
+    const cp = chars[i].codePointAt(0);
+    // Variation selectors (text/emoji presentation) — zero width
+    if (cp === 0xFE0F || cp === 0xFE0E) { i++; continue; }
+    // Zero-width joiner — zero width
+    if (cp === 0x200D) { i++; continue; }
+    // Regional indicator pair (flag emoji: 2 codepoints → 1 glyph, width 2)
+    if (cp >= 0x1F1E6 && cp <= 0x1F1FF) {
+      if (i + 1 < chars.length) {
+        const next = chars[i + 1].codePointAt(0);
+        if (next >= 0x1F1E6 && next <= 0x1F1FF) { w += 2; i += 2; continue; }
+      }
+      w += 2; i++; continue;
+    }
+    // Emoji & special symbols — width 2
+    if (cp > 0x1F00) { w += 2; i++; continue; }
+    // Regular character — width 1
+    w += 1; i++;
   }
   return w;
 }
@@ -233,11 +250,11 @@ export function buildDailyReport(data) {
 
       // Tableau Aujourd'hui vs Avril (cumul)
       const tr = (label, today, month) =>
-        `${vPadEnd(label, 14)} ${vPadStart(String(today), 10)}  ${vPadStart(String(month), 10)}`;
+        `${vPadEnd(label, 16)} ${vPadStart(String(today), 9)}  ${vPadStart(String(month), 9)}`;
 
       report += `\n<pre>`;
       report += tr('', 'Auj.', 'Avril') + '\n';
-      report += '─'.repeat(38) + '\n';
+      report += '─'.repeat(37) + '\n';
       report += tr('Dépenses', formatCurrency(mt.totalSpend), mm ? formatCurrency(mm.totalSpend) : '—') + '\n';
       report += tr('Impressions', mt.totalImpressions.toLocaleString(), mm ? mm.totalImpressions.toLocaleString() : '—') + '\n';
       report += tr('Clics', String(mt.totalClicks), mm ? String(mm.totalClicks) : '—') + '\n';
@@ -336,7 +353,7 @@ export function buildDailyReport(data) {
 
   // Revenue table
   const tr2 = (label, value) =>
-    `${vPadEnd(label, 18)} ${vPadStart(String(value), 12)}`;
+    `${vPadEnd(label, 26)} ${vPadStart(String(value), 8)}`;
 
   if (monthStripeRevenue && stripe?.available) {
     // Show in_progress orders count — use real statuses (Stripe for subs, DB for one-time)
