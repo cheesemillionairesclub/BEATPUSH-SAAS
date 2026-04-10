@@ -539,7 +539,7 @@ export function buildDailyReport(data) {
       }
     }
 
-    // Ad diagnostics — simplified text
+    // Ad diagnostics — simplified text (only show if Meta provides actual rankings)
     if (hasDiagnostics) {
       const rankText = (r) => {
         if (r === 'ABOVE_AVERAGE_35' || r === 'ABOVE_AVERAGE') return 'bon';
@@ -555,39 +555,38 @@ export function buildDailyReport(data) {
         return null;
       };
 
-      report += `\n🔬 <b>Diagnostics Meta par pub :</b>\n`;
-      for (const ad of meta.diagnostics.slice(0, 5)) {
-        const q = rankText(ad.qualityRanking);
-        const e = rankText(ad.engagementRanking);
-        const cv = rankText(ad.conversionRanking);
-
-        // Skip if all unknown
-        if (!q && !e && !cv) continue;
-
-        report += `   • <b>${escapeHtml(ad.adName)}</b> — `;
-        const parts = [];
-        if (q) parts.push(`qualité ${q}`);
-        if (e) parts.push(`engagement ${e}`);
-        if (cv) parts.push(`conversion ${cv}`);
-        report += parts.join(', ') + '\n';
-
-        // Actionable tip for below-average rankings
-        const tips = [
-          rankExplain('quality', ad.qualityRanking),
-          rankExplain('engagement', ad.engagementRanking),
-          rankExplain('conversion', ad.conversionRanking),
-        ].filter(Boolean);
-        if (tips.length > 0) {
-          report += `     → ${tips.join(' + ')}\n`;
-        }
-      }
-
-      // If all diagnostics were unknown (< 500 impressions)
-      const allUnknown = meta.diagnostics.every(ad =>
-        !rankText(ad.qualityRanking) && !rankText(ad.engagementRanking) && !rankText(ad.conversionRanking)
+      // Check if at least one ad has real rankings before showing the section
+      const hasRealRankings = meta.diagnostics.some(ad =>
+        rankText(ad.qualityRanking) || rankText(ad.engagementRanking) || rankText(ad.conversionRanking)
       );
-      if (allUnknown) {
-        report += `   ℹ️ Pas assez de données (il faut 500+ impressions par pub pour que Meta évalue la qualité)\n`;
+
+      if (hasRealRankings) {
+        report += `\n🔬 <b>Diagnostics Meta par pub :</b>\n`;
+        for (const ad of meta.diagnostics.slice(0, 5)) {
+          const q = rankText(ad.qualityRanking);
+          const e = rankText(ad.engagementRanking);
+          const cv = rankText(ad.conversionRanking);
+
+          // Skip if all unknown
+          if (!q && !e && !cv) continue;
+
+          report += `   • <b>${escapeHtml(ad.adName)}</b> — `;
+          const parts = [];
+          if (q) parts.push(`qualité ${q}`);
+          if (e) parts.push(`engagement ${e}`);
+          if (cv) parts.push(`conversion ${cv}`);
+          report += parts.join(', ') + '\n';
+
+          // Actionable tip for below-average rankings
+          const tips = [
+            rankExplain('quality', ad.qualityRanking),
+            rankExplain('engagement', ad.engagementRanking),
+            rankExplain('conversion', ad.conversionRanking),
+          ].filter(Boolean);
+          if (tips.length > 0) {
+            report += `     → ${tips.join(' + ')}\n`;
+          }
+        }
       }
     }
   }
