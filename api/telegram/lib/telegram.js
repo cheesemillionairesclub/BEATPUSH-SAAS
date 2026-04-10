@@ -270,20 +270,6 @@ export function buildDailyReport(data) {
       }
     }
 
-    // Traffic sources
-    if (ga4.sources?.length > 0) {
-      report += `\n   📡 <b>Sources trafic :</b>\n`;
-      for (const s of ga4.sources.slice(0, 5)) {
-        const bounce = ((s.bounceRate || 0) * 100).toFixed(0);
-        report += `   • ${s.channel} — ${s.sessions} sessions (${bounce}% rebond)\n`;
-      }
-    }
-
-    // Month summary
-    if (ga4.month) {
-      const m = ga4.month;
-      report += `\n   📅 Mois : ${m.users} visiteurs | ${m.sessions} sessions | ${m.pageViews} pages vues\n`;
-    }
   } else if (ga4?.available) {
     report += `📊 Connecté — données sous 24-48h\n`;
   } else {
