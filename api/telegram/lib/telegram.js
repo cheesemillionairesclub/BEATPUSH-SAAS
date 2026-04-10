@@ -313,49 +313,48 @@ export function buildDailyReport(data) {
   // Always use Stripe as unique source of conversions
   const monthStripeRevenue = calcStripeRevenue(s.allOrders || [], stripe);
 
+  // Revenue table
+  const tr2 = (label, value) =>
+    `${label.padEnd(18)} ${String(value).padStart(12)}`;
+
   if (monthStripeRevenue && stripe?.available) {
-    report += `💳 <b>Revenue Stripe</b>\n`;
-    report += `📦 Commandes : ${formatCurrency(monthStripeRevenue.oneTimeTotal / 100)}\n`;
-    report += `🔄 Abonnements : ${formatCurrency(monthStripeRevenue.subsTotal / 100)}\n`;
-    report += `💰 Total reçu : <b>${formatCurrency(monthStripeRevenue.total / 100)}</b>\n`;
-  } else {
-    report += `⚠️ Stripe non disponible — données indisponibles\n`;
-  }
+    // Show in_progress orders count — use real statuses (Stripe for subs, DB for one-time)
+    const allMonthOrders = s.month.orders || [];
+    let inProgressCount = 0;
+    let inProgressToday = 0;
+    const todayStart = s.today.orders?.length > 0 ? new Date(s.today.orders[s.today.orders.length - 1].created_at) : null;
 
-  // Show in_progress orders count — use real statuses (Stripe for subs, DB for one-time)
-  const allMonthOrders = s.month.orders || [];
-  let inProgressCount = 0;
-  let inProgressToday = 0;
-  const todayStart = s.today.orders?.length > 0 ? new Date(s.today.orders[s.today.orders.length - 1].created_at) : null;
-
-  for (const order of allMonthOrders) {
-    // For daily-push, check Stripe subscription status
-    if (order.pack === 'daily-push') {
-      const subData = stripe?.subscriptions?.[order.id];
-      const stripeStatus = subData?.status;
-      // Only count as in_progress if truly active in Stripe
-      if (stripeStatus === 'active' || stripeStatus === 'trialing') {
-        if (order.order_status === 'active_missing_receipt' || order.order_status === 'complete_for_day') {
-          // Active sub, not "in_progress" in the one-time sense
-          continue;
+    for (const order of allMonthOrders) {
+      if (order.pack === 'daily-push') {
+        const subData = stripe?.subscriptions?.[order.id];
+        const stripeStatus = subData?.status;
+        if (stripeStatus === 'active' || stripeStatus === 'trialing') {
+          if (order.order_status === 'active_missing_receipt' || order.order_status === 'complete_for_day') {
+            continue;
+          }
+        }
+        continue;
+      }
+      const status = order.order_status || 'in_progress';
+      if (status === 'in_progress') {
+        inProgressCount++;
+        if (todayStart && new Date(order.created_at) >= todayStart) {
+          inProgressToday++;
         }
       }
-      // Cancelled/unpaid subs are not in_progress
-      continue;
     }
 
-    // For one-time orders: in_progress if status says so
-    const status = order.order_status || 'in_progress';
-    if (status === 'in_progress') {
-      inProgressCount++;
-      if (todayStart && new Date(order.created_at) >= todayStart) {
-        inProgressToday++;
-      }
+    report += `<pre>`;
+    report += tr2('📦 Commandes', formatCurrency(monthStripeRevenue.oneTimeTotal / 100)) + '\n';
+    report += tr2('🔄 Abonnements', formatCurrency(monthStripeRevenue.subsTotal / 100)) + '\n';
+    report += tr2('💰 Total reçu', formatCurrency(monthStripeRevenue.total / 100)) + '\n';
+    if (inProgressCount > 0) {
+      report += '\n';
+      report += tr2('🔄 En cours', `${inProgressCount} (${inProgressToday} auj.)`) + '\n';
     }
-  }
-
-  if (inProgressCount > 0) {
-    report += `🔄 Commandes en cours : <b>${inProgressCount}</b> (dont ${inProgressToday} aujourd'hui)\n`;
+    report += `</pre>`;
+  } else {
+    report += `⚠️ Stripe non disponible — données indisponibles\n`;
   }
 
   // Daily Push subscriptions detail
