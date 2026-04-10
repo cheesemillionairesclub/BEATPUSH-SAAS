@@ -203,9 +203,12 @@ export function buildDailyReport(data) {
 
   // Compute Stripe-based conversions & revenue (single source of truth)
   const todayStripeRev = calcStripeRevenue(supabase.today.orders || [], stripe);
+  const yesterdayStripeRev = calcStripeRevenue(supabase.yesterday.orders || [], stripe);
   const monthStripeRev = calcStripeRevenue(supabase.allOrders || [], stripe);
   const stripeConvsToday = supabase.today.count || 0;
   const stripeRevenueToday = (todayStripeRev?.total || 0) / 100;
+  const stripeConvsYesterday = supabase.yesterday.count || 0;
+  const stripeRevenueYesterday = (yesterdayStripeRev?.total || 0) / 100;
   const stripeConvsMonth = supabase.month.count || 0;
   const stripeRevenueMonth = (monthStripeRev?.total || 0) / 100;
 
@@ -244,61 +247,72 @@ export function buildDailyReport(data) {
 
     if (meta.today?.campaigns?.length > 0) {
       const mt = meta.today.totals;
+      const my = meta.yesterday?.totals;
       const mm = meta.month?.totals;
       const metaRoas = mt.totalSpend > 0 ? (stripeRevenueToday / mt.totalSpend).toFixed(1) : '0';
+      const yesterdayMetaRoas = my && my.totalSpend > 0 ? (stripeRevenueYesterday / my.totalSpend).toFixed(1) : '0';
       const monthMetaRoas = mm && mm.totalSpend > 0 ? (stripeRevenueMonth / mm.totalSpend).toFixed(1) : '0';
 
-      // Tableau Aujourd'hui vs Avril (cumul)
-      const tr = (label, today, month) =>
-        `${vPadEnd(label, 16)} ${vPadStart(String(today), 9)}  ${vPadStart(String(month), 9)}`;
+      const yf = supabase.yesterdayFunnel || {};
+
+      // Tableau Aujourd'hui vs Hier vs Avril (cumul)
+      const tr = (label, today, yesterday, month) =>
+        `${vPadEnd(label, 14)} ${vPadStart(String(today), 8)} ${vPadStart(String(yesterday), 8)} ${vPadStart(String(month), 8)}`;
 
       report += `\n<pre>`;
-      report += tr('', 'Auj.', 'Avril') + '\n';
-      report += '─'.repeat(37) + '\n';
-      report += tr('Dépenses', formatCurrency(mt.totalSpend), mm ? formatCurrency(mm.totalSpend) : '—') + '\n';
-      report += tr('Impressions', mt.totalImpressions.toLocaleString(), mm ? mm.totalImpressions.toLocaleString() : '—') + '\n';
-      report += tr('Clics', String(mt.totalClicks), mm ? String(mm.totalClicks) : '—') + '\n';
-      report += tr('CPC moyen', formatCurrency(mt.avgCpc), mm ? formatCurrency(mm.avgCpc || 0) : '—') + '\n';
+      report += tr('', 'Auj.', 'Hier', 'Avril') + '\n';
+      report += '─'.repeat(41) + '\n';
+      report += tr('Dépenses', formatCurrency(mt.totalSpend), my ? formatCurrency(my.totalSpend) : '—', mm ? formatCurrency(mm.totalSpend) : '—') + '\n';
+      report += tr('Impressions', mt.totalImpressions.toLocaleString(), my ? my.totalImpressions.toLocaleString() : '—', mm ? mm.totalImpressions.toLocaleString() : '—') + '\n';
+      report += tr('Clics', String(mt.totalClicks), my ? String(my.totalClicks) : '—', mm ? String(mm.totalClicks) : '—') + '\n';
+      report += tr('CPC moyen', formatCurrency(mt.avgCpc), my ? formatCurrency(my.avgCpc || 0) : '—', mm ? formatCurrency(mm.avgCpc || 0) : '—') + '\n';
       report += '\n';
       const todayUsers = ga4?.today?.users ?? '—';
+      const yesterdayUsers = ga4?.yesterday?.users ?? '—';
       const monthUsers = ga4?.month?.users ?? '—';
-      report += tr('Visiteurs', String(todayUsers), String(monthUsers)) + '\n';
+      report += tr('Visiteurs', String(todayUsers), String(yesterdayUsers), String(monthUsers)) + '\n';
       if (ga4.sources?.length > 0) {
         const metaUsers = ga4.sources.filter(s => s.channel === 'Paid Social').reduce((sum, s) => sum + (s.users || 0), 0);
         const googleUsers = ga4.sources.filter(s => s.channel === 'Paid Search').reduce((sum, s) => sum + (s.users || 0), 0);
         const totalSourceUsers = ga4.sources.reduce((sum, s) => sum + (s.users || 0), 0);
         const googleAdsActive = google?.available && google.today?.campaigns?.length > 0;
         const autresUsers = totalSourceUsers - metaUsers - (googleAdsActive ? googleUsers : 0);
-        report += tr('  📘 Meta', String(metaUsers), '—') + '\n';
+        report += tr('  📘 Meta', String(metaUsers), '—', '—') + '\n';
         if (googleAdsActive) {
-          report += tr('  🔍 Google Ads', String(googleUsers), '—') + '\n';
+          report += tr('  🔍 Google Ads', String(googleUsers), '—', '—') + '\n';
         }
-        report += tr('  🌐 Autres', String(autresUsers), '—') + '\n';
+        report += tr('  🌐 Autres', String(autresUsers), '—', '—') + '\n';
       }
       if (ga4.countries?.length > 0) {
         const tc = ga4.countries.slice(0, 3);
+        const yc = ga4.countriesYesterday || [];
         const mc = ga4.countriesMonth || [];
         const tTotal = tc.reduce((s, c) => s + (c.users || 0), 0) || 1;
+        const yTotal = yc.reduce((s, c) => s + (c.users || 0), 0) || 1;
         const mTotal = mc.reduce((s, c) => s + (c.users || 0), 0) || 1;
+        const yMap = new Map(yc.map(c => [c.country, c]));
         const mMap = new Map(mc.map(c => [c.country, c]));
         for (const c of tc) {
           const tPct = `${Math.round((c.users / tTotal) * 100)}%`;
+          const yC = yMap.get(c.country);
+          const yPct = yC ? `${Math.round((yC.users / yTotal) * 100)}%` : '—';
           const mC = mMap.get(c.country);
           const mPct = mC ? `${Math.round((mC.users / mTotal) * 100)}%` : '—';
-          report += tr(`  ${countryFlag(c.country)}`, tPct, mPct) + '\n';
+          report += tr(`  ${countryFlag(c.country)}`, tPct, yPct, mPct) + '\n';
         }
       }
       const todayBounce = ga4?.today ? `${((ga4.today.bounceRate || 0) * 100).toFixed(0)}%` : '—';
+      const yesterdayBounce = ga4?.yesterday ? `${((ga4.yesterday.bounceRate || 0) * 100).toFixed(0)}%` : '—';
       const monthBounce = ga4?.month ? `${((ga4.month.bounceRate || 0) * 100).toFixed(0)}%` : '—';
-      report += tr('Rebond', todayBounce, monthBounce) + '\n';
+      report += tr('Rebond', todayBounce, yesterdayBounce, monthBounce) + '\n';
       report += '\n';
-      report += tr('Nv. util.', String(funnel.newUsers), String(mf.newUsers ?? funnel.newUsers)) + '\n';
-      report += tr('Recherches', String(funnel.searches), String(mf.searches ?? funnel.searches)) + '\n';
-      report += tr('Sélections', String(funnel.selections), String(mf.selections ?? funnel.selections)) + '\n';
+      report += tr('Nv. util.', String(funnel.newUsers), String(yf.newUsers ?? 0), String(mf.newUsers ?? funnel.newUsers)) + '\n';
+      report += tr('Recherches', String(funnel.searches), String(yf.searches ?? 0), String(mf.searches ?? funnel.searches)) + '\n';
+      report += tr('Sélections', String(funnel.selections), String(yf.selections ?? 0), String(mf.selections ?? funnel.selections)) + '\n';
       report += '\n';
-      report += tr('Conv.', String(stripeConvsToday), String(stripeConvsMonth)) + '\n';
-      report += tr('CA Stripe', formatCurrency(stripeRevenueToday), formatCurrency(stripeRevenueMonth)) + '\n';
-      report += tr('ROAS', `${metaRoas}x`, `${monthMetaRoas}x`) + '\n';
+      report += tr('Conv.', String(stripeConvsToday), String(stripeConvsYesterday), String(stripeConvsMonth)) + '\n';
+      report += tr('CA Stripe', formatCurrency(stripeRevenueToday), formatCurrency(stripeRevenueYesterday), formatCurrency(stripeRevenueMonth)) + '\n';
+      report += tr('ROAS', `${metaRoas}x`, `${yesterdayMetaRoas}x`, `${monthMetaRoas}x`) + '\n';
       report += `</pre>`;
       if (funnel.newUsers > 0) {
         report += `🆕 ${funnel.newUsers} nouveau${funnel.newUsers > 1 ? 'x' : ''} utilisateur${funnel.newUsers > 1 ? 's' : ''} | 📱 ${funnel.newDevices.mobile} mobile | 💻 ${funnel.newDevices.desktop} desktop\n`;
@@ -386,26 +400,25 @@ export function buildDailyReport(data) {
     }
 
     report += `<pre>`;
+    // 1. Commandes + En cours
     report += tr2('📦 Commandes', formatCurrency(monthStripeRevenue.oneTimeTotal / 100)) + '\n';
-    report += tr2('🔄 Abonnements', formatCurrency(monthStripeRevenue.subsTotal / 100)) + '\n';
-    report += tr2('💰 Total reçu', formatCurrency(monthStripeRevenue.total / 100)) + '\n';
     if (inProgressCount > 0) {
-      report += '\n';
       report += tr2('🔄 En cours', `${inProgressCount} (${inProgressToday} auj.)`) + '\n';
     }
 
-    // Daily Push subscriptions detail
+    // 2. Abonnements + Daily Push
     const dailyPushSubs = (s.allDailyPushSubs || []);
+    const activeSubs = dailyPushSubs.filter(o => isSubActive(o, stripe));
+    const missingSubs = dailyPushSubs.filter(o => o.order_status === 'active_missing_receipt');
+
+    report += '\n';
+    report += tr2('🔄 Abonnements', formatCurrency(monthStripeRevenue.subsTotal / 100)) + '\n';
+    report += tr2('🔄 Daily Push', `${activeSubs.length} actifs`) + '\n';
+    if (missingSubs.length > 0) {
+      report += tr2('  ⚠️ Receipts', `${missingSubs.length} manquants`) + '\n';
+    }
+
     if (dailyPushSubs.length > 0) {
-      const activeSubs = dailyPushSubs.filter(o => isSubActive(o, stripe));
-      const missingSubs = dailyPushSubs.filter(o => o.order_status === 'active_missing_receipt');
-
-      report += '\n';
-      report += tr2('🔄 Daily Push', `${activeSubs.length} actifs`) + '\n';
-      if (missingSubs.length > 0) {
-        report += tr2('  ⚠️ Receipts', `${missingSubs.length} manquants`) + '\n';
-      }
-
       const visibleSubs = dailyPushSubs.filter(sub => {
         const subStripeData = stripe?.subscriptions?.[sub.id];
         if (subStripeData && (subStripeData.status === 'canceled' || subStripeData.status === 'unpaid')) return false;
@@ -423,7 +436,7 @@ export function buildDailyReport(data) {
       }
     }
 
-    // Breakdown by pack
+    // 3. Packs ce mois
     if (Object.keys(s.today.byPack).length > 0 || Object.keys(s.month.byPack).length > 0) {
       report += '\n';
       report += '📋 Packs ce mois\n';
@@ -442,7 +455,7 @@ export function buildDailyReport(data) {
       }
     }
 
-    // Top genres
+    // 4. Top genres
     if (Object.keys(s.month.byGenre).length > 0) {
       report += '\n';
       report += '🎵 Top genres ce mois\n';

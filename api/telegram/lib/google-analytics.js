@@ -105,15 +105,34 @@ export async function collectGA4Data() {
 
     const todayStr = formatDate(new Date());
 
+    const yesterdayDate = new Date();
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+    const yesterdayStr = formatDate(yesterdayDate);
+
     const monthStart = new Date();
     monthStart.setDate(1);
     const monthStartStr = formatDate(monthStart);
 
     // Run all reports in parallel
-    const [overviewToday, overviewMonth, countriesToday, countriesMonth, sourcesToday, pagesToday] = await Promise.all([
+    const [overviewToday, overviewYesterday, overviewMonth, countriesToday, countriesYesterday, countriesMonth, sourcesToday, pagesToday] = await Promise.all([
       // 1. Today overview: sessions, users, bounce rate, engagement
       runReport(propertyId, accessToken, {
         dateRanges: [{ startDate: todayStr, endDate: todayStr }],
+        metrics: [
+          { name: 'sessions' },
+          { name: 'totalUsers' },
+          { name: 'newUsers' },
+          { name: 'bounceRate' },
+          { name: 'averageSessionDuration' },
+          { name: 'screenPageViews' },
+          { name: 'engagedSessions' },
+          { name: 'conversions' },
+        ],
+      }),
+
+      // 1b. Yesterday overview
+      runReport(propertyId, accessToken, {
+        dateRanges: [{ startDate: yesterdayStr, endDate: yesterdayStr }],
         metrics: [
           { name: 'sessions' },
           { name: 'totalUsers' },
@@ -152,7 +171,20 @@ export async function collectGA4Data() {
         limit: 10,
       }),
 
-      // 3b. Top countries month
+      // 3b. Top countries yesterday
+      runReport(propertyId, accessToken, {
+        dateRanges: [{ startDate: yesterdayStr, endDate: yesterdayStr }],
+        dimensions: [{ name: 'country' }],
+        metrics: [
+          { name: 'sessions' },
+          { name: 'totalUsers' },
+          { name: 'conversions' },
+        ],
+        orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
+        limit: 10,
+      }),
+
+      // 3c. Top countries month
       runReport(propertyId, accessToken, {
         dateRanges: [{ startDate: monthStartStr, endDate: todayStr }],
         dimensions: [{ name: 'country' }],
@@ -230,6 +262,12 @@ export async function collectGA4Data() {
       ['sessions', 'users', 'conversions']
     );
 
+    const countriesYesterdayData = parseRows(
+      countriesYesterday,
+      ['country'],
+      ['sessions', 'users', 'conversions']
+    );
+
     const countriesMonthData = parseRows(
       countriesMonth,
       ['country'],
@@ -251,8 +289,10 @@ export async function collectGA4Data() {
     return {
       available: true,
       today: parseOverview(overviewToday),
+      yesterday: parseOverview(overviewYesterday),
       month: parseMonthOverview(overviewMonth),
       countries,
+      countriesYesterday: countriesYesterdayData,
       countriesMonth: countriesMonthData,
       sources,
       pages,

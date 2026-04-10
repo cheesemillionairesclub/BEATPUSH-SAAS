@@ -167,9 +167,21 @@ export async function collectSupabaseData(serviceKey) {
     };
   };
 
-  // Process activity funnel (today)
+  // Process activity funnel (today — includes last 24h from yesterday.start)
   const searches = recentActivity.filter(a => a.activity_type === 'search').length;
   const selections = recentActivity.filter(a => a.activity_type === 'select').length;
+
+  // Process activity funnel (yesterday only — proper date bounds)
+  const yesterdaySearches = recentActivity.filter(a => {
+    if (a.activity_type !== 'search') return false;
+    const t = new Date(a.created_at);
+    return t >= new Date(yesterday.start) && t <= new Date(yesterday.end);
+  }).length;
+  const yesterdaySelections = recentActivity.filter(a => {
+    if (a.activity_type !== 'select') return false;
+    const t = new Date(a.created_at);
+    return t >= new Date(yesterday.start) && t <= new Date(yesterday.end);
+  }).length;
 
   // Process activity funnel (month)
   const monthSearches = monthActivity.filter(a => a.activity_type === 'search').length;
@@ -202,6 +214,18 @@ export async function collectSupabaseData(serviceKey) {
         funnelNewUsers++;
         const device = profile.device_type || 'desktop';
         funnelNewDevices[device] = (funnelNewDevices[device] || 0) + 1;
+      }
+    }
+  }
+
+  // Count new users in funnel yesterday
+  let yesterdayFunnelNewUsers = 0;
+  for (const uid of funnelUserIds) {
+    const profile = profileMap.get(uid);
+    if (profile) {
+      const created = new Date(profile.created_at);
+      if (created >= new Date(yesterday.start) && created <= new Date(yesterday.end)) {
+        yesterdayFunnelNewUsers++;
       }
     }
   }
@@ -257,6 +281,11 @@ export async function collectSupabaseData(serviceKey) {
       conversionRate: searches > 0 ? ((todayOrders.length / searches) * 100).toFixed(1) : '0',
       newUsers: funnelNewUsers,
       newDevices: funnelNewDevices,
+    },
+    yesterdayFunnel: {
+      searches: yesterdaySearches,
+      selections: yesterdaySelections,
+      newUsers: yesterdayFunnelNewUsers,
     },
     monthFunnel: {
       searches: monthSearches,

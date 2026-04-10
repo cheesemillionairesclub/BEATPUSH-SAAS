@@ -40,6 +40,12 @@ function getToday() {
   return new Date();
 }
 
+function getYesterday() {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return d;
+}
+
 function getMonthStart() {
   const d = new Date();
   d.setDate(1);
@@ -59,13 +65,21 @@ export async function collectMetaAdsData() {
 
   try {
     const today = formatDate(getToday());
+    const yesterdayStr = formatDate(getYesterday());
     const monthStart = formatDate(getMonthStart());
 
     // Fetch campaign-level insights, ad-level diagnostics, and recommendations in parallel
-    const [todayInsights, monthInsights, campaignDetails, adDiagnostics] = await Promise.all([
+    const [todayInsights, yesterdayInsights, monthInsights, campaignDetails, adDiagnostics] = await Promise.all([
       // Today's performance
       metaFetch(`/${accountId}/insights`, accessToken, {
         time_range: { since: today, until: today },
+        fields: 'campaign_name,campaign_id,spend,impressions,clicks,cpc,cpm,ctr,actions,action_values,cost_per_action_type,frequency',
+        level: 'campaign',
+        limit: 100,
+      }),
+      // Yesterday's performance
+      metaFetch(`/${accountId}/insights`, accessToken, {
+        time_range: { since: yesterdayStr, until: yesterdayStr },
         fields: 'campaign_name,campaign_id,spend,impressions,clicks,cpc,cpm,ctr,actions,action_values,cost_per_action_type,frequency',
         level: 'campaign',
         limit: 100,
@@ -135,6 +149,7 @@ export async function collectMetaAdsData() {
     };
 
     const todayCampaigns = processInsights(todayInsights);
+    const yesterdayCampaigns = processInsights(yesterdayInsights);
     const monthCampaigns = processInsights(monthInsights);
 
     // Totals
@@ -186,6 +201,10 @@ export async function collectMetaAdsData() {
       today: {
         campaigns: todayCampaigns,
         totals: sumCampaigns(todayCampaigns),
+      },
+      yesterday: {
+        campaigns: yesterdayCampaigns,
+        totals: sumCampaigns(yesterdayCampaigns),
       },
       month: {
         campaigns: monthCampaigns,
