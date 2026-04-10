@@ -272,16 +272,23 @@ export function buildDailyReport(data) {
       const monthUsers = ga4?.month?.users ?? '—';
       report += tr('Visiteurs', String(todayUsers), String(yesterdayUsers), String(monthUsers)) + '\n';
       if (ga4.sources?.length > 0) {
-        const metaUsers = ga4.sources.filter(s => s.channel === 'Paid Social').reduce((sum, s) => sum + (s.users || 0), 0);
-        const googleUsers = ga4.sources.filter(s => s.channel === 'Paid Search').reduce((sum, s) => sum + (s.users || 0), 0);
-        const totalSourceUsers = ga4.sources.reduce((sum, s) => sum + (s.users || 0), 0);
         const googleAdsActive = google?.available && google.today?.campaigns?.length > 0;
-        const autresUsers = totalSourceUsers - metaUsers - (googleAdsActive ? googleUsers : 0);
-        report += tr('  📘 Meta', String(metaUsers), '—', '—') + '\n';
+        const calcSources = (srcList) => {
+          if (!srcList?.length) return null;
+          const meta = srcList.filter(s => s.channel === 'Paid Social').reduce((sum, s) => sum + (s.users || 0), 0);
+          const gAds = srcList.filter(s => s.channel === 'Paid Search').reduce((sum, s) => sum + (s.users || 0), 0);
+          const total = srcList.reduce((sum, s) => sum + (s.users || 0), 0);
+          const autres = total - meta - (googleAdsActive ? gAds : 0);
+          return { meta, gAds, autres };
+        };
+        const st = calcSources(ga4.sources);
+        const sy = calcSources(ga4.sourcesYesterday);
+        const sm = calcSources(ga4.sourcesMonth);
+        report += tr('  📘 Meta', String(st.meta), sy ? String(sy.meta) : '—', sm ? String(sm.meta) : '—') + '\n';
         if (googleAdsActive) {
-          report += tr('  🔍 Google Ads', String(googleUsers), '—', '—') + '\n';
+          report += tr('  🔍 Google Ads', String(st.gAds), sy ? String(sy.gAds) : '—', sm ? String(sm.gAds) : '—') + '\n';
         }
-        report += tr('  🌐 Autres', String(autresUsers), '—', '—') + '\n';
+        report += tr('  🌐 Autres', String(st.autres), sy ? String(sy.autres) : '—', sm ? String(sm.autres) : '—') + '\n';
       }
       if (ga4.countries?.length > 0) {
         const tc = ga4.countries.slice(0, 3);
