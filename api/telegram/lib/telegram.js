@@ -264,7 +264,8 @@ export function buildDailyReport(data) {
       report += tr('Dépenses', formatCurrency(mt.totalSpend), my ? formatCurrency(my.totalSpend) : '—', mm ? formatCurrency(mm.totalSpend) : '—') + '\n';
       report += tr('Impressions', mt.totalImpressions.toLocaleString(), my ? my.totalImpressions.toLocaleString() : '—', mm ? mm.totalImpressions.toLocaleString() : '—') + '\n';
       report += tr('Clics', String(mt.totalClicks), my ? String(my.totalClicks) : '—', mm ? String(mm.totalClicks) : '—') + '\n';
-      report += tr('CPC moyen', formatCurrency(mt.avgCpc), my ? formatCurrency(my.avgCpc || 0) : '—', mm ? formatCurrency(mm.avgCpc || 0) : '—') + '\n';
+      const formatCpc = (v) => `$${Number(v).toFixed(2)}`;
+      report += tr('CPC moyen', formatCpc(mt.avgCpc), my ? formatCpc(my.avgCpc || 0) : '—', mm ? formatCpc(mm.avgCpc || 0) : '—') + '\n';
       report += '\n';
       const todayUsers = ga4?.today?.users ?? '—';
       const yesterdayUsers = ga4?.yesterday?.users ?? '—';
