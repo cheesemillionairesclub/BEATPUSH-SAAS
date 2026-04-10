@@ -199,6 +199,12 @@ export function buildDailyReport(data) {
       report += tr('Impressions', mt.totalImpressions.toLocaleString(), mm ? mm.totalImpressions.toLocaleString() : '—') + '\n';
       report += tr('Clics', String(mt.totalClicks), mm ? String(mm.totalClicks) : '—') + '\n';
       report += tr('CPC moyen', formatCurrency(mt.avgCpc), mm ? formatCurrency(mm.avgCpc || 0) : '—') + '\n';
+      const todayUsers = ga4?.today?.users ?? '—';
+      const monthUsers = ga4?.month?.users ?? '—';
+      report += tr('Visiteurs', String(todayUsers), String(monthUsers)) + '\n';
+      const todayBounce = ga4?.today ? `${((ga4.today.bounceRate || 0) * 100).toFixed(0)}%` : '—';
+      const monthBounce = ga4?.month ? `${((ga4.month.bounceRate || 0) * 100).toFixed(0)}%` : '—';
+      report += tr('Rebond', todayBounce, monthBounce) + '\n';
       report += tr('Recherches', String(funnel.searches), String(funnel.searches)) + '\n';
       report += tr('Sélections', String(funnel.selections), String(funnel.selections)) + '\n';
       report += tr('Conv.', String(stripeConvsToday), String(stripeConvsMonth)) + '\n';
@@ -252,28 +258,12 @@ export function buildDailyReport(data) {
   }
   // If google is not available (error), we simply skip the entire section
 
-  // ━━ SITE / GA4 ━━━━━━━━━━━━━━━━
-  report += `\n━━ 🌐 SITE (GA4) ━━━━━━━━━━━━━━━━\n`;
-  if (ga4?.available && ga4.today) {
-    const y = ga4.today;
-    const bounceStr = ((y.bounceRate || 0) * 100).toFixed(1);
-    const avgDuration = Math.round(y.avgSessionDuration || 0);
-    report += `👥 Visiteurs aujourd'hui : <b>${y.users}</b> (${y.newUsers} nouveaux)\n`;
-    report += `📄 Sessions : ${y.sessions} | Pages vues : ${y.pageViews}\n`;
-    report += `📊 Rebond : ${bounceStr}% | Durée moy : ${avgDuration}s\n`;
-
-    // Top countries
-    if (ga4.countries?.length > 0) {
-      report += `\n   🌍 <b>Top pays :</b>\n`;
-      for (const c of ga4.countries.slice(0, 5)) {
-        report += `   • ${c.country} — ${c.users} visiteurs, ${c.sessions} sessions\n`;
-      }
+  // Top countries (GA4)
+  if (ga4?.available && ga4.today && ga4.countries?.length > 0) {
+    report += `\n   🌍 <b>Top pays :</b>\n`;
+    for (const c of ga4.countries.slice(0, 5)) {
+      report += `   • ${c.country} — ${c.users} visiteurs, ${c.sessions} sessions\n`;
     }
-
-  } else if (ga4?.available) {
-    report += `📊 Connecté — données sous 24-48h\n`;
-  } else {
-    report += `⚠️ ${escapeHtml(ga4?.message || ga4?.error || 'Non connecté')}\n`;
   }
 
   // ━━ COMMANDES / CA ━━━━━━━━━━━━
