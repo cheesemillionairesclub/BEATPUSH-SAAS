@@ -184,22 +184,30 @@ export function buildDailyReport(data) {
 
     if (meta.today?.campaigns?.length > 0) {
       const mt = meta.today.totals;
+      const mm = meta.month?.totals;
       const metaRoas = mt.totalSpend > 0 ? (stripeRevenueToday / mt.totalSpend).toFixed(1) : '0';
+      const monthMetaRoas = mm && mm.totalSpend > 0 ? (stripeRevenueMonth / mm.totalSpend).toFixed(1) : '0';
 
-      // 2. Ad performance metrics
-      report += `\n💰 Dépensé aujourd'hui : ${formatCurrency(mt.totalSpend)}\n`;
-      report += `👁️ Impressions : ${mt.totalImpressions.toLocaleString()}\n`;
-      report += `🖱️ Clics : ${mt.totalClicks} | CPC moy : ${formatCurrency(mt.avgCpc)}\n`;
+      // Tableau Aujourd'hui vs Avril (cumul)
+      const tr = (label, today, month) =>
+        `${label.padEnd(14)} ${String(today).padStart(10)}  ${String(month).padStart(10)}`;
 
-      // 3. Funnel inline + user stats
-      report += funnelBlock();
-      report += `📊 ROAS : ${metaRoas}x ${roasStars(metaRoas)}\n`;
-
-      // 4. Month totals
-      if (meta.month?.totals) {
-        const mm = meta.month.totals;
-        const monthMetaRoas = mm.totalSpend > 0 ? (stripeRevenueMonth / mm.totalSpend).toFixed(1) : '0';
-        report += `\n📅 Mois : ${formatCurrency(mm.totalSpend)} dépensé | ${formatCurrency(stripeRevenueMonth)} CA (Stripe) | ${stripeConvsMonth} conv | ROAS ${monthMetaRoas}x\n`;
+      report += `\n<pre>`;
+      report += tr('', 'Auj.', 'Avril') + '\n';
+      report += '─'.repeat(38) + '\n';
+      report += tr('Dépenses', formatCurrency(mt.totalSpend), mm ? formatCurrency(mm.totalSpend) : '—') + '\n';
+      report += tr('Impressions', mt.totalImpressions.toLocaleString(), mm ? mm.totalImpressions.toLocaleString() : '—') + '\n';
+      report += tr('Clics', String(mt.totalClicks), mm ? String(mm.totalClicks) : '—') + '\n';
+      report += tr('CPC moyen', formatCurrency(mt.avgCpc), mm ? formatCurrency(mm.avgCpc || 0) : '—') + '\n';
+      report += tr('Recherches', String(funnel.searches), String(funnel.searches)) + '\n';
+      report += tr('Sélections', String(funnel.selections), String(funnel.selections)) + '\n';
+      report += tr('Conv.', String(stripeConvsToday), String(stripeConvsMonth)) + '\n';
+      report += tr('CA Stripe', formatCurrency(stripeRevenueToday), formatCurrency(stripeRevenueMonth)) + '\n';
+      report += tr('Nv. util.', String(funnel.newUsers), String(funnel.newUsers)) + '\n';
+      report += tr('ROAS', `${metaRoas}x`, `${monthMetaRoas}x`) + '\n';
+      report += `</pre>`;
+      if (funnel.newUsers > 0) {
+        report += `🆕 ${funnel.newUsers} nouveau${funnel.newUsers > 1 ? 'x' : ''} utilisateur${funnel.newUsers > 1 ? 's' : ''} | 📱 ${funnel.newDevices.mobile} mobile | 💻 ${funnel.newDevices.desktop} desktop\n`;
       }
 
     } else {
@@ -238,11 +246,6 @@ export function buildDailyReport(data) {
       }
     }
 
-    if (google.month?.totals) {
-      const gm = google.month.totals;
-      const monthGRoas = gm.totalSpend > 0 ? (stripeRevenueMonth / gm.totalSpend).toFixed(1) : '0';
-      report += `\n   📅 Mois : ${formatCurrency(gm.totalSpend)} dépensé | ${formatCurrency(stripeRevenueMonth)} CA (Stripe) | ${stripeConvsMonth} conv | ROAS ${monthGRoas}x\n`;
-    }
   } else if (google?.available) {
     report += `\n━━ 🔍 GOOGLE ADS ━━━━━━━━━━━━━━\n`;
     report += `✅ Connecté | Aucune campagne active aujourd'hui\n`;
