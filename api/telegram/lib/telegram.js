@@ -221,6 +221,7 @@ export function buildDailyReport(data) {
       report += tr('Impressions', mt.totalImpressions.toLocaleString(), mm ? mm.totalImpressions.toLocaleString() : '—') + '\n';
       report += tr('Clics', String(mt.totalClicks), mm ? String(mm.totalClicks) : '—') + '\n';
       report += tr('CPC moyen', formatCurrency(mt.avgCpc), mm ? formatCurrency(mm.avgCpc || 0) : '—') + '\n';
+      report += '\n';
       const todayUsers = ga4?.today?.users ?? '—';
       const monthUsers = ga4?.month?.users ?? '—';
       report += tr('Visiteurs', String(todayUsers), String(monthUsers)) + '\n';
@@ -249,9 +250,11 @@ export function buildDailyReport(data) {
       const todayBounce = ga4?.today ? `${((ga4.today.bounceRate || 0) * 100).toFixed(0)}%` : '—';
       const monthBounce = ga4?.month ? `${((ga4.month.bounceRate || 0) * 100).toFixed(0)}%` : '—';
       report += tr('Rebond', todayBounce, monthBounce) + '\n';
+      report += '\n';
       report += tr('Nv. util.', String(funnel.newUsers), String(mf.newUsers ?? funnel.newUsers)) + '\n';
       report += tr('Recherches', String(funnel.searches), String(mf.searches ?? funnel.searches)) + '\n';
       report += tr('Sélections', String(funnel.selections), String(mf.selections ?? funnel.selections)) + '\n';
+      report += '\n';
       report += tr('Conv.', String(stripeConvsToday), String(stripeConvsMonth)) + '\n';
       report += tr('CA Stripe', formatCurrency(stripeRevenueToday), formatCurrency(stripeRevenueMonth)) + '\n';
       report += tr('ROAS', `${metaRoas}x`, `${monthMetaRoas}x`) + '\n';
