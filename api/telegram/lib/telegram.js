@@ -191,8 +191,8 @@ export function buildDailyReport(data) {
     return f;
   };
 
-  // ━━ META ADS + FUNNEL ━━━━━━━━━━━━━━━━
-  report += `\n━━ 📘 META ADS + FUNNEL ━━━━━━━━━━\n`;
+  // ━━ RAPPORT DE PERFORMANCE ━━━━━━━━━━━━
+  report += `\n━━ 📊 RAPPORT DE PERFORMANCE ━━━━━━\n`;
   if (meta?.available) {
     // 1. Campaign status (only active campaigns)
     const activeCampaigns = (meta.activeCampaigns || []).filter(c => c.status === 'ACTIVE');
