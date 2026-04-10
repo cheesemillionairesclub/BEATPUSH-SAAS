@@ -149,9 +149,9 @@ export function buildDailyReport(data) {
 
   // ━━ META ADS ━━━━━━━━━━━━━━━━
   report += `\n━━ 📘 META ADS ━━━━━━━━━━━━━━━━\n`;
-  if (meta?.available && meta.yesterday?.campaigns?.length > 0) {
-    const mt = meta.yesterday.totals;
-    report += `💰 Dépensé hier : ${formatCurrency(mt.totalSpend)}\n`;
+  if (meta?.available && meta.today?.campaigns?.length > 0) {
+    const mt = meta.today.totals;
+    report += `💰 Dépensé aujourd'hui : ${formatCurrency(mt.totalSpend)}\n`;
     report += `👁️ Impressions : ${mt.totalImpressions.toLocaleString()}\n`;
     report += `🖱️ Clics : ${mt.totalClicks} | CPC moy : ${formatCurrency(mt.avgCpc)}\n`;
     report += `🛒 Conversions : ${mt.totalConversions} | CA : ${formatCurrency(mt.totalRevenue)}\n`;
@@ -159,7 +159,7 @@ export function buildDailyReport(data) {
     report += `📊 ROAS : ${metaRoas}x ${roasStars(metaRoas)}\n`;
 
     // Campaign details
-    for (const c of meta.yesterday.campaigns) {
+    for (const c of meta.today.campaigns) {
       if (c.spend > 0) {
         report += `\n   📌 <b>${c.campaignName}</b>\n`;
         report += `   ${formatCurrency(c.spend)} | ${c.clicks} clics | ${c.conversions} conv | ROAS ${c.roas}x\n`;
@@ -172,7 +172,7 @@ export function buildDailyReport(data) {
       report += `\n   📅 Mois : ${formatCurrency(mm.totalSpend)} dépensé | ${formatCurrency(mm.totalRevenue)} CA | ${mm.totalConversions} conv\n`;
     }
   } else if (meta?.available) {
-    report += `✅ Connecté | Aucune campagne active hier\n`;
+    report += `✅ Connecté | Aucune campagne active aujourd'hui\n`;
     if (meta.activeCampaigns?.length > 0) {
       const paused = meta.activeCampaigns.filter(c => c.status === 'PAUSED').length;
       const active = meta.activeCampaigns.filter(c => c.status === 'ACTIVE').length;
@@ -184,16 +184,16 @@ export function buildDailyReport(data) {
 
   // ━━ GOOGLE ADS ━━━━━━━━━━━━━━
   report += `\n━━ 🔍 GOOGLE ADS ━━━━━━━━━━━━━━\n`;
-  if (google?.available && google.yesterday?.campaigns?.length > 0) {
-    const gt = google.yesterday.totals;
-    report += `💰 Dépensé hier : ${formatCurrency(gt.totalSpend)}\n`;
+  if (google?.available && google.today?.campaigns?.length > 0) {
+    const gt = google.today.totals;
+    report += `💰 Dépensé aujourd'hui : ${formatCurrency(gt.totalSpend)}\n`;
     report += `👁️ Impressions : ${gt.totalImpressions.toLocaleString()}\n`;
     report += `🖱️ Clics : ${gt.totalClicks}\n`;
     report += `🛒 Conversions : ${gt.totalConversions} | CA : ${formatCurrency(gt.totalRevenue)}\n`;
     const gRoas = gt.totalSpend > 0 ? (gt.totalRevenue / gt.totalSpend).toFixed(1) : '0';
     report += `📊 ROAS : ${gRoas}x ${roasStars(gRoas)}\n`;
 
-    for (const c of google.yesterday.campaigns) {
+    for (const c of google.today.campaigns) {
       if (c.spend > 0) {
         report += `\n   📌 <b>${c.campaignName}</b>\n`;
         report += `   ${formatCurrency(c.spend)} | ${c.clicks} clics | ${c.conversions} conv | ROAS ${c.roas}x\n`;
@@ -213,18 +213,18 @@ export function buildDailyReport(data) {
       report += `\n   📅 Mois : ${formatCurrency(gm.totalSpend)} dépensé | ${formatCurrency(gm.totalRevenue)} CA | ${gm.totalConversions} conv\n`;
     }
   } else if (google?.available) {
-    report += `✅ Connecté | Aucune campagne active hier\n`;
+    report += `✅ Connecté | Aucune campagne active aujourd'hui\n`;
   } else {
     report += `⚠️ ${escapeHtml(google?.message || google?.error || 'Non connecté')}\n`;
   }
 
   // ━━ SITE / GA4 ━━━━━━━━━━━━━━━━
   report += `\n━━ 🌐 SITE (GA4) ━━━━━━━━━━━━━━━━\n`;
-  if (ga4?.available && ga4.yesterday) {
-    const y = ga4.yesterday;
+  if (ga4?.available && ga4.today) {
+    const y = ga4.today;
     const bounceStr = ((y.bounceRate || 0) * 100).toFixed(1);
     const avgDuration = Math.round(y.avgSessionDuration || 0);
-    report += `👥 Visiteurs hier : <b>${y.users}</b> (${y.newUsers} nouveaux)\n`;
+    report += `👥 Visiteurs aujourd'hui : <b>${y.users}</b> (${y.newUsers} nouveaux)\n`;
     report += `📄 Sessions : ${y.sessions} | Pages vues : ${y.pageViews}\n`;
     report += `📊 Rebond : ${bounceStr}% | Durée moy : ${avgDuration}s\n`;
 
@@ -382,16 +382,16 @@ export function buildAdsResponse(data) {
   let msg = `📊 <b>ADS — Temps réel</b>\n\n`;
 
   if (meta?.available) {
-    const mt = meta.yesterday?.totals;
-    msg += `📘 <b>Meta Ads (hier)</b>\n`;
+    const mt = meta.today?.totals;
+    msg += `📘 <b>Meta Ads (aujourd'hui)</b>\n`;
     msg += `   Dépensé: ${formatCurrency(mt?.totalSpend || 0)} | Conv: ${mt?.totalConversions || 0} | ROAS: ${mt?.totalSpend > 0 ? ((mt?.totalRevenue || 0) / mt.totalSpend).toFixed(1) : '0'}x\n\n`;
   } else {
     msg += `📘 Meta Ads: ${meta?.error ? escapeHtml(meta.error) : 'Non connecté'}\n\n`;
   }
 
   if (google?.available) {
-    const gt = google.yesterday?.totals;
-    msg += `🔍 <b>Google Ads (hier)</b>\n`;
+    const gt = google.today?.totals;
+    msg += `🔍 <b>Google Ads (aujourd'hui)</b>\n`;
     msg += `   Dépensé: ${formatCurrency(gt?.totalSpend || 0)} | Conv: ${gt?.totalConversions || 0} | ROAS: ${gt?.totalSpend > 0 ? ((gt?.totalRevenue || 0) / gt.totalSpend).toFixed(1) : '0'}x\n`;
   } else {
     msg += `🔍 Google Ads: ${google?.error ? escapeHtml(google.error) : 'Non connecté'}\n`;
@@ -411,18 +411,18 @@ export function buildSiteResponse(ga4) {
   }
 
   // Check if there's any data at all
-  if (!ga4.yesterday && !ga4.month) {
+  if (!ga4.today && !ga4.month) {
     msg += `📊 GA4 connecté mais aucune donnée disponible.\n`;
     msg += `\n💡 GA4 vient d'être activé — les premières données apparaîtront sous 24-48h.`;
     return msg;
   }
 
-  // Yesterday overview
-  if (ga4.yesterday) {
-    const y = ga4.yesterday;
+  // Today overview
+  if (ga4.today) {
+    const y = ga4.today;
     const bounceStr = ((y.bounceRate || 0) * 100).toFixed(1);
     const avgDuration = Math.round(y.avgSessionDuration || 0);
-    msg += `📅 <b>Hier</b>\n`;
+    msg += `📅 <b>Aujourd'hui</b>\n`;
     msg += `👥 Visiteurs : <b>${y.users}</b> (${y.newUsers} nouveaux)\n`;
     msg += `📄 Sessions : ${y.sessions} | Pages vues : ${y.pageViews}\n`;
     msg += `📊 Taux de rebond : ${bounceStr}%\n`;
@@ -432,7 +432,7 @@ export function buildSiteResponse(ga4) {
 
   // Top countries
   if (ga4.countries?.length > 0) {
-    msg += `\n🌍 <b>Top pays (hier)</b>\n`;
+    msg += `\n🌍 <b>Top pays (aujourd'hui)</b>\n`;
     for (const c of ga4.countries.slice(0, 8)) {
       msg += `   • ${c.country} — ${c.users} visiteurs, ${c.sessions} sessions\n`;
     }
@@ -440,7 +440,7 @@ export function buildSiteResponse(ga4) {
 
   // Traffic sources
   if (ga4.sources?.length > 0) {
-    msg += `\n📡 <b>Sources de trafic (hier)</b>\n`;
+    msg += `\n📡 <b>Sources de trafic (aujourd'hui)</b>\n`;
     for (const s of ga4.sources) {
       const bounce = ((s.bounceRate || 0) * 100).toFixed(0);
       msg += `   • ${s.channel} — ${s.sessions} sessions (${bounce}% rebond)\n`;
@@ -449,7 +449,7 @@ export function buildSiteResponse(ga4) {
 
   // Top pages
   if (ga4.pages?.length > 0) {
-    msg += `\n📄 <b>Top pages (hier)</b>\n`;
+    msg += `\n📄 <b>Top pages (aujourd'hui)</b>\n`;
     for (const p of ga4.pages.slice(0, 8)) {
       const bounce = ((p.bounceRate || 0) * 100).toFixed(0);
       msg += `   • ${escapeHtml(p.pagePath)} — ${p.pageViews} vues (${bounce}% rebond)\n`;

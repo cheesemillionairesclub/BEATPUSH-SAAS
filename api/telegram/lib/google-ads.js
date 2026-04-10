@@ -90,18 +90,15 @@ export async function collectGoogleAdsData() {
   try {
     const accessToken = await getAccessToken();
 
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
     const monthStart = new Date();
     monthStart.setDate(1);
 
-    const yesterdayStr = formatDate(yesterday);
-    const monthStartStr = formatDate(monthStart);
     const todayStr = formatDate(new Date());
+    const monthStartStr = formatDate(monthStart);
 
-    // Fetch campaign performance for yesterday and month
-    const [yesterdayRows, monthRows, searchTermRows] = await Promise.all([
-      // Yesterday campaign metrics
+    // Fetch campaign performance for today and month
+    const [todayRows, monthRows, searchTermRows] = await Promise.all([
+      // Today campaign metrics
       gaqlQuery(`
         SELECT
           campaign.id,
@@ -117,7 +114,7 @@ export async function collectGoogleAdsData() {
           metrics.ctr,
           metrics.average_cost
         FROM campaign
-        WHERE segments.date = '${yesterdayStr}'
+        WHERE segments.date = '${todayStr}'
           AND campaign.status != 'REMOVED'
         ORDER BY metrics.cost_micros DESC
       `, accessToken),
@@ -138,7 +135,7 @@ export async function collectGoogleAdsData() {
         ORDER BY metrics.cost_micros DESC
       `, accessToken),
 
-      // Top search terms yesterday
+      // Top search terms today
       gaqlQuery(`
         SELECT
           search_term_view.search_term,
@@ -148,7 +145,7 @@ export async function collectGoogleAdsData() {
           metrics.conversions,
           campaign.name
         FROM search_term_view
-        WHERE segments.date = '${yesterdayStr}'
+        WHERE segments.date = '${todayStr}'
         ORDER BY metrics.cost_micros DESC
         LIMIT 20
       `, accessToken),
@@ -175,7 +172,7 @@ export async function collectGoogleAdsData() {
       });
     };
 
-    const yesterdayCampaigns = processCampaignRows(yesterdayRows);
+    const todayCampaigns = processCampaignRows(todayRows);
     const monthCampaigns = processCampaignRows(monthRows);
 
     // Process search terms
@@ -198,9 +195,9 @@ export async function collectGoogleAdsData() {
 
     return {
       available: true,
-      yesterday: {
-        campaigns: yesterdayCampaigns,
-        totals: sumCampaigns(yesterdayCampaigns),
+      today: {
+        campaigns: todayCampaigns,
+        totals: sumCampaigns(todayCampaigns),
       },
       month: {
         campaigns: monthCampaigns,

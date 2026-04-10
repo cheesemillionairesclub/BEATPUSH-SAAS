@@ -36,10 +36,8 @@ function formatDate(date) {
   return date.toISOString().split('T')[0];
 }
 
-function getYesterday() {
-  const d = new Date();
-  d.setDate(d.getDate() - 1);
-  return d;
+function getToday() {
+  return new Date();
 }
 
 function getMonthStart() {
@@ -60,15 +58,14 @@ export async function collectMetaAdsData() {
   }
 
   try {
-    const yesterday = formatDate(getYesterday());
-    const today = formatDate(new Date());
+    const today = formatDate(getToday());
     const monthStart = formatDate(getMonthStart());
 
-    // Fetch campaign-level insights for yesterday and month-to-date in parallel
-    const [yesterdayInsights, monthInsights, campaignDetails] = await Promise.all([
-      // Yesterday's performance
+    // Fetch campaign-level insights for today and month-to-date in parallel
+    const [todayInsights, monthInsights, campaignDetails] = await Promise.all([
+      // Today's performance
       metaFetch(`/${accountId}/insights`, accessToken, {
-        time_range: { since: yesterday, until: yesterday },
+        time_range: { since: today, until: today },
         fields: 'campaign_name,campaign_id,spend,impressions,clicks,cpc,cpm,ctr,actions,action_values,cost_per_action_type,frequency',
         level: 'campaign',
         limit: 100,
@@ -130,7 +127,7 @@ export async function collectMetaAdsData() {
       });
     };
 
-    const yesterdayCampaigns = processInsights(yesterdayInsights);
+    const todayCampaigns = processInsights(todayInsights);
     const monthCampaigns = processInsights(monthInsights);
 
     // Totals
@@ -147,9 +144,9 @@ export async function collectMetaAdsData() {
 
     return {
       available: true,
-      yesterday: {
-        campaigns: yesterdayCampaigns,
-        totals: sumCampaigns(yesterdayCampaigns),
+      today: {
+        campaigns: todayCampaigns,
+        totals: sumCampaigns(todayCampaigns),
       },
       month: {
         campaigns: monthCampaigns,

@@ -18,7 +18,7 @@ CONTEXTE BUSINESS :
 - Marchés : monde entier (principalement Europe, US, Amérique latine)
 
 RÈGLES D'ANALYSE :
-1. Compare toujours hier vs moyenne du mois pour détecter les anomalies
+1. Compare toujours aujourd'hui vs moyenne du mois pour détecter les anomalies
 2. Un CPA (coût par acquisition) acceptable est < $100 pour ce business
 3. Un ROAS > 3x est bon, > 5x est excellent
 4. Priorise les insights actionnables, pas les évidences
@@ -103,9 +103,9 @@ function generateFallbackAnalysis(data) {
   if (todayOrders > 0) score += 15;
   if (todayRevenue > 500) score += 15;
   if (monthOrders > 10) score += 10;
-  if (meta?.available && meta.yesterday?.totals?.totalConversions > 0) score += 10;
-  if (google?.available && google.yesterday?.totals?.totalConversions > 0) score += 10;
-  if (ga4?.available && ga4.yesterday?.users > 0) score += 5;
+  if (meta?.available && meta.today?.totals?.totalConversions > 0) score += 10;
+  if (google?.available && google.today?.totals?.totalConversions > 0) score += 10;
+  if (ga4?.available && ga4.today?.users > 0) score += 5;
   score = Math.min(score, 100);
 
   const highlights = [];
@@ -113,11 +113,11 @@ function generateFallbackAnalysis(data) {
 
   if (todayOrders > 0) highlights.push(`${todayOrders} commande(s) aujourd'hui ($${todayRevenue})`);
   if (monthRevenue > 0) highlights.push(`$${monthRevenue} CA ce mois (${monthOrders} commandes)`);
-  if (ga4?.available && ga4.yesterday) highlights.push(`${ga4.yesterday.users} visiteurs hier sur le site`);
+  if (ga4?.available && ga4.today) highlights.push(`${ga4.today.users} visiteurs aujourd'hui sur le site`);
   if (todayOrders === 0) warnings.push('Aucune commande aujourd\'hui');
   if (!meta?.available) warnings.push('Meta Ads non connecté');
   if (!google?.available) warnings.push('Google Ads non connecté');
-  if (ga4?.available && ga4.yesterday?.bounceRate > 0.7) warnings.push(`Taux de rebond élevé : ${(ga4.yesterday.bounceRate * 100).toFixed(0)}%`);
+  if (ga4?.available && ga4.today?.bounceRate > 0.7) warnings.push(`Taux de rebond élevé : ${(ga4.today.bounceRate * 100).toFixed(0)}%`);
 
   return {
     health_score: score,
@@ -133,7 +133,7 @@ function generateFallbackAnalysis(data) {
     ].filter(Boolean),
     meta_analysis: meta?.available ? 'Données disponibles' : 'Non connecté — configurer META_ADS_ACCESS_TOKEN et META_ADS_ACCOUNT_ID',
     google_analysis: google?.available ? 'Données disponibles' : 'Non connecté — configurer les credentials Google Ads',
-    site_analysis: ga4?.available ? `${ga4.yesterday?.users || 0} visiteurs hier, ${(ga4.yesterday?.bounceRate * 100 || 0).toFixed(0)}% rebond` : 'Non connecté — configurer GA4_PROPERTY_ID, GA4_CLIENT_EMAIL, GA4_PRIVATE_KEY',
+    site_analysis: ga4?.available ? `${ga4.today?.users || 0} visiteurs aujourd'hui, ${(ga4.today?.bounceRate * 100 || 0).toFixed(0)}% rebond` : 'Non connecté — configurer GA4_PROPERTY_ID, GA4_CLIENT_EMAIL, GA4_PRIVATE_KEY',
     revenue_analysis: `CA jour: $${todayRevenue} | CA mois: $${monthRevenue}`,
   };
 }

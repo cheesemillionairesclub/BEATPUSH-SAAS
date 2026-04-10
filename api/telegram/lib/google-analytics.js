@@ -103,20 +103,17 @@ export async function collectGA4Data() {
     const accessToken = await getAccessToken();
     const propertyId = process.env.GA4_PROPERTY_ID;
 
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = formatDate(yesterday);
+    const todayStr = formatDate(new Date());
 
     const monthStart = new Date();
     monthStart.setDate(1);
     const monthStartStr = formatDate(monthStart);
-    const todayStr = formatDate(new Date());
 
     // Run all reports in parallel
-    const [overviewYesterday, overviewMonth, countriesYesterday, sourcesYesterday, pagesYesterday] = await Promise.all([
-      // 1. Yesterday overview: sessions, users, bounce rate, engagement
+    const [overviewToday, overviewMonth, countriesToday, sourcesToday, pagesToday] = await Promise.all([
+      // 1. Today overview: sessions, users, bounce rate, engagement
       runReport(propertyId, accessToken, {
-        dateRanges: [{ startDate: yesterdayStr, endDate: yesterdayStr }],
+        dateRanges: [{ startDate: todayStr, endDate: todayStr }],
         metrics: [
           { name: 'sessions' },
           { name: 'totalUsers' },
@@ -142,9 +139,9 @@ export async function collectGA4Data() {
         ],
       }),
 
-      // 3. Top countries yesterday
+      // 3. Top countries today
       runReport(propertyId, accessToken, {
-        dateRanges: [{ startDate: yesterdayStr, endDate: yesterdayStr }],
+        dateRanges: [{ startDate: todayStr, endDate: todayStr }],
         dimensions: [{ name: 'country' }],
         metrics: [
           { name: 'sessions' },
@@ -155,9 +152,9 @@ export async function collectGA4Data() {
         limit: 10,
       }),
 
-      // 4. Traffic sources yesterday
+      // 4. Traffic sources today
       runReport(propertyId, accessToken, {
-        dateRanges: [{ startDate: yesterdayStr, endDate: yesterdayStr }],
+        dateRanges: [{ startDate: todayStr, endDate: todayStr }],
         dimensions: [{ name: 'sessionDefaultChannelGroup' }],
         metrics: [
           { name: 'sessions' },
@@ -169,9 +166,9 @@ export async function collectGA4Data() {
         limit: 10,
       }),
 
-      // 5. Top pages yesterday
+      // 5. Top pages today
       runReport(propertyId, accessToken, {
-        dateRanges: [{ startDate: yesterdayStr, endDate: yesterdayStr }],
+        dateRanges: [{ startDate: todayStr, endDate: todayStr }],
         dimensions: [{ name: 'pagePath' }],
         metrics: [
           { name: 'screenPageViews' },
@@ -215,26 +212,26 @@ export async function collectGA4Data() {
     };
 
     const countries = parseRows(
-      countriesYesterday,
+      countriesToday,
       ['country'],
       ['sessions', 'users', 'conversions']
     );
 
     const sources = parseRows(
-      sourcesYesterday,
+      sourcesToday,
       ['channel'],
       ['sessions', 'users', 'bounceRate', 'conversions']
     );
 
     const pages = parseRows(
-      pagesYesterday,
+      pagesToday,
       ['pagePath'],
       ['pageViews', 'sessions', 'bounceRate']
     );
 
     return {
       available: true,
-      yesterday: parseOverview(overviewYesterday),
+      today: parseOverview(overviewToday),
       month: parseMonthOverview(overviewMonth),
       countries,
       sources,
