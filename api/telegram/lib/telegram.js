@@ -157,57 +157,49 @@ export function buildDailyReport(data) {
 
   // ━━ META ADS + FUNNEL ━━━━━━━━━━━━━━━━
   report += `\n━━ 📘 META ADS + FUNNEL ━━━━━━━━━━\n`;
-  if (meta?.available && meta.today?.campaigns?.length > 0) {
-    const mt = meta.today.totals;
-    const metaRoas = mt.totalSpend > 0 ? (stripeRevenueToday / mt.totalSpend).toFixed(1) : '0';
-    report += `💰 Dépensé aujourd'hui : ${formatCurrency(mt.totalSpend)}\n`;
-    report += `👁️ Impressions : ${mt.totalImpressions.toLocaleString()}\n`;
-    report += `🖱️ Clics : ${mt.totalClicks} | CPC moy : ${formatCurrency(mt.avgCpc)}\n`;
-    report += `🛒 Conversions (Stripe) : ${stripeConvsToday} | CA : ${formatCurrency(stripeRevenueToday)}\n`;
-    report += `📊 ROAS : ${metaRoas}x ${roasStars(metaRoas)}\n`;
-
-    // Funnel (merged with Meta Ads)
-    report += `\n   🔄 <b>Funnel (24h)</b>\n`;
-    report += `   🔍 Recherches : ${supabase.funnel.searches}\n`;
-    report += `   🎯 Sélections : ${supabase.funnel.selections}\n`;
-    report += `   🛒 Conversions : ${supabase.funnel.conversionsToday}\n`;
-    report += `   📊 Taux conversion : ${supabase.funnel.conversionRate}%\n`;
-
-    // Campaign details (spend + clicks only, conversions are global via Stripe)
-    for (const c of meta.today.campaigns) {
-      if (c.spend > 0) {
-        report += `\n   📌 <b>${c.campaignName}</b>\n`;
-        report += `   ${formatCurrency(c.spend)} | ${c.clicks} clics | CTR ${c.ctr || '0'}%\n`;
+  if (meta?.available) {
+    // 1. Campaign status (active campaigns first)
+    if (meta.activeCampaigns?.length > 0) {
+      for (const c of meta.activeCampaigns) {
+        const statusIcon = c.status === 'ACTIVE' ? '🟢' : c.status === 'PAUSED' ? '🟡' : '⚪';
+        const budget = c.daily_budget ? `${formatCurrency(c.daily_budget / 100)}/j` : (c.lifetime_budget ? `${formatCurrency(c.lifetime_budget / 100)} total` : 'N/A');
+        report += `   ${statusIcon} <b>${c.name}</b>\n`;
+        report += `   ID: ${c.id} | Budget: ${budget} | ${c.objective || ''}\n`;
       }
     }
 
-    // Month totals (conversions & revenue from Stripe)
-    if (meta.month?.totals) {
-      const mm = meta.month.totals;
-      const monthMetaRoas = mm.totalSpend > 0 ? (stripeRevenueMonth / mm.totalSpend).toFixed(1) : '0';
-      report += `\n   📅 Mois : ${formatCurrency(mm.totalSpend)} dépensé | ${formatCurrency(stripeRevenueMonth)} CA (Stripe) | ${stripeConvsMonth} conv | ROAS ${monthMetaRoas}x\n`;
+    if (meta.today?.campaigns?.length > 0) {
+      const mt = meta.today.totals;
+      const metaRoas = mt.totalSpend > 0 ? (stripeRevenueToday / mt.totalSpend).toFixed(1) : '0';
+
+      // 2. Ad performance metrics
+      report += `\n💰 Dépensé aujourd'hui : ${formatCurrency(mt.totalSpend)}\n`;
+      report += `👁️ Impressions : ${mt.totalImpressions.toLocaleString()}\n`;
+      report += `🖱️ Clics : ${mt.totalClicks} | CPC moy : ${formatCurrency(mt.avgCpc)}\n`;
+
+      // 3. Funnel inline (continues the flow: impressions → clicks → searches → selections → conversions)
+      report += `🔍 Recherches : ${supabase.funnel.searches}\n`;
+      report += `🎯 Sélections : ${supabase.funnel.selections}\n`;
+      report += `🛒 Conversions (Stripe) : ${stripeConvsToday}\n`;
+      report += `📊 ROAS : ${metaRoas}x ${roasStars(metaRoas)}\n`;
+
+      // 4. Month totals
+      if (meta.month?.totals) {
+        const mm = meta.month.totals;
+        const monthMetaRoas = mm.totalSpend > 0 ? (stripeRevenueMonth / mm.totalSpend).toFixed(1) : '0';
+        report += `\n📅 Mois : ${formatCurrency(mm.totalSpend)} dépensé | ${formatCurrency(stripeRevenueMonth)} CA (Stripe) | ${stripeConvsMonth} conv | ROAS ${monthMetaRoas}x\n`;
+      }
+    } else {
+      report += `\n✅ Connecté | Aucune campagne active aujourd'hui\n`;
+      report += `🔍 Recherches : ${supabase.funnel.searches}\n`;
+      report += `🎯 Sélections : ${supabase.funnel.selections}\n`;
+      report += `🛒 Conversions (Stripe) : ${stripeConvsToday}\n`;
     }
-  } else if (meta?.available) {
-    report += `✅ Connecté | Aucune campagne active aujourd'hui\n`;
-    if (meta.activeCampaigns?.length > 0) {
-      const paused = meta.activeCampaigns.filter(c => c.status === 'PAUSED').length;
-      const active = meta.activeCampaigns.filter(c => c.status === 'ACTIVE').length;
-      report += `   📋 ${active} active${active > 1 ? 's' : ''}, ${paused} en pause\n`;
-    }
-    // Funnel even without active campaigns
-    report += `\n   🔄 <b>Funnel (24h)</b>\n`;
-    report += `   🔍 Recherches : ${supabase.funnel.searches}\n`;
-    report += `   🎯 Sélections : ${supabase.funnel.selections}\n`;
-    report += `   🛒 Conversions : ${supabase.funnel.conversionsToday}\n`;
-    report += `   📊 Taux conversion : ${supabase.funnel.conversionRate}%\n`;
   } else {
     report += `⚠️ ${escapeHtml(meta?.message || meta?.error || 'Non connecté')}\n`;
-    // Funnel even without Meta Ads
-    report += `\n   🔄 <b>Funnel (24h)</b>\n`;
-    report += `   🔍 Recherches : ${supabase.funnel.searches}\n`;
-    report += `   🎯 Sélections : ${supabase.funnel.selections}\n`;
-    report += `   🛒 Conversions : ${supabase.funnel.conversionsToday}\n`;
-    report += `   📊 Taux conversion : ${supabase.funnel.conversionRate}%\n`;
+    report += `🔍 Recherches : ${supabase.funnel.searches}\n`;
+    report += `🎯 Sélections : ${supabase.funnel.selections}\n`;
+    report += `🛒 Conversions (Stripe) : ${stripeConvsToday}\n`;
   }
 
   // ━━ GOOGLE ADS ━━━━━━━━━━━━━━
