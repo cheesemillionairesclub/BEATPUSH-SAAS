@@ -42,16 +42,20 @@
     <!-- Promo Banner -->
     <div class="promo-banner" id="promoBanner">
         <span class="promo-banner-text"><span class="promo-highlight">10% OFF</span> Discount. Use Code</span>
-        <button class="promo-code-btn" id="promoCodeBtn" onclick="copyPromoCode()">BEAT10</button>
+        <button class="promo-code-btn" id="promoCodeBtn" onclick="copyPromoCode()">
+            <span class="promo-code-text">BEAT10</span>
+            <svg class="promo-copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        </button>
         <button class="promo-close-btn" onclick="closePromoBanner()" aria-label="Close">&times;</button>
     </div>
     <script>
     function copyPromoCode() {
         navigator.clipboard.writeText('BEAT10').then(function() {
+            var txt = document.querySelector('#promoCodeBtn .promo-code-text');
             var btn = document.getElementById('promoCodeBtn');
-            btn.textContent = 'Copied!';
+            txt.textContent = 'Copied!';
             btn.classList.add('copied');
-            setTimeout(function() { btn.textContent = 'BEAT10'; btn.classList.remove('copied'); }, 2000);
+            setTimeout(function() { txt.textContent = 'BEAT10'; btn.classList.remove('copied'); }, 2000);
         });
     }
     function closePromoBanner() {

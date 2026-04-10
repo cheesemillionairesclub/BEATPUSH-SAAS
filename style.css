@@ -92,8 +92,8 @@ body {
 
 .promo-code-btn {
     background: transparent;
-    color: var(--green-primary);
-    border: 2px solid var(--green-primary);
+    color: #ffffff;
+    border: 2px dashed var(--green-primary);
     padding: 6px 18px;
     border-radius: 6px;
     font-size: 0.82rem;
@@ -102,17 +102,31 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     font-family: 'Inter', monospace;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .promo-code-btn:hover {
-    background: var(--green-primary);
-    color: #000000;
+    background: rgba(0, 230, 118, 0.1);
+    color: #ffffff;
 }
 
 .promo-code-btn.copied {
     border-color: var(--green-primary);
     background: rgba(0, 230, 118, 0.15);
-    color: var(--green-primary);
+    color: #ffffff;
+}
+
+.promo-copy-icon {
+    width: 14px;
+    height: 14px;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.promo-code-btn:hover .promo-copy-icon {
+    opacity: 1;
 }
 
 .promo-close-btn {
