@@ -155,6 +155,17 @@ export function buildDailyReport(data) {
   report += `🏥 Santé : <b>${analysis.health_score}/100</b> ${trendEmoji(analysis.health_trend)}\n`;
   report += `\n💬 <i>${analysis.summary}</i>\n`;
 
+  // Funnel + user stats block (reused in all branches)
+  const funnel = supabase.funnel;
+  const funnelBlock = () => {
+    let f = '';
+    f += `🔍 Recherches : ${funnel.searches}\n`;
+    f += `🎯 Sélections : ${funnel.selections}\n`;
+    f += `🛒 Conversions (Stripe) : ${stripeConvsToday}\n`;
+    f += `👥 ${funnel.uniqueUsers} utilisateur${funnel.uniqueUsers > 1 ? 's' : ''} (${funnel.newUsers} nouveau${funnel.newUsers > 1 ? 'x' : ''}) | 📱 ${funnel.devices.mobile} mobile | 💻 ${funnel.devices.desktop} desktop\n`;
+    return f;
+  };
+
   // ━━ META ADS + FUNNEL ━━━━━━━━━━━━━━━━
   report += `\n━━ 📘 META ADS + FUNNEL ━━━━━━━━━━\n`;
   if (meta?.available) {
@@ -177,10 +188,8 @@ export function buildDailyReport(data) {
       report += `👁️ Impressions : ${mt.totalImpressions.toLocaleString()}\n`;
       report += `🖱️ Clics : ${mt.totalClicks} | CPC moy : ${formatCurrency(mt.avgCpc)}\n`;
 
-      // 3. Funnel inline (continues the flow: impressions → clicks → searches → selections → conversions)
-      report += `🔍 Recherches : ${supabase.funnel.searches}\n`;
-      report += `🎯 Sélections : ${supabase.funnel.selections}\n`;
-      report += `🛒 Conversions (Stripe) : ${stripeConvsToday}\n`;
+      // 3. Funnel inline + user stats
+      report += funnelBlock();
       report += `📊 ROAS : ${metaRoas}x ${roasStars(metaRoas)}\n`;
 
       // 4. Month totals
@@ -191,15 +200,11 @@ export function buildDailyReport(data) {
       }
     } else {
       report += `\n✅ Connecté | Aucune campagne active aujourd'hui\n`;
-      report += `🔍 Recherches : ${supabase.funnel.searches}\n`;
-      report += `🎯 Sélections : ${supabase.funnel.selections}\n`;
-      report += `🛒 Conversions (Stripe) : ${stripeConvsToday}\n`;
+      report += funnelBlock();
     }
   } else {
     report += `⚠️ ${escapeHtml(meta?.message || meta?.error || 'Non connecté')}\n`;
-    report += `🔍 Recherches : ${supabase.funnel.searches}\n`;
-    report += `🎯 Sélections : ${supabase.funnel.selections}\n`;
-    report += `🛒 Conversions (Stripe) : ${stripeConvsToday}\n`;
+    report += funnelBlock();
   }
 
   // ━━ GOOGLE ADS ━━━━━━━━━━━━━━
@@ -356,21 +361,6 @@ export function buildDailyReport(data) {
     const sortedGenres = Object.entries(s.month.byGenre).sort((a, b) => b[1] - a[1]).slice(0, 5);
     for (const [genre, count] of sortedGenres) {
       report += `   • ${genre} : ${count}x\n`;
-    }
-  }
-
-  // ━━ UTILISATEURS ━━━━━━━━━━━━
-  report += `\n━━ 👥 UTILISATEURS ━━━━━━━━━━━━━\n`;
-  report += `👤 Total : ${s.users.total}\n`;
-  report += `🆕 Nouveaux aujourd'hui : ${s.users.newToday}\n`;
-  report += `📱 Mobile : ${s.users.byDevice.mobile} | 💻 Desktop : ${s.users.byDevice.desktop}\n`;
-
-  // Top countries
-  if (Object.keys(s.users.byCountry).length > 0) {
-    report += `\n   🌍 Top pays :\n`;
-    const sortedCountries = Object.entries(s.users.byCountry).sort((a, b) => b[1] - a[1]).slice(0, 5);
-    for (const [country, count] of sortedCountries) {
-      report += `   • ${country} : ${count}\n`;
     }
   }
 

@@ -166,7 +166,34 @@ export async function collectSupabaseData(serviceKey) {
   const searches = recentActivity.filter(a => a.activity_type === 'search').length;
   const selections = recentActivity.filter(a => a.activity_type === 'select').length;
 
-  // New users today
+  // Unique users active in funnel (24h)
+  const funnelUserIds = new Set(
+    recentActivity.map(a => a.user_id).filter(Boolean)
+  );
+  const funnelUniqueUsers = funnelUserIds.size;
+
+  // Build a profile lookup map
+  const profileMap = new Map();
+  for (const p of allProfiles) {
+    profileMap.set(p.id, p);
+  }
+
+  // Count new users and devices among funnel users
+  let funnelNewUsers = 0;
+  const funnelDevices = { mobile: 0, desktop: 0 };
+  for (const uid of funnelUserIds) {
+    const profile = profileMap.get(uid);
+    if (profile) {
+      const created = new Date(profile.created_at);
+      if (created >= new Date(today.start) && created <= new Date(today.end)) {
+        funnelNewUsers++;
+      }
+      const device = profile.device_type || 'desktop';
+      funnelDevices[device] = (funnelDevices[device] || 0) + 1;
+    }
+  }
+
+  // New users today (global)
   const newUsersToday = allProfiles.filter(p => {
     const created = new Date(p.created_at);
     return created >= new Date(today.start) && created <= new Date(today.end);
@@ -203,6 +230,9 @@ export async function collectSupabaseData(serviceKey) {
       selections,
       conversionsToday: todayOrders.length,
       conversionRate: searches > 0 ? ((todayOrders.length / searches) * 100).toFixed(1) : '0',
+      uniqueUsers: funnelUniqueUsers,
+      newUsers: funnelNewUsers,
+      devices: funnelDevices,
     },
     users: {
       total: allProfiles.length,
