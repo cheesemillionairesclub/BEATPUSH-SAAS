@@ -205,11 +205,11 @@ export function buildDailyReport(data) {
       const todayBounce = ga4?.today ? `${((ga4.today.bounceRate || 0) * 100).toFixed(0)}%` : '—';
       const monthBounce = ga4?.month ? `${((ga4.month.bounceRate || 0) * 100).toFixed(0)}%` : '—';
       report += tr('Rebond', todayBounce, monthBounce) + '\n';
+      report += tr('Nv. util.', String(funnel.newUsers), String(funnel.newUsers)) + '\n';
       report += tr('Recherches', String(funnel.searches), String(funnel.searches)) + '\n';
       report += tr('Sélections', String(funnel.selections), String(funnel.selections)) + '\n';
       report += tr('Conv.', String(stripeConvsToday), String(stripeConvsMonth)) + '\n';
       report += tr('CA Stripe', formatCurrency(stripeRevenueToday), formatCurrency(stripeRevenueMonth)) + '\n';
-      report += tr('Nv. util.', String(funnel.newUsers), String(funnel.newUsers)) + '\n';
       report += tr('ROAS', `${metaRoas}x`, `${monthMetaRoas}x`) + '\n';
       report += `</pre>`;
       if (funnel.newUsers > 0) {
@@ -376,18 +376,42 @@ export function buildDailyReport(data) {
     }
   }
 
+  // Dedup helper: extract key terms from a line to detect semantic duplicates
+  const usedInsights = [];
+  const extractKeys = (text) => {
+    const lower = text.toLowerCase();
+    const keys = new Set();
+    // Extract percentages and numbers with context
+    for (const m of lower.matchAll(/(\d+[\d.,]*\s*%?)/g)) keys.add(m[1].trim());
+    // Extract key topic words
+    for (const word of ['rebond', 'bounce', 'conversion', 'commande', 'trafic', 'session', 'visiteur', 'cpa', 'roas', 'budget', 'landing', 'clic']) {
+      if (lower.includes(word)) keys.add(word);
+    }
+    return keys;
+  };
+  const isDuplicate = (text) => {
+    const keys = extractKeys(text);
+    if (keys.size === 0) return false;
+    for (const prev of usedInsights) {
+      const overlap = [...keys].filter(k => prev.has(k));
+      if (overlap.length >= 2) return true;
+    }
+    usedInsights.push(keys);
+    return false;
+  };
+
   // ━━ ANALYSE IA ━━━━━━━━━━━━━━
   if (analysis.highlights?.length > 0 || analysis.warnings?.length > 0) {
     report += `\n━━ 🧠 ANALYSE IA ━━━━━━━━━━━━━━\n`;
 
     if (analysis.highlights?.length > 0) {
       for (const h of analysis.highlights) {
-        report += `✅ ${h}\n`;
+        if (!isDuplicate(h)) report += `✅ ${h}\n`;
       }
     }
     if (analysis.warnings?.length > 0) {
       for (const w of analysis.warnings) {
-        report += `🚨 ${w}\n`;
+        if (!isDuplicate(w)) report += `🚨 ${w}\n`;
       }
     }
   }
@@ -403,13 +427,13 @@ export function buildDailyReport(data) {
 
     if (hasRecs) {
       for (const r of analysis.recommendations) {
-        report += `💡 ${r}\n`;
+        if (!isDuplicate(r)) report += `💡 ${r}\n`;
       }
     }
 
     if (hasTips) {
       for (const tip of analysis.meta_creative_tips) {
-        report += `🎯 ${tip}\n`;
+        if (!isDuplicate(tip)) report += `🎯 ${tip}\n`;
       }
     }
 

@@ -28,6 +28,16 @@ RÈGLES D'ANALYSE :
 8. Un taux de rebond > 70% est préoccupant, < 40% est excellent
 9. Identifie les pays à fort trafic mais faible conversion (opportunité ou gaspillage)
 
+RÈGLE ANTI-DOUBLONS (CRITIQUE) :
+- JAMAIS de redondance entre highlights, warnings et recommendations
+- Chaque fait ou donnée ne doit apparaître qu'UNE SEULE FOIS dans tout le JSON
+- highlights = points positifs factuels (chiffres bruts)
+- warnings = alertes factuelles (constats négatifs, chiffres bruts)
+- recommendations = actions concrètes à faire (pas de restatement du problème, juste la solution)
+- Exemple INTERDIT : warning "Rebond 100%" + recommendation "analyser pourquoi 100% rebondissent" → la recommendation doit dire "Retravailler la landing page (CTA, vitesse, proposition de valeur)" sans répéter le chiffre du warning
+- Exemple INTERDIT : warning "0 conversion" + warning "aucune commande" + warning "disconnect trafic/conversions" → garder UN SEUL warning, le plus complet
+- meta_creative_tips = conseils créatifs/ciblage UNIQUEMENT, pas de diagnostic déjà mentionné ailleurs
+
 SOURCE DE VÉRITÉ POUR LE CA :
 - IMPORTANT : utilise TOUJOURS les données "stripe" (si disponibles) pour les montants de CA, PAS les montants de supabase
 - stripe.oneTimeAmounts contient les montants réels reçus par commande (en cents)
