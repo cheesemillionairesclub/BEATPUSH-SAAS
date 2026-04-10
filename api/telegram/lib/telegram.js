@@ -219,7 +219,13 @@ export function buildDailyReport(data) {
       report += '─'.repeat(38) + '\n';
       report += tr('Dépenses', formatCurrency(mt.totalSpend), mm ? formatCurrency(mm.totalSpend) : '—') + '\n';
       report += tr('Impressions', mt.totalImpressions.toLocaleString(), mm ? mm.totalImpressions.toLocaleString() : '—') + '\n';
-      report += tr('Clics', String(mt.totalClicks), mm ? String(mm.totalClicks) : '—') + '\n';
+      const gtClicks = google?.available && google.today?.totals ? google.today.totals.totalClicks : 0;
+      const gmClicks = google?.available && google.month?.totals ? google.month.totals.totalClicks : 0;
+      const totalClicksToday = mt.totalClicks + gtClicks;
+      const totalClicksMonth = (mm ? mm.totalClicks : 0) + gmClicks;
+      report += tr('Clics', String(totalClicksToday), String(totalClicksMonth)) + '\n';
+      report += tr('  📘 Meta', String(mt.totalClicks), mm ? String(mm.totalClicks) : '—') + '\n';
+      report += tr('  🔍 Google', String(gtClicks), String(gmClicks)) + '\n';
       report += tr('CPC moyen', formatCurrency(mt.avgCpc), mm ? formatCurrency(mm.avgCpc || 0) : '—') + '\n';
       const todayUsers = ga4?.today?.users ?? '—';
       const monthUsers = ga4?.month?.users ?? '—';
