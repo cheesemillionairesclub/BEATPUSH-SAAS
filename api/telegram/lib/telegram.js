@@ -543,12 +543,10 @@ export function buildDailyReport(data) {
       report += `\n📌 <b>${escapeHtml(ad.adName)}</b>\n`;
       report += `   Qualité : ${rankLabel(ad.qualityRanking)}\n`;
       report += `   Engagement : ${rankLabel(ad.engagementRanking)}\n`;
-      report += `   Conversion : ${rankLabel(ad.conversionRanking)}\n`;
 
       const tips = [
         tip('quality', ad.qualityRanking),
         tip('engagement', ad.engagementRanking),
-        tip('conversion', ad.conversionRanking),
       ].filter(Boolean);
       if (tips.length > 0) {
         report += `   💡 <b>Actions :</b>\n`;
