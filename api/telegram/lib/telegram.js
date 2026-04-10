@@ -147,8 +147,8 @@ export function buildDailyReport(data) {
   report += `🏥 Santé : <b>${analysis.health_score}/100</b> ${trendEmoji(analysis.health_trend)}\n`;
   report += `\n💬 <i>${analysis.summary}</i>\n`;
 
-  // ━━ META ADS ━━━━━━━━━━━━━━━━
-  report += `\n━━ 📘 META ADS ━━━━━━━━━━━━━━━━\n`;
+  // ━━ META ADS + FUNNEL ━━━━━━━━━━━━━━━━
+  report += `\n━━ 📘 META ADS + FUNNEL ━━━━━━━━━━\n`;
   if (meta?.available && meta.today?.campaigns?.length > 0) {
     const mt = meta.today.totals;
     report += `💰 Dépensé aujourd'hui : ${formatCurrency(mt.totalSpend)}\n`;
@@ -157,6 +157,13 @@ export function buildDailyReport(data) {
     report += `🛒 Conversions : ${mt.totalConversions} | CA : ${formatCurrency(mt.totalRevenue)}\n`;
     const metaRoas = mt.totalSpend > 0 ? (mt.totalRevenue / mt.totalSpend).toFixed(1) : '0';
     report += `📊 ROAS : ${metaRoas}x ${roasStars(metaRoas)}\n`;
+
+    // Funnel (merged with Meta Ads)
+    report += `\n   🔄 <b>Funnel (24h)</b>\n`;
+    report += `   🔍 Recherches : ${supabase.funnel.searches}\n`;
+    report += `   🎯 Sélections : ${supabase.funnel.selections}\n`;
+    report += `   🛒 Conversions : ${supabase.funnel.conversionsToday}\n`;
+    report += `   📊 Taux conversion : ${supabase.funnel.conversionRate}%\n`;
 
     // Campaign details
     for (const c of meta.today.campaigns) {
@@ -178,13 +185,26 @@ export function buildDailyReport(data) {
       const active = meta.activeCampaigns.filter(c => c.status === 'ACTIVE').length;
       report += `   📋 ${active} active${active > 1 ? 's' : ''}, ${paused} en pause\n`;
     }
+    // Funnel even without active campaigns
+    report += `\n   🔄 <b>Funnel (24h)</b>\n`;
+    report += `   🔍 Recherches : ${supabase.funnel.searches}\n`;
+    report += `   🎯 Sélections : ${supabase.funnel.selections}\n`;
+    report += `   🛒 Conversions : ${supabase.funnel.conversionsToday}\n`;
+    report += `   📊 Taux conversion : ${supabase.funnel.conversionRate}%\n`;
   } else {
     report += `⚠️ ${escapeHtml(meta?.message || meta?.error || 'Non connecté')}\n`;
+    // Funnel even without Meta Ads
+    report += `\n   🔄 <b>Funnel (24h)</b>\n`;
+    report += `   🔍 Recherches : ${supabase.funnel.searches}\n`;
+    report += `   🎯 Sélections : ${supabase.funnel.selections}\n`;
+    report += `   🛒 Conversions : ${supabase.funnel.conversionsToday}\n`;
+    report += `   📊 Taux conversion : ${supabase.funnel.conversionRate}%\n`;
   }
 
   // ━━ GOOGLE ADS ━━━━━━━━━━━━━━
-  report += `\n━━ 🔍 GOOGLE ADS ━━━━━━━━━━━━━━\n`;
+  // Only show Google Ads section if available (skip entirely if in error)
   if (google?.available && google.today?.campaigns?.length > 0) {
+    report += `\n━━ 🔍 GOOGLE ADS ━━━━━━━━━━━━━━\n`;
     const gt = google.today.totals;
     report += `💰 Dépensé aujourd'hui : ${formatCurrency(gt.totalSpend)}\n`;
     report += `👁️ Impressions : ${gt.totalImpressions.toLocaleString()}\n`;
@@ -213,10 +233,10 @@ export function buildDailyReport(data) {
       report += `\n   📅 Mois : ${formatCurrency(gm.totalSpend)} dépensé | ${formatCurrency(gm.totalRevenue)} CA | ${gm.totalConversions} conv\n`;
     }
   } else if (google?.available) {
+    report += `\n━━ 🔍 GOOGLE ADS ━━━━━━━━━━━━━━\n`;
     report += `✅ Connecté | Aucune campagne active aujourd'hui\n`;
-  } else {
-    report += `⚠️ ${escapeHtml(google?.message || google?.error || 'Non connecté')}\n`;
   }
+  // If google is not available (error), we simply skip the entire section
 
   // ━━ SITE / GA4 ━━━━━━━━━━━━━━━━
   report += `\n━━ 🌐 SITE (GA4) ━━━━━━━━━━━━━━━━\n`;
@@ -260,18 +280,23 @@ export function buildDailyReport(data) {
   report += `\n━━ 💰 COMMANDES / CA ━━━━━━━━━━━\n`;
   const s = supabase;
 
-  // Calculate Stripe-based revenue if available
+  // Always use Stripe as unique source of conversions
   const monthStripeRevenue = calcStripeRevenue(s.allOrders || [], stripe);
 
   if (monthStripeRevenue && stripe?.available) {
-    report += `💳 <b>Données Stripe (montants réels)</b>\n`;
+    report += `💳 <b>Revenue Stripe</b>\n`;
     report += `📦 Commandes : ${formatCurrency(monthStripeRevenue.oneTimeTotal / 100)}\n`;
     report += `🔄 Abonnements : ${formatCurrency(monthStripeRevenue.subsTotal / 100)}\n`;
     report += `💰 Total reçu : <b>${formatCurrency(monthStripeRevenue.total / 100)}</b>\n`;
   } else {
-    report += `📦 Aujourd'hui : ${s.today.count} commande(s) — ${formatCurrency(s.today.revenue)}\n`;
-    report += `📦 Hier : ${s.yesterday.count} commande(s) — ${formatCurrency(s.yesterday.revenue)}\n`;
-    report += `📅 Ce mois : ${s.month.count} commande(s) — ${formatCurrency(s.month.revenue)}\n`;
+    report += `⚠️ Stripe non disponible — données indisponibles\n`;
+  }
+
+  // Show in_progress orders count
+  const todayInProgress = s.today.byStatus?.in_progress || 0;
+  const monthInProgress = s.month.byStatus?.in_progress || 0;
+  if (monthInProgress > 0) {
+    report += `🔄 Commandes en cours : <b>${monthInProgress}</b> (dont ${todayInProgress} aujourd'hui)\n`;
   }
 
   // Daily Push subscriptions detail
@@ -286,8 +311,15 @@ export function buildDailyReport(data) {
       report += `   ⚠️ Receipts manquants : ${missingSubs.length}\n`;
     }
 
-    // Per-subscription detail with Stripe data
-    for (const sub of dailyPushSubs) {
+    // Per-subscription detail with Stripe data (exclude cancelled)
+    const visibleSubs = dailyPushSubs.filter(sub => {
+      // Skip cancelled subscriptions (from Stripe or Supabase status)
+      const subStripeData = stripe?.subscriptions?.[sub.id];
+      if (subStripeData && (subStripeData.status === 'canceled' || subStripeData.status === 'unpaid')) return false;
+      if (sub.order_status === 'cancelled') return false;
+      return true;
+    });
+    for (const sub of visibleSubs) {
       const statusLabel = getSubStatusLabel(sub, stripe);
       const subStripe = stripe?.subscriptions?.[sub.id];
       const daysPaid = subStripe?.daysPaid || '-';
@@ -324,13 +356,6 @@ export function buildDailyReport(data) {
       report += `   • ${genre} : ${count}x\n`;
     }
   }
-
-  // ━━ FUNNEL ━━━━━━━━━━━━━━━━━
-  report += `\n━━ 🔄 FUNNEL (24h) ━━━━━━━━━━━━\n`;
-  report += `🔍 Recherches : ${s.funnel.searches}\n`;
-  report += `🎯 Sélections : ${s.funnel.selections}\n`;
-  report += `🛒 Conversions : ${s.funnel.conversionsToday}\n`;
-  report += `📊 Taux conversion : ${s.funnel.conversionRate}%\n`;
 
   // ━━ UTILISATEURS ━━━━━━━━━━━━
   report += `\n━━ 👥 UTILISATEURS ━━━━━━━━━━━━━\n`;
