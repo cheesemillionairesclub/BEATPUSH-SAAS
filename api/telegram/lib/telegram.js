@@ -24,6 +24,27 @@ function countryFlag(name) {
   return [...code].map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65)).join('');
 }
 
+// Visual width of a string accounting for emojis (2 chars wide) and flag pairs
+function visualWidth(str) {
+  let w = 0;
+  for (const ch of str) {
+    const cp = ch.codePointAt(0);
+    if (cp > 0x1F00) w += 2; // emoji / special symbol
+    else w += 1;
+  }
+  return w;
+}
+
+function vPadEnd(str, len) {
+  const diff = len - visualWidth(str);
+  return diff > 0 ? str + ' '.repeat(diff) : str;
+}
+
+function vPadStart(str, len) {
+  const diff = len - visualWidth(str);
+  return diff > 0 ? ' '.repeat(diff) + str : str;
+}
+
 function escapeHtml(text) {
   return String(text)
     .replace(/&/g, '&amp;')
@@ -212,7 +233,7 @@ export function buildDailyReport(data) {
 
       // Tableau Aujourd'hui vs Avril (cumul)
       const tr = (label, today, month) =>
-        `${label.padEnd(14)} ${String(today).padStart(10)}  ${String(month).padStart(10)}`;
+        `${vPadEnd(label, 14)} ${vPadStart(String(today), 10)}  ${vPadStart(String(month), 10)}`;
 
       report += `\n<pre>`;
       report += tr('', 'Auj.', 'Avril') + '\n';
@@ -315,7 +336,7 @@ export function buildDailyReport(data) {
 
   // Revenue table
   const tr2 = (label, value) =>
-    `${label.padEnd(18)} ${String(value).padStart(12)}`;
+    `${vPadEnd(label, 18)} ${vPadStart(String(value), 12)}`;
 
   if (monthStripeRevenue && stripe?.available) {
     // Show in_progress orders count — use real statuses (Stripe for subs, DB for one-time)
