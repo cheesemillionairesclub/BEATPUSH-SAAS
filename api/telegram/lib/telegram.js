@@ -3,6 +3,27 @@
 
 const TELEGRAM_API = 'https://api.telegram.org/bot';
 
+const COUNTRY_CODES = {
+  'United States': 'US', 'United Kingdom': 'GB', 'Germany': 'DE', 'France': 'FR',
+  'Spain': 'ES', 'Italy': 'IT', 'Netherlands': 'NL', 'Belgium': 'BE', 'Switzerland': 'CH',
+  'Portugal': 'PT', 'Austria': 'AT', 'Sweden': 'SE', 'Norway': 'NO', 'Denmark': 'DK',
+  'Finland': 'FI', 'Poland': 'PL', 'Ireland': 'IE', 'Greece': 'GR', 'Romania': 'RO',
+  'Czechia': 'CZ', 'Hungary': 'HU', 'Croatia': 'HR', 'Bulgaria': 'BG', 'Ukraine': 'UA',
+  'Russia': 'RU', 'Türkiye': 'TR', 'Turkey': 'TR', 'Morocco': 'MA', 'Tunisia': 'TN',
+  'Algeria': 'DZ', 'Egypt': 'EG', 'South Africa': 'ZA', 'Nigeria': 'NG', 'Kenya': 'KE',
+  'Canada': 'CA', 'Mexico': 'MX', 'Brazil': 'BR', 'Argentina': 'AR', 'Colombia': 'CO',
+  'Chile': 'CL', 'Peru': 'PE', 'Japan': 'JP', 'South Korea': 'KR', 'China': 'CN',
+  'India': 'IN', 'Indonesia': 'ID', 'Thailand': 'TH', 'Vietnam': 'VN', 'Philippines': 'PH',
+  'Australia': 'AU', 'New Zealand': 'NZ', 'Israel': 'IL', 'Saudi Arabia': 'SA',
+  'United Arab Emirates': 'AE', 'Singapore': 'SG', 'Malaysia': 'MY', 'Taiwan': 'TW',
+};
+
+function countryFlag(name) {
+  const code = COUNTRY_CODES[name];
+  if (!code) return name.substring(0, 2).toUpperCase();
+  return [...code].map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65)).join('');
+}
+
 function escapeHtml(text) {
   return String(text)
     .replace(/&/g, '&amp;')
@@ -258,12 +279,15 @@ export function buildDailyReport(data) {
   }
   // If google is not available (error), we simply skip the entire section
 
-  // Top countries (GA4)
+  // Top countries (GA4) — flags + % of total visitors
   if (ga4?.available && ga4.today && ga4.countries?.length > 0) {
-    report += `\n   🌍 <b>Top pays :</b>\n`;
-    for (const c of ga4.countries.slice(0, 5)) {
-      report += `   • ${c.country} — ${c.users} visiteurs, ${c.sessions} sessions\n`;
-    }
+    const totalUsers = ga4.countries.reduce((sum, c) => sum + (c.users || 0), 0) || 1;
+    const top = ga4.countries.slice(0, 5);
+    const parts = top.map(c => {
+      const pct = Math.round((c.users / totalUsers) * 100);
+      return `${countryFlag(c.country)} ${pct}%`;
+    });
+    report += `\n   🌍 ${parts.join(' · ')}\n`;
   }
 
   // ━━ COMMANDES / CA ━━━━━━━━━━━━
