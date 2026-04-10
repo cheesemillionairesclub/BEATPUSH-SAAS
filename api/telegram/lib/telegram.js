@@ -267,9 +267,12 @@ export function buildDailyReport(data) {
         const metaUsers = ga4.sources.filter(s => s.channel === 'Paid Social').reduce((sum, s) => sum + (s.users || 0), 0);
         const googleUsers = ga4.sources.filter(s => s.channel === 'Paid Search').reduce((sum, s) => sum + (s.users || 0), 0);
         const totalSourceUsers = ga4.sources.reduce((sum, s) => sum + (s.users || 0), 0);
-        const autresUsers = totalSourceUsers - metaUsers - googleUsers;
+        const googleAdsActive = google?.available && google.today?.campaigns?.length > 0;
+        const autresUsers = totalSourceUsers - metaUsers - (googleAdsActive ? googleUsers : 0);
         report += tr('  📘 Meta', String(metaUsers), '—') + '\n';
-        report += tr('  🔍 Google Ads', String(googleUsers), '—') + '\n';
+        if (googleAdsActive) {
+          report += tr('  🔍 Google Ads', String(googleUsers), '—') + '\n';
+        }
         report += tr('  🌐 Autres', String(autresUsers), '—') + '\n';
       }
       if (ga4.countries?.length > 0) {
