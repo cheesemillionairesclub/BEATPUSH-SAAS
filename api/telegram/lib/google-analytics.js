@@ -110,7 +110,7 @@ export async function collectGA4Data() {
     const monthStartStr = formatDate(monthStart);
 
     // Run all reports in parallel
-    const [overviewToday, overviewMonth, countriesToday, sourcesToday, pagesToday] = await Promise.all([
+    const [overviewToday, overviewMonth, countriesToday, countriesMonth, sourcesToday, pagesToday] = await Promise.all([
       // 1. Today overview: sessions, users, bounce rate, engagement
       runReport(propertyId, accessToken, {
         dateRanges: [{ startDate: todayStr, endDate: todayStr }],
@@ -142,6 +142,19 @@ export async function collectGA4Data() {
       // 3. Top countries today
       runReport(propertyId, accessToken, {
         dateRanges: [{ startDate: todayStr, endDate: todayStr }],
+        dimensions: [{ name: 'country' }],
+        metrics: [
+          { name: 'sessions' },
+          { name: 'totalUsers' },
+          { name: 'conversions' },
+        ],
+        orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
+        limit: 10,
+      }),
+
+      // 3b. Top countries month
+      runReport(propertyId, accessToken, {
+        dateRanges: [{ startDate: monthStartStr, endDate: todayStr }],
         dimensions: [{ name: 'country' }],
         metrics: [
           { name: 'sessions' },
@@ -217,6 +230,12 @@ export async function collectGA4Data() {
       ['sessions', 'users', 'conversions']
     );
 
+    const countriesMonthData = parseRows(
+      countriesMonth,
+      ['country'],
+      ['sessions', 'users', 'conversions']
+    );
+
     const sources = parseRows(
       sourcesToday,
       ['channel'],
@@ -234,6 +253,7 @@ export async function collectGA4Data() {
       today: parseOverview(overviewToday),
       month: parseMonthOverview(overviewMonth),
       countries,
+      countriesMonth: countriesMonthData,
       sources,
       pages,
     };

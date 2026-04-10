@@ -280,15 +280,31 @@ export function buildDailyReport(data) {
   }
   // If google is not available (error), we simply skip the entire section
 
-  // Top countries (GA4) — flags + % of total visitors
+  // Top countries (GA4) — flags table Auj. vs Avril
   if (ga4?.available && ga4.today && ga4.countries?.length > 0) {
-    const totalUsers = ga4.countries.reduce((sum, c) => sum + (c.users || 0), 0) || 1;
-    const top = ga4.countries.slice(0, 5);
-    const parts = top.map(c => {
-      const pct = Math.round((c.users / totalUsers) * 100);
-      return `${countryFlag(c.country)} ${pct}%`;
-    });
-    report += `\n   🌍 ${parts.join(' · ')}\n`;
+    const todayCountries = ga4.countries.slice(0, 5);
+    const monthCountries = ga4.countriesMonth || [];
+    const totalToday = todayCountries.reduce((s, c) => s + (c.users || 0), 0) || 1;
+    const totalMonth = monthCountries.reduce((s, c) => s + (c.users || 0), 0) || 1;
+    const monthMap = new Map(monthCountries.map(c => [c.country, c]));
+
+    // Collect all unique countries from both periods, ordered by today
+    const allNames = [...new Set([...todayCountries.map(c => c.country), ...monthCountries.slice(0, 5).map(c => c.country)])].slice(0, 5);
+
+    const cr = (flag, today, month) =>
+      `${flag}  ${String(today).padStart(10)}  ${String(month).padStart(10)}`;
+
+    report += `\n<pre>`;
+    report += cr('🌍', 'Auj.', 'Avril') + '\n';
+    report += '─'.repeat(28) + '\n';
+    for (const name of allNames) {
+      const todayC = todayCountries.find(c => c.country === name);
+      const monthC = monthMap.get(name);
+      const tPct = todayC ? `${Math.round((todayC.users / totalToday) * 100)}%` : '—';
+      const mPct = monthC ? `${Math.round((monthC.users / totalMonth) * 100)}%` : '—';
+      report += cr(countryFlag(name), tPct, mPct) + '\n';
+    }
+    report += `</pre>`;
   }
 
   // ━━ COMMANDES / CA ━━━━━━━━━━━━
