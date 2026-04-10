@@ -271,7 +271,7 @@ export function buildDailyReport(data) {
       const yesterdayUsers = ga4?.yesterday?.users ?? '—';
       const monthUsers = ga4?.month?.users ?? '—';
       report += tr('Visiteurs', String(todayUsers), String(yesterdayUsers), String(monthUsers)) + '\n';
-      if (ga4.sources?.length > 0) {
+      if (ga4.sources?.length > 0 || ga4.sourcesYesterday?.length > 0 || ga4.sourcesMonth?.length > 0) {
         const googleAdsActive = google?.available && google.today?.campaigns?.length > 0;
         const calcSources = (srcList) => {
           if (!srcList?.length) return null;
@@ -284,23 +284,27 @@ export function buildDailyReport(data) {
         const st = calcSources(ga4.sources);
         const sy = calcSources(ga4.sourcesYesterday);
         const sm = calcSources(ga4.sourcesMonth);
-        report += tr('  📘 Meta', String(st.meta), sy ? String(sy.meta) : '—', sm ? String(sm.meta) : '—') + '\n';
+        report += tr('  📘 Meta', st ? String(st.meta) : '—', sy ? String(sy.meta) : '—', sm ? String(sm.meta) : '—') + '\n';
         if (googleAdsActive) {
-          report += tr('  🔍 Google Ads', String(st.gAds), sy ? String(sy.gAds) : '—', sm ? String(sm.gAds) : '—') + '\n';
+          report += tr('  🔍 Google Ads', st ? String(st.gAds) : '—', sy ? String(sy.gAds) : '—', sm ? String(sm.gAds) : '—') + '\n';
         }
-        report += tr('  🌐 Autres', String(st.autres), sy ? String(sy.autres) : '—', sm ? String(sm.autres) : '—') + '\n';
+        report += tr('  🌐 Autres', st ? String(st.autres) : '—', sy ? String(sy.autres) : '—', sm ? String(sm.autres) : '—') + '\n';
       }
-      if (ga4.countries?.length > 0) {
-        const tc = ga4.countries.slice(0, 3);
+      const bestCountries = ga4.countries?.length > 0 ? ga4.countries : (ga4.countriesYesterday?.length > 0 ? ga4.countriesYesterday : ga4.countriesMonth || []);
+      if (bestCountries.length > 0) {
+        const tc = ga4.countries?.slice(0, 3) || [];
         const yc = ga4.countriesYesterday || [];
         const mc = ga4.countriesMonth || [];
+        const refCountries = (tc.length > 0 ? tc : (yc.length > 0 ? yc.slice(0, 3) : mc.slice(0, 3)));
         const tTotal = tc.reduce((s, c) => s + (c.users || 0), 0) || 1;
         const yTotal = yc.reduce((s, c) => s + (c.users || 0), 0) || 1;
         const mTotal = mc.reduce((s, c) => s + (c.users || 0), 0) || 1;
+        const tMap = new Map(tc.map(c => [c.country, c]));
         const yMap = new Map(yc.map(c => [c.country, c]));
         const mMap = new Map(mc.map(c => [c.country, c]));
-        for (const c of tc) {
-          const tPct = `${Math.round((c.users / tTotal) * 100)}%`;
+        for (const c of refCountries) {
+          const tC = tMap.get(c.country);
+          const tPct = tC ? `${Math.round((tC.users / tTotal) * 100)}%` : '—';
           const yC = yMap.get(c.country);
           const yPct = yC ? `${Math.round((yC.users / yTotal) * 100)}%` : '—';
           const mC = mMap.get(c.country);
