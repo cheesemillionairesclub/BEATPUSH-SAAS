@@ -325,6 +325,33 @@ export function buildDailyReport(data) {
       report += tr('CA Stripe', formatCurrency(stripeRevenueToday), formatCurrency(stripeRevenueYesterday), formatCurrency(stripeRevenueMonth)) + '\n';
       report += tr('ROAS', `${metaRoas}x`, `${yesterdayMetaRoas}x`, `${monthMetaRoas}x`) + '\n';
       report += `</pre>`;
+
+      // Per-ad performance breakdown
+      const adPerf = meta.adPerformance;
+      const allAds = [...(adPerf?.today || []), ...(adPerf?.yesterday || []), ...(adPerf?.month || [])];
+      const adIds = [...new Set(allAds.map(a => a.adId))];
+      if (adIds.length > 0) {
+        const todayMap = new Map((adPerf.today || []).map(a => [a.adId, a]));
+        const yesterdayMap = new Map((adPerf.yesterday || []).map(a => [a.adId, a]));
+        const monthMap = new Map((adPerf.month || []).map(a => [a.adId, a]));
+        report += `\n━━ 🎯 PUBS META ━━━━━━━━━━━━━━━\n`;
+        for (const adId of adIds) {
+          const ref = monthMap.get(adId) || todayMap.get(adId) || yesterdayMap.get(adId);
+          report += `\n📌 <b>${escapeHtml(ref.adName)}</b>\n`;
+          report += `<pre>`;
+          const at = todayMap.get(adId);
+          const ay = yesterdayMap.get(adId);
+          const am = monthMap.get(adId);
+          report += tr('', 'Auj.', 'Hier', 'Avril') + '\n';
+          report += '─'.repeat(41) + '\n';
+          report += tr('Dépenses', at ? formatCurrency(at.spend) : '—', ay ? formatCurrency(ay.spend) : '—', am ? formatCurrency(am.spend) : '—') + '\n';
+          report += tr('Impress.', at ? at.impressions.toLocaleString() : '—', ay ? ay.impressions.toLocaleString() : '—', am ? am.impressions.toLocaleString() : '—') + '\n';
+          report += tr('Clics', at ? String(at.clicks) : '—', ay ? String(ay.clicks) : '—', am ? String(am.clicks) : '—') + '\n';
+          const formatCpc = (v) => `$${Number(v).toFixed(2)}`;
+          report += tr('CPC', at ? formatCpc(at.cpc) : '—', ay ? formatCpc(ay.cpc) : '—', am ? formatCpc(am.cpc) : '—') + '\n';
+          report += `</pre>`;
+        }
+      }
       if (funnel.newUsers > 0) {
         report += `🆕 ${funnel.newUsers} nouveau${funnel.newUsers > 1 ? 'x' : ''} utilisateur${funnel.newUsers > 1 ? 's' : ''} | 📱 ${funnel.newDevices.mobile} mobile | 💻 ${funnel.newDevices.desktop} desktop\n`;
       }
