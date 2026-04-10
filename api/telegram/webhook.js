@@ -74,18 +74,34 @@ async function buildStatusResponse() {
   return msg;
 }
 
-// Build /spend response — real-time spend today
-async function buildSpendResponse() {
-  const [metaSpend, googleSpend] = await Promise.all([
+// Build /spend response — real-time spend today, conversions from Stripe
+async function buildSpendResponse(serviceKey) {
+  const [metaSpend, googleSpend, spendSupabase] = await Promise.all([
     metaManager.getTodaySpend().catch(e => ({ error: e.message })),
     googleManager.getTodaySpend().catch(e => ({ error: e.message })),
+    collectSupabaseData(serviceKey),
   ]);
+  const spendStripe = await collectStripeData(spendSupabase.allOrders || []);
+
+  // Stripe-based conversions for today
+  const stripeConvs = spendSupabase.today.count || 0;
+  let stripeRevenue = 0;
+  if (spendStripe?.available) {
+    for (const order of spendSupabase.today.orders || []) {
+      if (order.pack === 'daily-push') {
+        const subData = spendStripe.subscriptions?.[order.id];
+        if (subData) stripeRevenue += subData.totalPaid;
+      } else {
+        const amountData = spendStripe.oneTimeAmounts?.[order.id];
+        stripeRevenue += amountData ? amountData.amountReceived : (order.amount || 0);
+      }
+    }
+  }
+  stripeRevenue = stripeRevenue / 100;
 
   let msg = `💸 <b>DÉPENSES AUJOURD'HUI</b>\n\n`;
 
   let grandTotalSpend = 0;
-  let grandTotalRevenue = 0;
-  let grandTotalConv = 0;
 
   // Meta
   msg += `📘 <b>Meta Ads</b>\n`;
@@ -93,14 +109,12 @@ async function buildSpendResponse() {
     msg += `   ⚠️ ${escapeHtml(metaSpend.error)}\n`;
   } else {
     grandTotalSpend += metaSpend.totalSpend || 0;
-    grandTotalRevenue += metaSpend.totalRevenue || 0;
-    grandTotalConv += metaSpend.totalConversions || 0;
 
-    msg += `   💰 Total: ${formatCurrency(metaSpend.totalSpend)} | Conv: ${metaSpend.totalConversions} | CA: ${formatCurrency(metaSpend.totalRevenue)}\n`;
+    msg += `   💰 Total: ${formatCurrency(metaSpend.totalSpend)}\n`;
     if (metaSpend.campaigns?.length > 0) {
       for (const c of metaSpend.campaigns) {
         if (c.spend > 0) {
-          msg += `   • ${c.name}: ${formatCurrency(c.spend)} (${c.clicks} clics, ${c.conversions} conv)\n`;
+          msg += `   • ${c.name}: ${formatCurrency(c.spend)} (${c.clicks} clics)\n`;
         }
       }
     }
@@ -112,24 +126,22 @@ async function buildSpendResponse() {
     msg += `   ⚠️ ${escapeHtml(googleSpend.error)}\n`;
   } else {
     grandTotalSpend += googleSpend.totalSpend || 0;
-    grandTotalRevenue += googleSpend.totalRevenue || 0;
-    grandTotalConv += googleSpend.totalConversions || 0;
 
-    msg += `   💰 Total: ${formatCurrency(googleSpend.totalSpend)} | Conv: ${googleSpend.totalConversions} | CA: ${formatCurrency(googleSpend.totalRevenue)}\n`;
+    msg += `   💰 Total: ${formatCurrency(googleSpend.totalSpend)}\n`;
     if (googleSpend.campaigns?.length > 0) {
       for (const c of googleSpend.campaigns) {
         if (c.spend > 0) {
-          msg += `   • ${c.name}: ${formatCurrency(c.spend)} (${c.clicks} clics, ${c.conversions} conv)\n`;
+          msg += `   • ${c.name}: ${formatCurrency(c.spend)} (${c.clicks} clics)\n`;
         }
       }
     }
   }
 
-  // Grand total
-  const roas = grandTotalSpend > 0 ? (grandTotalRevenue / grandTotalSpend).toFixed(1) : '0';
+  // Grand total with Stripe conversions
+  const roas = grandTotalSpend > 0 ? (stripeRevenue / grandTotalSpend).toFixed(1) : '0';
   msg += `\n━━━━━━━━━━━━━━━━━━━━━━\n`;
   msg += `💰 <b>TOTAL</b>: ${formatCurrency(grandTotalSpend)} dépensé\n`;
-  msg += `🛒 ${grandTotalConv} conversions | CA: ${formatCurrency(grandTotalRevenue)}\n`;
+  msg += `🛒 ${stripeConvs} conversions (Stripe) | CA: ${formatCurrency(stripeRevenue)}\n`;
   msg += `📊 ROAS: ${roas}x\n`;
 
   return msg;
@@ -344,11 +356,13 @@ export default async function handler(req, res) {
 
     switch (command) {
       case '/ads': {
-        const [meta, google] = await Promise.all([
+        const [meta, google, adsSupabase] = await Promise.all([
           collectMetaAdsData(),
           collectGoogleAdsData(),
+          collectSupabaseData(serviceKey),
         ]);
-        responseText = buildAdsResponse({ meta, google });
+        const adsStripe = await collectStripeData(adsSupabase.allOrders || []);
+        responseText = buildAdsResponse({ meta, google, supabase: adsSupabase, stripe: adsStripe });
         break;
       }
 
@@ -386,7 +400,7 @@ export default async function handler(req, res) {
       }
 
       case '/spend': {
-        responseText = await buildSpendResponse();
+        responseText = await buildSpendResponse(serviceKey);
         break;
       }
 

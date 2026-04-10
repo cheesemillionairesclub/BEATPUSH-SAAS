@@ -142,6 +142,14 @@ export function buildDailyReport(data) {
 
   let report = '';
 
+  // Compute Stripe-based conversions & revenue (single source of truth)
+  const todayStripeRev = calcStripeRevenue(supabase.today.orders || [], stripe);
+  const monthStripeRev = calcStripeRevenue(supabase.allOrders || [], stripe);
+  const stripeConvsToday = supabase.today.count || 0;
+  const stripeRevenueToday = (todayStripeRev?.total || 0) / 100;
+  const stripeConvsMonth = supabase.month.count || 0;
+  const stripeRevenueMonth = (monthStripeRev?.total || 0) / 100;
+
   // Header
   report += `📊 <b>BEATPUSH</b> — ${dateStr}\n`;
   report += `🏥 Santé : <b>${analysis.health_score}/100</b> ${trendEmoji(analysis.health_trend)}\n`;
@@ -151,11 +159,11 @@ export function buildDailyReport(data) {
   report += `\n━━ 📘 META ADS + FUNNEL ━━━━━━━━━━\n`;
   if (meta?.available && meta.today?.campaigns?.length > 0) {
     const mt = meta.today.totals;
+    const metaRoas = mt.totalSpend > 0 ? (stripeRevenueToday / mt.totalSpend).toFixed(1) : '0';
     report += `💰 Dépensé aujourd'hui : ${formatCurrency(mt.totalSpend)}\n`;
     report += `👁️ Impressions : ${mt.totalImpressions.toLocaleString()}\n`;
     report += `🖱️ Clics : ${mt.totalClicks} | CPC moy : ${formatCurrency(mt.avgCpc)}\n`;
-    report += `🛒 Conversions : ${mt.totalConversions} | CA : ${formatCurrency(mt.totalRevenue)}\n`;
-    const metaRoas = mt.totalSpend > 0 ? (mt.totalRevenue / mt.totalSpend).toFixed(1) : '0';
+    report += `🛒 Conversions (Stripe) : ${stripeConvsToday} | CA : ${formatCurrency(stripeRevenueToday)}\n`;
     report += `📊 ROAS : ${metaRoas}x ${roasStars(metaRoas)}\n`;
 
     // Funnel (merged with Meta Ads)
@@ -165,18 +173,19 @@ export function buildDailyReport(data) {
     report += `   🛒 Conversions : ${supabase.funnel.conversionsToday}\n`;
     report += `   📊 Taux conversion : ${supabase.funnel.conversionRate}%\n`;
 
-    // Campaign details
+    // Campaign details (spend + clicks only, conversions are global via Stripe)
     for (const c of meta.today.campaigns) {
       if (c.spend > 0) {
         report += `\n   📌 <b>${c.campaignName}</b>\n`;
-        report += `   ${formatCurrency(c.spend)} | ${c.clicks} clics | ${c.conversions} conv | ROAS ${c.roas}x\n`;
+        report += `   ${formatCurrency(c.spend)} | ${c.clicks} clics | CTR ${c.ctr || '0'}%\n`;
       }
     }
 
-    // Month totals
+    // Month totals (conversions & revenue from Stripe)
     if (meta.month?.totals) {
       const mm = meta.month.totals;
-      report += `\n   📅 Mois : ${formatCurrency(mm.totalSpend)} dépensé | ${formatCurrency(mm.totalRevenue)} CA | ${mm.totalConversions} conv\n`;
+      const monthMetaRoas = mm.totalSpend > 0 ? (stripeRevenueMonth / mm.totalSpend).toFixed(1) : '0';
+      report += `\n   📅 Mois : ${formatCurrency(mm.totalSpend)} dépensé | ${formatCurrency(stripeRevenueMonth)} CA (Stripe) | ${stripeConvsMonth} conv | ROAS ${monthMetaRoas}x\n`;
     }
   } else if (meta?.available) {
     report += `✅ Connecté | Aucune campagne active aujourd'hui\n`;
@@ -206,31 +215,32 @@ export function buildDailyReport(data) {
   if (google?.available && google.today?.campaigns?.length > 0) {
     report += `\n━━ 🔍 GOOGLE ADS ━━━━━━━━━━━━━━\n`;
     const gt = google.today.totals;
+    const gRoas = gt.totalSpend > 0 ? (stripeRevenueToday / gt.totalSpend).toFixed(1) : '0';
     report += `💰 Dépensé aujourd'hui : ${formatCurrency(gt.totalSpend)}\n`;
     report += `👁️ Impressions : ${gt.totalImpressions.toLocaleString()}\n`;
     report += `🖱️ Clics : ${gt.totalClicks}\n`;
-    report += `🛒 Conversions : ${gt.totalConversions} | CA : ${formatCurrency(gt.totalRevenue)}\n`;
-    const gRoas = gt.totalSpend > 0 ? (gt.totalRevenue / gt.totalSpend).toFixed(1) : '0';
+    report += `🛒 Conversions (Stripe) : ${stripeConvsToday} | CA : ${formatCurrency(stripeRevenueToday)}\n`;
     report += `📊 ROAS : ${gRoas}x ${roasStars(gRoas)}\n`;
 
     for (const c of google.today.campaigns) {
       if (c.spend > 0) {
         report += `\n   📌 <b>${c.campaignName}</b>\n`;
-        report += `   ${formatCurrency(c.spend)} | ${c.clicks} clics | ${c.conversions} conv | ROAS ${c.roas}x\n`;
+        report += `   ${formatCurrency(c.spend)} | ${c.clicks} clics\n`;
       }
     }
 
-    // Top search terms
+    // Top search terms (keep clicks + spend, remove platform conversions)
     if (google.searchTerms?.length > 0) {
       report += `\n   🔎 Top termes recherche :\n`;
       for (const t of google.searchTerms.slice(0, 5)) {
-        report += `   • "${t.term}" — ${t.clicks} clics, ${formatCurrency(t.spend)}, ${t.conversions} conv\n`;
+        report += `   • "${t.term}" — ${t.clicks} clics, ${formatCurrency(t.spend)}\n`;
       }
     }
 
     if (google.month?.totals) {
       const gm = google.month.totals;
-      report += `\n   📅 Mois : ${formatCurrency(gm.totalSpend)} dépensé | ${formatCurrency(gm.totalRevenue)} CA | ${gm.totalConversions} conv\n`;
+      const monthGRoas = gm.totalSpend > 0 ? (stripeRevenueMonth / gm.totalSpend).toFixed(1) : '0';
+      report += `\n   📅 Mois : ${formatCurrency(gm.totalSpend)} dépensé | ${formatCurrency(stripeRevenueMonth)} CA (Stripe) | ${stripeConvsMonth} conv | ROAS ${monthGRoas}x\n`;
     }
   } else if (google?.available) {
     report += `\n━━ 🔍 GOOGLE ADS ━━━━━━━━━━━━━━\n`;
@@ -401,23 +411,31 @@ export function buildDailyReport(data) {
   return report;
 }
 
-// Build response for /ads command
+// Build response for /ads command — conversions always from Stripe
 export function buildAdsResponse(data) {
-  const { meta, google } = data;
+  const { meta, google, supabase, stripe } = data;
   let msg = `📊 <b>ADS — Temps réel</b>\n\n`;
+
+  // Stripe-based conversions
+  const todayConvs = supabase?.today?.count || 0;
+  const todayRev = supabase && stripe ? (calcStripeRevenue(supabase.today.orders || [], stripe)?.total || 0) / 100 : 0;
 
   if (meta?.available) {
     const mt = meta.today?.totals;
+    const spend = mt?.totalSpend || 0;
+    const roas = spend > 0 ? (todayRev / spend).toFixed(1) : '0';
     msg += `📘 <b>Meta Ads (aujourd'hui)</b>\n`;
-    msg += `   Dépensé: ${formatCurrency(mt?.totalSpend || 0)} | Conv: ${mt?.totalConversions || 0} | ROAS: ${mt?.totalSpend > 0 ? ((mt?.totalRevenue || 0) / mt.totalSpend).toFixed(1) : '0'}x\n\n`;
+    msg += `   Dépensé: ${formatCurrency(spend)} | Conv (Stripe): ${todayConvs} | ROAS: ${roas}x\n\n`;
   } else {
     msg += `📘 Meta Ads: ${meta?.error ? escapeHtml(meta.error) : 'Non connecté'}\n\n`;
   }
 
   if (google?.available) {
     const gt = google.today?.totals;
+    const spend = gt?.totalSpend || 0;
+    const roas = spend > 0 ? (todayRev / spend).toFixed(1) : '0';
     msg += `🔍 <b>Google Ads (aujourd'hui)</b>\n`;
-    msg += `   Dépensé: ${formatCurrency(gt?.totalSpend || 0)} | Conv: ${gt?.totalConversions || 0} | ROAS: ${gt?.totalSpend > 0 ? ((gt?.totalRevenue || 0) / gt.totalSpend).toFixed(1) : '0'}x\n`;
+    msg += `   Dépensé: ${formatCurrency(spend)} | Conv (Stripe): ${todayConvs} | ROAS: ${roas}x\n`;
   } else {
     msg += `🔍 Google Ads: ${google?.error ? escapeHtml(google.error) : 'Non connecté'}\n`;
   }
