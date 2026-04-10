@@ -191,8 +191,8 @@ export function buildDailyReport(data) {
     return f;
   };
 
-  // ━━ RAPPORT DE PERFORMANCE ━━━━━━━━━━━━
-  report += `\n━━ 📊 RAPPORT DE PERFORMANCE ━━━━━━\n`;
+  // ━━ META ADS + FUNNEL ━━━━━━━━━━━━━━━━
+  report += `\n━━ 📘 META ADS + FUNNEL ━━━━━━━━━━\n`;
   if (meta?.available) {
     // 1. Campaign status (only active campaigns)
     const activeCampaigns = (meta.activeCampaigns || []).filter(c => c.status === 'ACTIVE');
@@ -219,17 +219,20 @@ export function buildDailyReport(data) {
       report += '─'.repeat(38) + '\n';
       report += tr('Dépenses', formatCurrency(mt.totalSpend), mm ? formatCurrency(mm.totalSpend) : '—') + '\n';
       report += tr('Impressions', mt.totalImpressions.toLocaleString(), mm ? mm.totalImpressions.toLocaleString() : '—') + '\n';
-      const gtClicks = google?.available && google.today?.totals ? google.today.totals.totalClicks : 0;
-      const gmClicks = google?.available && google.month?.totals ? google.month.totals.totalClicks : 0;
-      const totalClicksToday = mt.totalClicks + gtClicks;
-      const totalClicksMonth = (mm ? mm.totalClicks : 0) + gmClicks;
-      report += tr('Clics', String(totalClicksToday), String(totalClicksMonth)) + '\n';
-      report += tr('  📘 Meta', String(mt.totalClicks), mm ? String(mm.totalClicks) : '—') + '\n';
-      report += tr('  🔍 Google', String(gtClicks), String(gmClicks)) + '\n';
+      report += tr('Clics', String(mt.totalClicks), mm ? String(mm.totalClicks) : '—') + '\n';
       report += tr('CPC moyen', formatCurrency(mt.avgCpc), mm ? formatCurrency(mm.avgCpc || 0) : '—') + '\n';
       const todayUsers = ga4?.today?.users ?? '—';
       const monthUsers = ga4?.month?.users ?? '—';
       report += tr('Visiteurs', String(todayUsers), String(monthUsers)) + '\n';
+      if (ga4.sources?.length > 0) {
+        const metaUsers = ga4.sources.filter(s => s.channel === 'Paid Social').reduce((sum, s) => sum + (s.users || 0), 0);
+        const googleUsers = ga4.sources.filter(s => s.channel === 'Paid Search').reduce((sum, s) => sum + (s.users || 0), 0);
+        const totalSourceUsers = ga4.sources.reduce((sum, s) => sum + (s.users || 0), 0);
+        const autresUsers = totalSourceUsers - metaUsers - googleUsers;
+        report += tr('  📘 Meta', String(metaUsers), '—') + '\n';
+        report += tr('  🔍 Google Ads', String(googleUsers), '—') + '\n';
+        report += tr('  🌐 Autres', String(autresUsers), '—') + '\n';
+      }
       if (ga4.countries?.length > 0) {
         const tc = ga4.countries.slice(0, 3);
         const mc = ga4.countriesMonth || [];
