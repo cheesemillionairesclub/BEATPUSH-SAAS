@@ -203,28 +203,6 @@ export function buildDailyReport(data) {
         report += `\n📅 Mois : ${formatCurrency(mm.totalSpend)} dépensé | ${formatCurrency(stripeRevenueMonth)} CA (Stripe) | ${stripeConvsMonth} conv | ROAS ${monthMetaRoas}x\n`;
       }
 
-      // 5. Ad relevance diagnostics (quality, engagement, conversion rankings)
-      if (meta.diagnostics?.length > 0) {
-        const rankLabel = (r) => {
-          if (r === 'ABOVE_AVERAGE_35' || r === 'ABOVE_AVERAGE') return '🟢 Au-dessus';
-          if (r === 'AVERAGE') return '🟡 Moyen';
-          if (r === 'BELOW_AVERAGE_10' || r === 'BELOW_AVERAGE_20' || r === 'BELOW_AVERAGE_35' || r?.startsWith('BELOW')) return '🔴 En-dessous';
-          return '⚪ N/A';
-        };
-        report += `\n   🔬 <b>Diagnostics Meta (par ad)</b>\n`;
-        for (const ad of meta.diagnostics.slice(0, 5)) {
-          report += `   • <b>${escapeHtml(ad.adName)}</b>\n`;
-          report += `     Qualité: ${rankLabel(ad.qualityRanking)} | Engagement: ${rankLabel(ad.engagementRanking)} | Conversion: ${rankLabel(ad.conversionRanking)}\n`;
-        }
-      }
-
-      // 6. Meta campaign recommendations (from Meta itself)
-      if (meta.campaignRecommendations?.length > 0) {
-        report += `\n   💡 <b>Recommandations Meta</b>\n`;
-        for (const rec of meta.campaignRecommendations.slice(0, 3)) {
-          report += `   • ${escapeHtml(rec.message)}\n`;
-        }
-      }
     } else {
       report += `\n✅ Connecté | Aucune campagne active aujourd'hui\n`;
       report += funnelBlock();
@@ -407,19 +385,85 @@ export function buildDailyReport(data) {
     }
   }
 
-  // ━━ SUGGESTIONS ━━━━━━━━━━━━━
-  if (analysis.recommendations?.length > 0) {
-    report += `\n━━ 💡 SUGGESTIONS ━━━━━━━━━━━━━\n`;
-    for (const r of analysis.recommendations) {
-      report += `💡 ${r}\n`;
-    }
-  }
+  // ━━ SUGGESTIONS & OPTIMISATION ━━━━━━
+  const hasRecs = analysis.recommendations?.length > 0;
+  const hasTips = analysis.meta_creative_tips?.length > 0;
+  const hasDiagnostics = meta?.diagnostics?.length > 0;
+  const hasMetaRecs = meta?.campaignRecommendations?.length > 0;
 
-  // ━━ CONSEILS CRÉATIFS META ━━━━━
-  if (analysis.meta_creative_tips?.length > 0) {
-    report += `\n━━ 🎨 OPTIMISATION ADS ━━━━━━━━━\n`;
-    for (const tip of analysis.meta_creative_tips) {
-      report += `🎯 ${tip}\n`;
+  if (hasRecs || hasTips || hasDiagnostics || hasMetaRecs) {
+    report += `\n━━ 💡 SUGGESTIONS ━━━━━━━━━━━━━\n`;
+
+    if (hasRecs) {
+      for (const r of analysis.recommendations) {
+        report += `💡 ${r}\n`;
+      }
+    }
+
+    if (hasTips) {
+      for (const tip of analysis.meta_creative_tips) {
+        report += `🎯 ${tip}\n`;
+      }
+    }
+
+    // Meta campaign recommendations
+    if (hasMetaRecs) {
+      report += `\n📘 <b>Meta recommande :</b>\n`;
+      for (const rec of meta.campaignRecommendations.slice(0, 3)) {
+        report += `   • ${escapeHtml(rec.message)}\n`;
+      }
+    }
+
+    // Ad diagnostics — simplified text
+    if (hasDiagnostics) {
+      const rankText = (r) => {
+        if (r === 'ABOVE_AVERAGE_35' || r === 'ABOVE_AVERAGE') return 'bon';
+        if (r === 'AVERAGE') return 'correct';
+        if (r?.startsWith('BELOW')) return 'à améliorer';
+        return null;
+      };
+      const rankExplain = (field, rank) => {
+        if (!rank?.startsWith('BELOW')) return null;
+        if (field === 'quality') return 'visuels/créatifs à retravailler';
+        if (field === 'engagement') return 'texte ou CTA à améliorer';
+        if (field === 'conversion') return 'ciblage ou landing page à revoir';
+        return null;
+      };
+
+      report += `\n🔬 <b>Diagnostics Meta par pub :</b>\n`;
+      for (const ad of meta.diagnostics.slice(0, 5)) {
+        const q = rankText(ad.qualityRanking);
+        const e = rankText(ad.engagementRanking);
+        const cv = rankText(ad.conversionRanking);
+
+        // Skip if all unknown
+        if (!q && !e && !cv) continue;
+
+        report += `   • <b>${escapeHtml(ad.adName)}</b> — `;
+        const parts = [];
+        if (q) parts.push(`qualité ${q}`);
+        if (e) parts.push(`engagement ${e}`);
+        if (cv) parts.push(`conversion ${cv}`);
+        report += parts.join(', ') + '\n';
+
+        // Actionable tip for below-average rankings
+        const tips = [
+          rankExplain('quality', ad.qualityRanking),
+          rankExplain('engagement', ad.engagementRanking),
+          rankExplain('conversion', ad.conversionRanking),
+        ].filter(Boolean);
+        if (tips.length > 0) {
+          report += `     → ${tips.join(' + ')}\n`;
+        }
+      }
+
+      // If all diagnostics were unknown (< 500 impressions)
+      const allUnknown = meta.diagnostics.every(ad =>
+        !rankText(ad.qualityRanking) && !rankText(ad.engagementRanking) && !rankText(ad.conversionRanking)
+      );
+      if (allUnknown) {
+        report += `   ℹ️ Pas assez de données (il faut 500+ impressions par pub pour que Meta évalue la qualité)\n`;
+      }
     }
   }
 
