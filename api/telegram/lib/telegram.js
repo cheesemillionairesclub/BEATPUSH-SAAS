@@ -177,6 +177,7 @@ export function buildDailyReport(data) {
 
   // Funnel + new user stats block (reused in all branches)
   const funnel = supabase.funnel;
+  const mf = supabase.monthFunnel || {};
   const funnelBlock = () => {
     let f = '';
     f += `🔍 Recherches : ${funnel.searches}\n`;
@@ -226,9 +227,9 @@ export function buildDailyReport(data) {
       const todayBounce = ga4?.today ? `${((ga4.today.bounceRate || 0) * 100).toFixed(0)}%` : '—';
       const monthBounce = ga4?.month ? `${((ga4.month.bounceRate || 0) * 100).toFixed(0)}%` : '—';
       report += tr('Rebond', todayBounce, monthBounce) + '\n';
-      report += tr('Nv. util.', String(funnel.newUsers), String(funnel.newUsers)) + '\n';
-      report += tr('Recherches', String(funnel.searches), String(funnel.searches)) + '\n';
-      report += tr('Sélections', String(funnel.selections), String(funnel.selections)) + '\n';
+      report += tr('Nv. util.', String(funnel.newUsers), String(mf.newUsers ?? funnel.newUsers)) + '\n';
+      report += tr('Recherches', String(funnel.searches), String(mf.searches ?? funnel.searches)) + '\n';
+      report += tr('Sélections', String(funnel.selections), String(mf.selections ?? funnel.selections)) + '\n';
       report += tr('Conv.', String(stripeConvsToday), String(stripeConvsMonth)) + '\n';
       report += tr('CA Stripe', formatCurrency(stripeRevenueToday), formatCurrency(stripeRevenueMonth)) + '\n';
       report += tr('ROAS', `${metaRoas}x`, `${monthMetaRoas}x`) + '\n';

@@ -67,7 +67,7 @@ export async function collectSupabaseData(serviceKey) {
   const monthStart = getMonthStart();
 
   // Fetch all data in parallel — include active Daily Push subs that started before today
-  const [todayOrders, yesterdayOrders, monthOrders, activeDailyPushSubs, allProfiles, recentActivity] = await Promise.all([
+  const [todayOrders, yesterdayOrders, monthOrders, activeDailyPushSubs, allProfiles, recentActivity, monthActivity] = await Promise.all([
     // Today's orders
     supabaseFetch(
       `orders?created_at=gte.${today.start}&created_at=lte.${today.end}&select=*&order=created_at.desc`,
@@ -96,6 +96,11 @@ export async function collectSupabaseData(serviceKey) {
     // Recent track activity (last 24h for funnel)
     supabaseFetch(
       `track_activity?created_at=gte.${yesterday.start}&select=*&order=created_at.desc`,
+      serviceKey
+    ),
+    // Month track activity (for monthly funnel)
+    supabaseFetch(
+      `track_activity?created_at=gte.${monthStart}&select=activity_type,user_id,created_at&order=created_at.desc`,
       serviceKey
     ),
   ]);
@@ -162,13 +167,22 @@ export async function collectSupabaseData(serviceKey) {
     };
   };
 
-  // Process activity funnel
+  // Process activity funnel (today)
   const searches = recentActivity.filter(a => a.activity_type === 'search').length;
   const selections = recentActivity.filter(a => a.activity_type === 'select').length;
+
+  // Process activity funnel (month)
+  const monthSearches = monthActivity.filter(a => a.activity_type === 'search').length;
+  const monthSelections = monthActivity.filter(a => a.activity_type === 'select').length;
 
   // Unique users active in funnel (24h)
   const funnelUserIds = new Set(
     recentActivity.map(a => a.user_id).filter(Boolean)
+  );
+
+  // Unique new users in funnel (month)
+  const monthFunnelUserIds = new Set(
+    monthActivity.map(a => a.user_id).filter(Boolean)
   );
 
   // Build a profile lookup map
@@ -188,6 +202,18 @@ export async function collectSupabaseData(serviceKey) {
         funnelNewUsers++;
         const device = profile.device_type || 'desktop';
         funnelNewDevices[device] = (funnelNewDevices[device] || 0) + 1;
+      }
+    }
+  }
+
+  // Count new users in funnel this month
+  let monthFunnelNewUsers = 0;
+  for (const uid of monthFunnelUserIds) {
+    const profile = profileMap.get(uid);
+    if (profile) {
+      const created = new Date(profile.created_at);
+      if (created >= new Date(monthStart)) {
+        monthFunnelNewUsers++;
       }
     }
   }
@@ -231,6 +257,11 @@ export async function collectSupabaseData(serviceKey) {
       conversionRate: searches > 0 ? ((todayOrders.length / searches) * 100).toFixed(1) : '0',
       newUsers: funnelNewUsers,
       newDevices: funnelNewDevices,
+    },
+    monthFunnel: {
+      searches: monthSearches,
+      selections: monthSelections,
+      newUsers: monthFunnelNewUsers,
     },
     users: {
       total: allProfiles.length,
