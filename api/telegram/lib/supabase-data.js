@@ -67,7 +67,7 @@ export async function collectSupabaseData(serviceKey) {
   const monthStart = getMonthStart();
 
   // Fetch all data in parallel — include active Daily Push subs that started before today
-  const [todayOrders, yesterdayOrders, monthOrders, activeDailyPushSubs, allProfiles, recentActivity, monthActivity] = await Promise.all([
+  const [todayOrders, yesterdayOrders, monthOrders, activeDailyPushSubs, allProfiles, todayActivity, yesterdayActivity, monthActivity] = await Promise.all([
     // Today's orders
     supabaseFetch(
       `orders?created_at=gte.${today.start}&created_at=lte.${today.end}&select=*&order=created_at.desc`,
@@ -93,9 +93,14 @@ export async function collectSupabaseData(serviceKey) {
       `profiles?select=id,country,device_type,created_at&order=created_at.desc`,
       serviceKey
     ),
-    // Recent track activity (last 24h for funnel)
+    // Today's track activity (today only — proper bounds)
     supabaseFetch(
-      `track_activity?created_at=gte.${yesterday.start}&select=*&order=created_at.desc`,
+      `track_activity?created_at=gte.${today.start}&created_at=lte.${today.end}&select=*&order=created_at.desc`,
+      serviceKey
+    ),
+    // Yesterday's track activity (yesterday only — proper bounds)
+    supabaseFetch(
+      `track_activity?created_at=gte.${yesterday.start}&created_at=lte.${yesterday.end}&select=*&order=created_at.desc`,
       serviceKey
     ),
     // Month track activity (for monthly funnel)
@@ -167,29 +172,26 @@ export async function collectSupabaseData(serviceKey) {
     };
   };
 
-  // Process activity funnel (today — includes last 24h from yesterday.start)
-  const searches = recentActivity.filter(a => a.activity_type === 'search').length;
-  const selections = recentActivity.filter(a => a.activity_type === 'select').length;
+  // Process activity funnel (today only)
+  const searches = todayActivity.filter(a => a.activity_type === 'search').length;
+  const selections = todayActivity.filter(a => a.activity_type === 'select').length;
 
-  // Process activity funnel (yesterday only — proper date bounds)
-  const yesterdaySearches = recentActivity.filter(a => {
-    if (a.activity_type !== 'search') return false;
-    const t = new Date(a.created_at);
-    return t >= new Date(yesterday.start) && t <= new Date(yesterday.end);
-  }).length;
-  const yesterdaySelections = recentActivity.filter(a => {
-    if (a.activity_type !== 'select') return false;
-    const t = new Date(a.created_at);
-    return t >= new Date(yesterday.start) && t <= new Date(yesterday.end);
-  }).length;
+  // Process activity funnel (yesterday only)
+  const yesterdaySearches = yesterdayActivity.filter(a => a.activity_type === 'search').length;
+  const yesterdaySelections = yesterdayActivity.filter(a => a.activity_type === 'select').length;
 
   // Process activity funnel (month)
   const monthSearches = monthActivity.filter(a => a.activity_type === 'search').length;
   const monthSelections = monthActivity.filter(a => a.activity_type === 'select').length;
 
-  // Unique users active in funnel (24h)
+  // Unique users active in funnel (today)
   const funnelUserIds = new Set(
-    recentActivity.map(a => a.user_id).filter(Boolean)
+    todayActivity.map(a => a.user_id).filter(Boolean)
+  );
+
+  // Unique users active in funnel (yesterday)
+  const yesterdayFunnelUserIds = new Set(
+    yesterdayActivity.map(a => a.user_id).filter(Boolean)
   );
 
   // Unique new users in funnel (month)
@@ -220,7 +222,7 @@ export async function collectSupabaseData(serviceKey) {
 
   // Count new users in funnel yesterday
   let yesterdayFunnelNewUsers = 0;
-  for (const uid of funnelUserIds) {
+  for (const uid of yesterdayFunnelUserIds) {
     const profile = profileMap.get(uid);
     if (profile) {
       const created = new Date(profile.created_at);
