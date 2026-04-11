@@ -14,6 +14,7 @@ import {
   buildSiteResponse,
   buildHelpResponse,
   sendReport,
+  countryFlag,
 } from './lib/telegram.js';
 import * as metaManager from './lib/meta-campaign-manager.js';
 import * as googleManager from './lib/google-campaign-manager.js';
@@ -192,7 +193,7 @@ async function buildClientsResponse(serviceKey) {
     msg += `\n🌍 <b>Top pays</b>\n`;
     const sorted = Object.entries(supabase.users.byCountry).sort((a, b) => b[1] - a[1]).slice(0, 5);
     for (const [country, count] of sorted) {
-      msg += `   • ${country}: ${count}\n`;
+      msg += `   ${countryFlag(country)} ${country}: ${count}\n`;
     }
   }
 

@@ -18,7 +18,7 @@ const COUNTRY_CODES = {
   'United Arab Emirates': 'AE', 'Singapore': 'SG', 'Malaysia': 'MY', 'Taiwan': 'TW',
 };
 
-function countryFlag(name) {
+export function countryFlag(name) {
   const code = COUNTRY_CODES[name];
   if (!code) return name.substring(0, 2).toUpperCase();
   return [...code].map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65)).join('');
@@ -616,11 +616,25 @@ export function buildSiteResponse(ga4) {
     msg += `🎯 Sessions engagées : ${y.engagedSessions}\n`;
   }
 
-  // Top countries
+  // Top countries — today, yesterday, month
   if (ga4.countries?.length > 0) {
     msg += `\n🌍 <b>Top pays (aujourd'hui)</b>\n`;
     for (const c of ga4.countries.slice(0, 8)) {
-      msg += `   • ${c.country} — ${c.users} visiteurs, ${c.sessions} sessions\n`;
+      msg += `   ${countryFlag(c.country)} ${c.country} — ${c.users} visiteurs, ${c.sessions} sessions\n`;
+    }
+  }
+
+  if (ga4.countriesYesterday?.length > 0) {
+    msg += `\n🌍 <b>Top pays (hier)</b>\n`;
+    for (const c of ga4.countriesYesterday.slice(0, 8)) {
+      msg += `   ${countryFlag(c.country)} ${c.country} — ${c.users} visiteurs, ${c.sessions} sessions\n`;
+    }
+  }
+
+  if (ga4.countriesMonth?.length > 0) {
+    msg += `\n🌍 <b>Top pays (ce mois)</b>\n`;
+    for (const c of ga4.countriesMonth.slice(0, 8)) {
+      msg += `   ${countryFlag(c.country)} ${c.country} — ${c.users} visiteurs, ${c.sessions} sessions\n`;
     }
   }
 
