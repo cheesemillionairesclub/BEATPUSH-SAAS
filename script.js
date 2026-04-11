@@ -1639,6 +1639,14 @@ document.getElementById('launchCampaignBtn').addEventListener('click', function(
     const packToSend = this.dataset.selectedPack || selectedPack;
     if (!packToSend) return;
 
+    // Send begin_checkout event to GA4
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'begin_checkout', {
+            currency: 'USD',
+            items: [{ item_name: (selectedTrack || {}).title || '', item_category: packToSend }],
+        });
+    }
+
     console.log('[BeatPush] selectedPack variable:', selectedPack);
     console.log('[BeatPush] button data-selected-pack:', this.dataset.selectedPack);
     console.log('[BeatPush] pack being sent to API:', packToSend);

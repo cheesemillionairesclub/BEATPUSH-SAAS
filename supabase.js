@@ -180,6 +180,10 @@ const BeatpushAuth = {
                     user_id: user ? user.id : null,
                 }),
             });
+            // Send to GA4 so it counts as engagement (reduces bounce rate)
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'search', { search_term: query });
+            }
         } catch (e) {
             console.error('Failed to log track search:', e);
         }
@@ -201,6 +205,13 @@ const BeatpushAuth = {
                     user_id: user ? user.id : null,
                 }),
             });
+            // Send to GA4 so it counts as engagement (reduces bounce rate)
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'select_content', {
+                    content_type: 'track',
+                    item_id: track.id,
+                });
+            }
         } catch (e) {
             console.error('Failed to log track selection:', e);
         }
