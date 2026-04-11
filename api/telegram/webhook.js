@@ -19,6 +19,9 @@ import {
 import * as metaManager from './lib/meta-campaign-manager.js';
 import * as googleManager from './lib/google-campaign-manager.js';
 import { buildEnvCheckMessage } from './lib/env-check.js';
+import { CONFIG } from './config.js';
+
+const isBeatpushCampaign = (name) => CONFIG.campaignNameFilter.test(name || '');
 
 function formatCurrency(amount) {
   return `$${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
@@ -42,31 +45,41 @@ async function buildStatusResponse() {
 
   let msg = `📋 <b>STATUT DES CAMPAGNES</b>\n\n`;
 
-  // Meta
+  // Meta (only BEATPUSH campaigns)
   msg += `📘 <b>Meta Ads</b>\n`;
   if (metaCampaigns.error) {
     msg += `   ⚠️ ${escapeHtml(metaCampaigns.error)}\n`;
-  } else if (Array.isArray(metaCampaigns) && metaCampaigns.length > 0) {
-    for (const c of metaCampaigns) {
-      const statusIcon = c.status === 'ACTIVE' ? '🟢' : c.status === 'PAUSED' ? '🟡' : '⚪';
-      const budget = c.dailyBudget ? `${formatCurrency(c.dailyBudget)}/j` : 'N/A';
-      msg += `   ${statusIcon} <b>${c.name}</b>\n`;
-      msg += `   ID: ${c.id} | Budget: ${budget} | ${c.objective || ''}\n\n`;
+  } else if (Array.isArray(metaCampaigns)) {
+    const filtered = metaCampaigns.filter(c => isBeatpushCampaign(c.name));
+    if (filtered.length > 0) {
+      for (const c of filtered) {
+        const statusIcon = c.status === 'ACTIVE' ? '🟢' : c.status === 'PAUSED' ? '🟡' : '⚪';
+        const budget = c.dailyBudget ? `${formatCurrency(c.dailyBudget)}/j` : 'N/A';
+        msg += `   ${statusIcon} <b>${c.name}</b>\n`;
+        msg += `   ID: ${c.id} | Budget: ${budget} | ${c.objective || ''}\n\n`;
+      }
+    } else {
+      msg += `   Aucune campagne BEATPUSH trouvée\n`;
     }
   } else {
     msg += `   Aucune campagne trouvée\n`;
   }
 
-  // Google
+  // Google (only BEATPUSH campaigns)
   msg += `\n🔍 <b>Google Ads</b>\n`;
   if (googleCampaigns.error) {
     msg += `   ⚠️ ${escapeHtml(googleCampaigns.error)}\n`;
-  } else if (Array.isArray(googleCampaigns) && googleCampaigns.length > 0) {
-    for (const c of googleCampaigns) {
-      const statusIcon = c.status === 'ENABLED' ? '🟢' : c.status === 'PAUSED' ? '🟡' : '⚪';
-      const budget = c.dailyBudget ? `${formatCurrency(c.dailyBudget)}/j` : 'N/A';
-      msg += `   ${statusIcon} <b>${c.name}</b>\n`;
-      msg += `   ID: ${c.id} | Budget: ${budget} | ${c.channelType || ''}\n\n`;
+  } else if (Array.isArray(googleCampaigns)) {
+    const filtered = googleCampaigns.filter(c => isBeatpushCampaign(c.name));
+    if (filtered.length > 0) {
+      for (const c of filtered) {
+        const statusIcon = c.status === 'ENABLED' ? '🟢' : c.status === 'PAUSED' ? '🟡' : '⚪';
+        const budget = c.dailyBudget ? `${formatCurrency(c.dailyBudget)}/j` : 'N/A';
+        msg += `   ${statusIcon} <b>${c.name}</b>\n`;
+        msg += `   ID: ${c.id} | Budget: ${budget} | ${c.channelType || ''}\n\n`;
+      }
+    } else {
+      msg += `   Aucune campagne BEATPUSH trouvée\n`;
     }
   } else {
     msg += `   Aucune campagne trouvée\n`;

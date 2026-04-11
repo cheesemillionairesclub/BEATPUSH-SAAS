@@ -6,8 +6,12 @@
 //   META_ADS_ACCOUNT_ID  - Ad account ID (act_XXXXX)
 //   META_ADS_PAGE_ID     - Facebook Page ID (for ad creatives)
 
+import { CONFIG } from '../config.js';
+
 const META_API_VERSION = 'v21.0';
 const META_API_BASE = `https://graph.facebook.com/${META_API_VERSION}`;
+
+const isBeatpushCampaign = (name) => CONFIG.campaignNameFilter.test(name || '');
 
 async function metaPost(endpoint, accessToken, body = {}) {
   const res = await fetch(`${META_API_BASE}${endpoint}`, {
@@ -178,24 +182,26 @@ export async function getTodaySpend() {
     limit: 100,
   });
 
-  const campaigns = (data.data || []).map(c => {
-    const purchases = c.actions?.find(a =>
-      a.action_type === 'purchase' || a.action_type === 'offsite_conversion.fb_pixel_purchase'
-    );
-    const revenue = c.action_values?.find(a =>
-      a.action_type === 'purchase' || a.action_type === 'offsite_conversion.fb_pixel_purchase'
-    );
+  const campaigns = (data.data || [])
+    .filter(c => isBeatpushCampaign(c.campaign_name))
+    .map(c => {
+      const purchases = c.actions?.find(a =>
+        a.action_type === 'purchase' || a.action_type === 'offsite_conversion.fb_pixel_purchase'
+      );
+      const revenue = c.action_values?.find(a =>
+        a.action_type === 'purchase' || a.action_type === 'offsite_conversion.fb_pixel_purchase'
+      );
 
-    return {
-      name: c.campaign_name,
-      id: c.campaign_id,
-      spend: parseFloat(c.spend || 0),
-      impressions: parseInt(c.impressions || 0),
-      clicks: parseInt(c.clicks || 0),
-      conversions: parseInt(purchases?.value || 0),
-      revenue: parseFloat(revenue?.value || 0),
-    };
-  });
+      return {
+        name: c.campaign_name,
+        id: c.campaign_id,
+        spend: parseFloat(c.spend || 0),
+        impressions: parseInt(c.impressions || 0),
+        clicks: parseInt(c.clicks || 0),
+        conversions: parseInt(purchases?.value || 0),
+        revenue: parseFloat(revenue?.value || 0),
+      };
+    });
 
   const totalSpend = campaigns.reduce((s, c) => s + c.spend, 0);
   const totalRevenue = campaigns.reduce((s, c) => s + c.revenue, 0);

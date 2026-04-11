@@ -5,7 +5,11 @@
 //   GOOGLE_ADS_DEVELOPER_TOKEN, GOOGLE_ADS_CLIENT_ID, GOOGLE_ADS_CLIENT_SECRET,
 //   GOOGLE_ADS_REFRESH_TOKEN, GOOGLE_ADS_CUSTOMER_ID, GOOGLE_ADS_MCC_ID (optional)
 
+import { CONFIG } from '../config.js';
+
 const GOOGLE_ADS_API_VERSION = 'v23';
+
+const isBeatpushCampaign = (name) => CONFIG.campaignNameFilter.test(name || '');
 
 async function getAccessToken() {
   const res = await fetch('https://oauth2.googleapis.com/token', {
@@ -217,15 +221,17 @@ export async function getTodaySpend() {
     ORDER BY metrics.cost_micros DESC
   `, accessToken);
 
-  const campaigns = rows.map(row => ({
-    name: row.campaign?.name || 'Unknown',
-    id: row.campaign?.id,
-    spend: (parseInt(row.metrics?.costMicros || 0)) / 1_000_000,
-    impressions: parseInt(row.metrics?.impressions || 0),
-    clicks: parseInt(row.metrics?.clicks || 0),
-    conversions: parseFloat(row.metrics?.conversions || 0),
-    revenue: parseFloat(row.metrics?.conversionsValue || 0),
-  }));
+  const campaigns = rows
+    .filter(row => isBeatpushCampaign(row.campaign?.name))
+    .map(row => ({
+      name: row.campaign?.name || 'Unknown',
+      id: row.campaign?.id,
+      spend: (parseInt(row.metrics?.costMicros || 0)) / 1_000_000,
+      impressions: parseInt(row.metrics?.impressions || 0),
+      clicks: parseInt(row.metrics?.clicks || 0),
+      conversions: parseFloat(row.metrics?.conversions || 0),
+      revenue: parseFloat(row.metrics?.conversionsValue || 0),
+    }));
 
   const totalSpend = campaigns.reduce((s, c) => s + c.spend, 0);
   const totalRevenue = campaigns.reduce((s, c) => s + c.revenue, 0);

@@ -9,7 +9,11 @@
 //   GOOGLE_ADS_CUSTOMER_ID      - Customer ID (no dashes)
 //   GOOGLE_ADS_MCC_ID           - Manager account ID (optional, no dashes)
 
+import { CONFIG } from '../config.js';
+
 const GOOGLE_ADS_API_VERSION = 'v23';
+
+const isBeatpushCampaign = (name) => CONFIG.campaignNameFilter.test(name || '');
 
 // Get fresh access token from refresh token
 async function getAccessToken() {
@@ -184,18 +188,20 @@ export async function collectGoogleAdsData() {
       });
     };
 
-    const todayCampaigns = processCampaignRows(todayRows);
-    const monthCampaigns = processCampaignRows(monthRows);
+    const todayCampaigns = processCampaignRows(todayRows).filter(c => isBeatpushCampaign(c.campaignName));
+    const monthCampaigns = processCampaignRows(monthRows).filter(c => isBeatpushCampaign(c.campaignName));
 
-    // Process search terms
-    const searchTerms = searchTermRows.map(row => ({
-      term: row.searchTermView?.searchTerm,
-      campaign: row.campaign?.name,
-      spend: (parseInt(row.metrics?.costMicros || 0)) / 1_000_000,
-      impressions: parseInt(row.metrics?.impressions || 0),
-      clicks: parseInt(row.metrics?.clicks || 0),
-      conversions: parseFloat(row.metrics?.conversions || 0),
-    }));
+    // Process search terms (only from BEATPUSH campaigns)
+    const searchTerms = searchTermRows
+      .filter(row => isBeatpushCampaign(row.campaign?.name))
+      .map(row => ({
+        term: row.searchTermView?.searchTerm,
+        campaign: row.campaign?.name,
+        spend: (parseInt(row.metrics?.costMicros || 0)) / 1_000_000,
+        impressions: parseInt(row.metrics?.impressions || 0),
+        clicks: parseInt(row.metrics?.clicks || 0),
+        conversions: parseFloat(row.metrics?.conversions || 0),
+      }));
 
     const sumCampaigns = (campaigns) => ({
       totalSpend: campaigns.reduce((s, c) => s + c.spend, 0),

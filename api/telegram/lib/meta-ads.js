@@ -13,8 +13,12 @@
 //    GET /oauth/access_token?grant_type=fb_exchange_token&client_id={app_id}&client_secret={app_secret}&fb_exchange_token={short_token}
 // 5. Ad Account ID is in Ads Manager URL or via /me/adaccounts
 
+import { CONFIG } from '../config.js';
+
 const META_API_VERSION = 'v21.0';
 const META_API_BASE = `https://graph.facebook.com/${META_API_VERSION}`;
+
+const isBeatpushCampaign = (name) => CONFIG.campaignNameFilter.test(name || '');
 
 async function metaFetch(endpoint, accessToken, params = {}) {
   const url = new URL(`${META_API_BASE}${endpoint}`);
@@ -146,9 +150,9 @@ export async function collectMetaAdsData() {
       });
     };
 
-    const todayCampaigns = processInsights(todayInsights);
-    const yesterdayCampaigns = processInsights(yesterdayInsights);
-    const monthCampaigns = processInsights(monthInsights);
+    const todayCampaigns = processInsights(todayInsights).filter(c => isBeatpushCampaign(c.campaignName));
+    const yesterdayCampaigns = processInsights(yesterdayInsights).filter(c => isBeatpushCampaign(c.campaignName));
+    const monthCampaigns = processInsights(monthInsights).filter(c => isBeatpushCampaign(c.campaignName));
 
     // Totals
     const sumCampaigns = (campaigns) => ({
@@ -162,9 +166,9 @@ export async function collectMetaAdsData() {
         : '0',
     });
 
-    // Process ad-level relevance diagnostics
+    // Process ad-level relevance diagnostics (only BEATPUSH campaigns)
     const diagnostics = (adDiagnostics.data || [])
-      .filter(ad => parseInt(ad.impressions || 0) >= 100)
+      .filter(ad => parseInt(ad.impressions || 0) >= 100 && isBeatpushCampaign(ad.campaign_name))
       .map(ad => ({
         adName: ad.ad_name,
         adId: ad.ad_id,
@@ -178,9 +182,10 @@ export async function collectMetaAdsData() {
         conversionRanking: ad.conversion_rate_ranking || 'UNKNOWN',
       }));
 
-    // Extract campaign-level recommendations from Meta
+    // Extract campaign-level recommendations from Meta (only BEATPUSH campaigns)
     const campaignRecommendations = [];
     for (const c of (campaignDetails.data || [])) {
+      if (!isBeatpushCampaign(c.name)) continue;
       if (c.recommendations?.length > 0) {
         for (const rec of c.recommendations) {
           campaignRecommendations.push({
@@ -208,7 +213,7 @@ export async function collectMetaAdsData() {
         campaigns: monthCampaigns,
         totals: sumCampaigns(monthCampaigns),
       },
-      activeCampaigns: campaignDetails.data || [],
+      activeCampaigns: (campaignDetails.data || []).filter(c => isBeatpushCampaign(c.name)),
       diagnostics,
       campaignRecommendations,
     };

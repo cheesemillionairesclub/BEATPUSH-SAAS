@@ -102,6 +102,10 @@ export const CONFIG = {
     maxDailyBudget: 500, // Safety: max daily budget allowed via Telegram
   },
 
+  // Campaign name filter — only include campaigns matching this pattern in reports
+  // Matches campaign names containing "beatpush" or starting with "BP-" (case-insensitive)
+  campaignNameFilter: /beatpush|^bp-/i,
+
   // Reporting periods
   periods: {
     daily: 1,
