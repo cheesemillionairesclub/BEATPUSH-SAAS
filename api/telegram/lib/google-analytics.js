@@ -167,16 +167,16 @@ export async function collectGA4Data() {
         ],
       }),
 
-      // 3. Top countries today
+      // 3. Top countries today (ordered by activeUsers to match GA4 dashboard)
       runReport(propertyId, accessToken, {
         dateRanges: [{ startDate: todayStr, endDate: todayStr }],
         dimensions: [{ name: 'country' }],
         metrics: [
+          { name: 'activeUsers' },
           { name: 'sessions' },
-          { name: 'totalUsers' },
           { name: 'conversions' },
         ],
-        orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
+        orderBys: [{ metric: { metricName: 'activeUsers' }, desc: true }],
         limit: 10,
       }),
 
@@ -185,11 +185,11 @@ export async function collectGA4Data() {
         dateRanges: [{ startDate: yesterdayStr, endDate: yesterdayStr }],
         dimensions: [{ name: 'country' }],
         metrics: [
+          { name: 'activeUsers' },
           { name: 'sessions' },
-          { name: 'totalUsers' },
           { name: 'conversions' },
         ],
-        orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
+        orderBys: [{ metric: { metricName: 'activeUsers' }, desc: true }],
         limit: 10,
       }),
 
@@ -198,11 +198,11 @@ export async function collectGA4Data() {
         dateRanges: [{ startDate: monthStartStr, endDate: todayStr }],
         dimensions: [{ name: 'country' }],
         metrics: [
+          { name: 'activeUsers' },
           { name: 'sessions' },
-          { name: 'totalUsers' },
           { name: 'conversions' },
         ],
-        orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
+        orderBys: [{ metric: { metricName: 'activeUsers' }, desc: true }],
         limit: 10,
       }),
 
@@ -296,19 +296,19 @@ export async function collectGA4Data() {
     const countries = parseRows(
       countriesToday,
       ['country'],
-      ['sessions', 'users', 'conversions']
+      ['users', 'sessions', 'conversions']
     );
 
     const countriesYesterdayData = parseRows(
       countriesYesterday,
       ['country'],
-      ['sessions', 'users', 'conversions']
+      ['users', 'sessions', 'conversions']
     );
 
     const countriesMonthData = parseRows(
       countriesMonth,
       ['country'],
-      ['sessions', 'users', 'conversions']
+      ['users', 'sessions', 'conversions']
     );
 
     const sources = parseRows(

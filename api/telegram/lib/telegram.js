@@ -289,9 +289,10 @@ export function buildDailyReport(data) {
         const yc = ga4.countriesYesterday || [];
         const mc = ga4.countriesMonth || [];
         const refCountries = (tc.length > 0 ? tc : (yc.length > 0 ? yc.slice(0, 3) : mc.slice(0, 3)));
-        const tTotal = tc.reduce((s, c) => s + (c.users || 0), 0) || 1;
-        const yTotal = yc.reduce((s, c) => s + (c.users || 0), 0) || 1;
-        const mTotal = mc.reduce((s, c) => s + (c.users || 0), 0) || 1;
+        // Use overview totals for consistent percentages across all periods
+        const tTotal = ga4.today?.users || (ga4.countries || []).reduce((s, c) => s + (c.users || 0), 0) || 1;
+        const yTotal = ga4.yesterday?.users || yc.reduce((s, c) => s + (c.users || 0), 0) || 1;
+        const mTotal = ga4.month?.users || mc.reduce((s, c) => s + (c.users || 0), 0) || 1;
         const tMap = new Map(tc.map(c => [c.country, c]));
         const yMap = new Map(yc.map(c => [c.country, c]));
         const mMap = new Map(mc.map(c => [c.country, c]));
