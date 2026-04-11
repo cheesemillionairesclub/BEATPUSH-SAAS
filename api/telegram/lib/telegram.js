@@ -283,20 +283,26 @@ export function buildDailyReport(data) {
         }
         report += tr('  🌐 Autres', st ? String(st.autres) : '—', sy ? String(sy.autres) : '—', sm ? String(sm.autres) : '—') + '\n';
       }
-      const bestCountries = ga4.countries?.length > 0 ? ga4.countries : (ga4.countriesYesterday?.length > 0 ? ga4.countriesYesterday : ga4.countriesMonth || []);
-      if (bestCountries.length > 0) {
-        const tc = ga4.countries?.slice(0, 3) || [];
-        const yc = ga4.countriesYesterday || [];
-        const mc = ga4.countriesMonth || [];
-        const refCountries = (tc.length > 0 ? tc : (yc.length > 0 ? yc.slice(0, 3) : mc.slice(0, 3)));
+      const tc = ga4.countries?.slice(0, 5) || [];
+      const yc = ga4.countriesYesterday?.slice(0, 5) || [];
+      const mc = ga4.countriesMonth?.slice(0, 5) || [];
+      // Merge unique countries from all periods (month first = most stable ranking)
+      const seen = new Set();
+      const refCountries = [];
+      for (const list of [mc, yc, tc]) {
+        for (const c of list) {
+          if (!seen.has(c.country)) { seen.add(c.country); refCountries.push(c); }
+        }
+      }
+      if (refCountries.length > 0) {
         // Use overview totals for consistent percentages across all periods
-        const tTotal = ga4.today?.users || (ga4.countries || []).reduce((s, c) => s + (c.users || 0), 0) || 1;
+        const tTotal = ga4.today?.users || tc.reduce((s, c) => s + (c.users || 0), 0) || 1;
         const yTotal = ga4.yesterday?.users || yc.reduce((s, c) => s + (c.users || 0), 0) || 1;
         const mTotal = ga4.month?.users || mc.reduce((s, c) => s + (c.users || 0), 0) || 1;
-        const tMap = new Map(tc.map(c => [c.country, c]));
-        const yMap = new Map(yc.map(c => [c.country, c]));
-        const mMap = new Map(mc.map(c => [c.country, c]));
-        for (const c of refCountries) {
+        const tMap = new Map((ga4.countries || []).map(c => [c.country, c]));
+        const yMap = new Map((ga4.countriesYesterday || []).map(c => [c.country, c]));
+        const mMap = new Map((ga4.countriesMonth || []).map(c => [c.country, c]));
+        for (const c of refCountries.slice(0, 7)) {
           const tC = tMap.get(c.country);
           const tPct = tC ? `${Math.round((tC.users / tTotal) * 100)}%` : '—';
           const yC = yMap.get(c.country);
