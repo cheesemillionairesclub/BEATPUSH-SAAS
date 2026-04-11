@@ -538,20 +538,31 @@ export function buildDailyReport(data) {
       return null;
     };
 
-    report += `\n━━ 🔬 DIAGNOSTICS META ━━━━━━━━━\n`;
-    for (const ad of meta.diagnostics.slice(0, 5)) {
-      report += `\n📌 <b>${escapeHtml(ad.adName)}</b>\n`;
-      report += `   Qualité : ${rankLabel(ad.qualityRanking)}\n`;
-      report += `   Engagement : ${rankLabel(ad.engagementRanking)}\n`;
+    const isKnown = (r) => r && r !== 'UNKNOWN';
+    const displayAds = meta.diagnostics.slice(0, 5).filter(
+      (ad) => isKnown(ad.qualityRanking) || isKnown(ad.engagementRanking)
+    );
 
-      const tips = [
-        tip('quality', ad.qualityRanking),
-        tip('engagement', ad.engagementRanking),
-      ].filter(Boolean);
-      if (tips.length > 0) {
-        report += `   💡 <b>Actions :</b>\n`;
-        for (const t of tips) {
-          report += `   → ${t}\n`;
+    if (displayAds.length > 0) {
+      report += `\n━━ 🔬 DIAGNOSTICS META ━━━━━━━━━\n`;
+      for (const ad of displayAds) {
+        report += `\n📌 <b>${escapeHtml(ad.adName)}</b>\n`;
+        if (isKnown(ad.qualityRanking)) {
+          report += `   Qualité : ${rankLabel(ad.qualityRanking)}\n`;
+        }
+        if (isKnown(ad.engagementRanking)) {
+          report += `   Engagement : ${rankLabel(ad.engagementRanking)}\n`;
+        }
+
+        const tips = [
+          tip('quality', ad.qualityRanking),
+          tip('engagement', ad.engagementRanking),
+        ].filter(Boolean);
+        if (tips.length > 0) {
+          report += `   💡 <b>Actions :</b>\n`;
+          for (const t of tips) {
+            report += `   → ${t}\n`;
+          }
         }
       }
     }
