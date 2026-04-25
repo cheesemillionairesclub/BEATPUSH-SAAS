@@ -109,15 +109,22 @@ export default async function handler(req, res) {
             updatePayload.order_status = 'complete_for_day';
         }
 
-        await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`, {
+        const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
                 'apikey': SUPABASE_SERVICE_KEY,
                 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+                'Prefer': 'return=minimal',
             },
             body: JSON.stringify(updatePayload),
         });
+
+        if (!patchRes.ok) {
+            const errText = await patchRes.text();
+            console.error('Order PATCH failed:', errText);
+            return res.status(500).json({ error: 'Failed to update order', details: errText });
+        }
 
         const newStatus = isDailyPush ? 'complete_for_day' : orderData[0]?.order_status || 'in_progress';
         return res.status(200).json({ success: true, receipt_url: receiptUrl, receipt_urls: receiptUrls, status: newStatus });

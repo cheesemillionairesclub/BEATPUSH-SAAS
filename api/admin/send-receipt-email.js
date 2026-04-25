@@ -33,7 +33,7 @@ export default async function handler(req, res) {
     const profiles = await profileRes.json();
     if (!profiles[0]?.is_admin) return res.status(403).json({ error: 'Not admin' });
 
-    const { order_id } = req.body;
+    const { order_id } = req.body || {};
     if (!order_id) return res.status(400).json({ error: 'Missing order_id' });
 
     try {
@@ -45,10 +45,6 @@ export default async function handler(req, res) {
         const orders = await orderRes.json();
         if (!orders.length) return res.status(404).json({ error: 'Order not found' });
         const order = orders[0];
-
-        if (!order.receipt_url) {
-            return res.status(400).json({ error: 'No receipt uploaded for this order yet' });
-        }
 
         // Determine recipient email: try user profile first, fallback to order customer_email
         let recipientEmail = order.customer_email;
