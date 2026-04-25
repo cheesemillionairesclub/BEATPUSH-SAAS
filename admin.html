@@ -708,24 +708,12 @@
                     const isDailyPush = data.status === 'complete_for_day';
                     const statusMsg = isDailyPush ? 'Complete for the day' : 'Uploaded';
 
-                    // Auto-send receipt notification email
-                    try {
-                        const emailRes = await fetch('/api/admin/send-receipt-email', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${token}`,
-                            },
-                            body: JSON.stringify({ order_id: orderId }),
-                        });
-                        const emailData = await emailRes.json();
-                        if (emailRes.ok) {
-                            showNotification(`Receipt uploaded (${statusMsg}) & email sent to ${emailData.sent_to}`, 'success');
-                        } else {
-                            showNotification(`Receipt uploaded (${statusMsg}) but email failed: ${emailData.error}`, 'warning');
-                        }
-                    } catch (emailErr) {
-                        showNotification(`Receipt uploaded (${statusMsg}) but email notification failed`, 'warning');
+                    if (data.email_sent) {
+                        showNotification(`Receipt uploaded (${statusMsg}) & email sent to ${data.email_sent}`, 'success');
+                    } else if (data.email_error) {
+                        showNotification(`Receipt uploaded (${statusMsg}) but email failed: ${data.email_error}`, 'warning');
+                    } else {
+                        showNotification(`Receipt uploaded (${statusMsg})`, 'success');
                     }
 
                     // Reload orders

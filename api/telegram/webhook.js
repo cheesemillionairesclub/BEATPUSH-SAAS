@@ -19,7 +19,7 @@ import {
 import * as metaManager from './lib/meta-campaign-manager.js';
 import * as googleManager from './lib/google-campaign-manager.js';
 import { buildEnvCheckMessage } from './lib/env-check.js';
-import { CONFIG } from './config.js';
+import { CONFIG } from './lib/config.js';
 
 const isBeatpushCampaign = (name) => CONFIG.campaignNameFilter.test(name || '');
 
@@ -313,6 +313,44 @@ async function handleCreate(args) {
   return `⚠️ Plateforme invalide. Utilise: meta ou google`;
 }
 
+const TELEGRAM_API = 'https://api.telegram.org/bot';
+
+async function handleSetup(req) {
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  if (!botToken) return `⚠️ TELEGRAM_BOT_TOKEN not set`;
+
+  const results = {};
+  const host = req.headers.host || req.headers['x-forwarded-host'];
+  const protocol = req.headers['x-forwarded-proto'] || 'https';
+  const webhookUrl = `${protocol}://${host}/api/telegram/webhook`;
+
+  try {
+    const webhookRes = await fetch(`${TELEGRAM_API}${botToken}/setWebhook`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: webhookUrl, allowed_updates: ['message'], drop_pending_updates: true }),
+    });
+    results.webhook = await webhookRes.json();
+  } catch (e) {
+    results.webhook = { error: e.message };
+  }
+
+  try {
+    const commandsRes = await fetch(`${TELEGRAM_API}${botToken}/setMyCommands`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ commands: CONFIG.telegram.commands }),
+    });
+    results.commands = await commandsRes.json();
+  } catch (e) {
+    results.commands = { error: e.message };
+  }
+
+  const wOk = results.webhook?.ok ? '✅' : '❌';
+  const cOk = results.commands?.ok ? '✅' : '❌';
+  return `🔧 <b>Setup terminé</b>\n\n${wOk} Webhook: ${webhookUrl}\n${cOk} Commandes enregistrées`;
+}
+
 function buildExtendedHelpResponse() {
   return `🤖 <b>BeatPush Ads Manager</b>
 
@@ -445,6 +483,11 @@ export default async function handler(req, res) {
 
       case '/check': {
         responseText = buildEnvCheckMessage();
+        break;
+      }
+
+      case '/setup': {
+        responseText = await handleSetup(req);
         break;
       }
 

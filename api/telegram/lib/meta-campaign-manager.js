@@ -6,7 +6,7 @@
 //   META_ADS_ACCOUNT_ID  - Ad account ID (act_XXXXX)
 //   META_ADS_PAGE_ID     - Facebook Page ID (for ad creatives)
 
-import { CONFIG } from '../config.js';
+import { CONFIG } from './config.js';
 
 const META_API_VERSION = 'v21.0';
 const META_API_BASE = `https://graph.facebook.com/${META_API_VERSION}`;

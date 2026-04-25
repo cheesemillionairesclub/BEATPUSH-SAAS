@@ -5,7 +5,7 @@
 //   GOOGLE_ADS_DEVELOPER_TOKEN, GOOGLE_ADS_CLIENT_ID, GOOGLE_ADS_CLIENT_SECRET,
 //   GOOGLE_ADS_REFRESH_TOKEN, GOOGLE_ADS_CUSTOMER_ID, GOOGLE_ADS_MCC_ID (optional)
 
-import { CONFIG } from '../config.js';
+import { CONFIG } from './config.js';
 
 const GOOGLE_ADS_API_VERSION = 'v23';
 

@@ -1,4 +1,6 @@
-// Admin API: Upload receipt PDF to Supabase Storage
+// Admin API: Upload receipt PDF to Supabase Storage + auto-send email notification
+import { Resend } from 'resend';
+
 export const config = {
     api: { bodyParser: false },
 };
@@ -47,7 +49,6 @@ export default async function handler(req, res) {
 
     try {
         const rawBody = await getRawBody(req);
-        // Use timestamp in filename to avoid collisions for multiple receipts
         const timestamp = Date.now();
         const storagePath = `${orderId}/${timestamp}_${fileName}`;
 
@@ -68,21 +69,18 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: 'Upload failed', details: errText });
         }
 
-        // Get public URL
         const receiptUrl = `${SUPABASE_URL}/storage/v1/object/public/receipts/${storagePath}`;
 
-        // Fetch order to determine type and current receipt_url
-        const orderRes = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}&select=pack,receipt_url,order_status`, {
-            headers: {
-                'apikey': SUPABASE_SERVICE_KEY,
-                'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
-            },
+        // Fetch full order details (needed for email and status update)
+        const orderRes = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}&select=*`, {
+            headers: { 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}` },
         });
         const orderData = await orderRes.json();
-        const isDailyPush = orderData[0]?.pack === 'daily-push';
-        const currentReceiptUrl = orderData[0]?.receipt_url || null;
+        const order = orderData[0];
+        const isDailyPush = order?.pack === 'daily-push';
+        const currentReceiptUrl = order?.receipt_url || null;
 
-        // Build receipt_urls array: parse existing value (could be JSON array or single URL string)
+        // Build receipt_urls array
         let receiptUrls = [];
         if (currentReceiptUrl) {
             try {
@@ -93,14 +91,11 @@ export default async function handler(req, res) {
                     receiptUrls = [currentReceiptUrl];
                 }
             } catch (e) {
-                // It's a plain URL string
                 receiptUrls = [currentReceiptUrl];
             }
         }
         receiptUrls.push(receiptUrl);
 
-        // For classic orders: do NOT change order_status (admin uses "Mark as completed")
-        // For daily push: mark as "complete_for_day"
         const updatePayload = {
             receipt_url: JSON.stringify(receiptUrls),
             updated_at: new Date().toISOString(),
@@ -126,10 +121,130 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: 'Failed to update order', details: errText });
         }
 
-        const newStatus = isDailyPush ? 'complete_for_day' : orderData[0]?.order_status || 'in_progress';
-        return res.status(200).json({ success: true, receipt_url: receiptUrl, receipt_urls: receiptUrls, status: newStatus });
+        const newStatus = isDailyPush ? 'complete_for_day' : order?.order_status || 'in_progress';
+
+        // Auto-send receipt notification email
+        let emailResult = null;
+        if (order) {
+            emailResult = await sendReceiptEmail(order, SUPABASE_URL, SUPABASE_SERVICE_KEY);
+        }
+
+        return res.status(200).json({
+            success: true,
+            receipt_url: receiptUrl,
+            receipt_urls: receiptUrls,
+            status: newStatus,
+            email_sent: emailResult?.sent_to || null,
+            email_error: emailResult?.error || null,
+        });
     } catch (error) {
         console.error('Upload error:', error.message);
         return res.status(500).json({ error: 'Upload failed', details: error.message });
     }
+}
+
+async function sendReceiptEmail(order, supabaseUrl, serviceKey) {
+    const RESEND_API_KEY = process.env.RESEND_API_KEY;
+    if (!RESEND_API_KEY) return { error: 'Email service not configured' };
+
+    try {
+        let recipientEmail = order.customer_email;
+        let recipientName = '';
+
+        if (order.user_id) {
+            const custProfileRes = await fetch(
+                `${supabaseUrl}/rest/v1/profiles?id=eq.${order.user_id}&select=email,full_name`,
+                { headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}` } }
+            );
+            const custProfiles = await custProfileRes.json();
+            if (custProfiles.length) {
+                recipientEmail = custProfiles[0].email || recipientEmail;
+                recipientName = custProfiles[0].full_name || '';
+            }
+        }
+
+        if (!recipientEmail) return { error: 'No email found for this customer' };
+
+        const packLabel = order.pack === 'daily-push' ? 'Daily Push' : `${order.pack} Copies`;
+        const greeting = recipientName ? recipientName.split(' ')[0] : 'there';
+
+        const resend = new Resend(RESEND_API_KEY);
+        const { error: emailError } = await resend.emails.send({
+            from: process.env.RESEND_FROM_EMAIL || 'BeatPush <noreply@beatpush.com>',
+            to: [recipientEmail],
+            subject: `Your BeatPush Campaign has been updated! 🎵`,
+            html: buildEmailHtml({ greeting, packLabel, order }),
+        });
+
+        if (emailError) {
+            console.error('Resend error:', emailError);
+            return { error: emailError.message };
+        }
+
+        return { sent_to: recipientEmail };
+    } catch (error) {
+        console.error('Send email error:', error.message);
+        return { error: error.message };
+    }
+}
+
+function buildEmailHtml({ greeting, packLabel, order }) {
+    const trackTitle = order.track_title || 'your track';
+    const trackArtist = order.track_artist || '';
+    const dashboardUrl = process.env.APP_URL ? `${process.env.APP_URL}/dashboard` : 'https://beatpush.com/dashboard';
+
+    return `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0;padding:0;background:#000;font-family:'Helvetica Neue',Arial,sans-serif;">
+    <div style="max-width:600px;margin:0 auto;background:#000;padding:40px 20px;">
+        <div style="text-align:center;padding-bottom:30px;border-bottom:1px solid rgba(255,255,255,0.1);">
+            <img src="/images/logo.png" alt="BeatPush" style="height:50px;" />
+        </div>
+        <div style="padding:40px 0;text-align:center;">
+            <h1 style="color:#fff;font-size:24px;font-weight:700;margin:0 0 10px;">New Receipt Available!</h1>
+            <p style="color:rgba(255,255,255,0.6);font-size:16px;margin:0 0 30px;line-height:1.5;">
+                Hey ${escapeHtml(greeting)}, great news!<br>
+                Your campaign receipt is ready to download.
+            </p>
+            <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:20px;margin-bottom:30px;text-align:left;">
+                <table style="width:100%;border-collapse:collapse;">
+                    <tr>
+                        <td style="padding:8px 0;color:rgba(255,255,255,0.5);font-size:14px;width:120px;">Track</td>
+                        <td style="padding:8px 0;color:#fff;font-size:14px;font-weight:600;">${escapeHtml(trackTitle)}${trackArtist ? ` - ${escapeHtml(trackArtist)}` : ''}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0;color:rgba(255,255,255,0.5);font-size:14px;">Campaign</td>
+                        <td style="padding:8px 0;color:#fff;font-size:14px;font-weight:600;">${escapeHtml(packLabel)}</td>
+                    </tr>
+                    ${order.genre ? `<tr>
+                        <td style="padding:8px 0;color:rgba(255,255,255,0.5);font-size:14px;">Genre</td>
+                        <td style="padding:8px 0;color:#fff;font-size:14px;font-weight:600;">${escapeHtml(order.genre)}</td>
+                    </tr>` : ''}
+                </table>
+            </div>
+            <a href="${escapeHtml(dashboardUrl)}" style="display:inline-block;padding:14px 40px;background:#00e676;color:#000;text-decoration:none;border-radius:8px;font-size:16px;font-weight:700;letter-spacing:0.5px;">
+                VIEW MY DASHBOARD
+            </a>
+            <p style="color:rgba(255,255,255,0.4);font-size:13px;margin-top:16px;">
+                Log in to your dashboard to download your campaign receipt PDF.
+            </p>
+        </div>
+        <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;text-align:center;">
+            <p style="color:rgba(255,255,255,0.3);font-size:12px;margin:0;line-height:1.5;">
+                BeatPush - Beatport Music Promotion<br>
+                You received this email because you purchased a campaign on BeatPush.
+            </p>
+        </div>
+    </div>
+</body>
+</html>`;
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }

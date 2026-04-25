@@ -9,7 +9,7 @@
 //   GOOGLE_ADS_CUSTOMER_ID      - Customer ID (no dashes)
 //   GOOGLE_ADS_MCC_ID           - Manager account ID (optional, no dashes)
 
-import { CONFIG } from '../config.js';
+import { CONFIG } from './config.js';
 
 const GOOGLE_ADS_API_VERSION = 'v23';
 

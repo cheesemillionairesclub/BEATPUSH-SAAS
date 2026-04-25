@@ -13,7 +13,7 @@
 //    GET /oauth/access_token?grant_type=fb_exchange_token&client_id={app_id}&client_secret={app_secret}&fb_exchange_token={short_token}
 // 5. Ad Account ID is in Ads Manager URL or via /me/adaccounts
 
-import { CONFIG } from '../config.js';
+import { CONFIG } from './config.js';
 
 const META_API_VERSION = 'v21.0';
 const META_API_BASE = `https://graph.facebook.com/${META_API_VERSION}`;
