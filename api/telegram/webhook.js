@@ -1,12 +1,12 @@
 // Telegram Webhook — Handles interactive commands from Telegram
 // Set webhook URL via: https://api.telegram.org/bot<TOKEN>/setWebhook?url=https://yoursite.com/api/telegram/webhook
 
-import { collectSupabaseData } from './lib/supabase-data.js';
-import { collectMetaAdsData } from './lib/meta-ads.js';
-import { collectGoogleAdsData } from './lib/google-ads.js';
-import { collectGA4Data } from './lib/google-analytics.js';
-import { collectStripeData } from './lib/stripe-data.js';
-import { analyzeWithClaude } from './lib/brain.js';
+import { collectSupabaseData } from '../../lib/telegram/supabase-data.js';
+import { collectMetaAdsData } from '../../lib/telegram/meta-ads.js';
+import { collectGoogleAdsData } from '../../lib/telegram/google-ads.js';
+import { collectGA4Data } from '../../lib/telegram/google-analytics.js';
+import { collectStripeData } from '../../lib/telegram/stripe-data.js';
+import { analyzeWithClaude } from '../../lib/telegram/brain.js';
 import {
   buildDailyReport,
   buildAdsResponse,
@@ -15,11 +15,11 @@ import {
   buildHelpResponse,
   sendReport,
   countryFlag,
-} from './lib/telegram.js';
-import * as metaManager from './lib/meta-campaign-manager.js';
-import * as googleManager from './lib/google-campaign-manager.js';
-import { buildEnvCheckMessage } from './lib/env-check.js';
-import { CONFIG } from './lib/config.js';
+} from '../../lib/telegram/telegram.js';
+import * as metaManager from '../../lib/telegram/meta-campaign-manager.js';
+import * as googleManager from '../../lib/telegram/google-campaign-manager.js';
+import { buildEnvCheckMessage } from '../../lib/telegram/env-check.js';
+import { CONFIG } from '../../lib/telegram/config.js';
 
 const isBeatpushCampaign = (name) => CONFIG.campaignNameFilter.test(name || '');
 

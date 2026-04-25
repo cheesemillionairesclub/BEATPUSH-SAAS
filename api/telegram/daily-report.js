@@ -2,13 +2,13 @@
 // Triggered daily at 23:59 Paris time (21:59 UTC)
 // Collects all data, analyzes with Claude, sends Telegram report
 
-import { collectSupabaseData } from './lib/supabase-data.js';
-import { collectMetaAdsData } from './lib/meta-ads.js';
-import { collectGoogleAdsData } from './lib/google-ads.js';
-import { collectGA4Data } from './lib/google-analytics.js';
-import { collectStripeData } from './lib/stripe-data.js';
-import { analyzeWithClaude } from './lib/brain.js';
-import { buildDailyReport, sendReport } from './lib/telegram.js';
+import { collectSupabaseData } from '../../lib/telegram/supabase-data.js';
+import { collectMetaAdsData } from '../../lib/telegram/meta-ads.js';
+import { collectGoogleAdsData } from '../../lib/telegram/google-ads.js';
+import { collectGA4Data } from '../../lib/telegram/google-analytics.js';
+import { collectStripeData } from '../../lib/telegram/stripe-data.js';
+import { analyzeWithClaude } from '../../lib/telegram/brain.js';
+import { buildDailyReport, sendReport } from '../../lib/telegram/telegram.js';
 
 export default async function handler(req, res) {
   // Verify this is a cron call or authorized request
